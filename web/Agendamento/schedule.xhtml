@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:composition template="../template.xhtml">
+        <ui:define name="titulo"  >
+            <span style="margin-left: 10px; font-size: 22px; font-family: sans-serif; color: #999999 ; "> Agenda </span>
+        </ui:define>
+        <ui:define name="conteudo">
+            <h:form id="agenda">
+                <p:poll id="poll" interval="60"  process="repeater, painelSchedule" update="repeater, painelSchedule"  />
+                <div class="col-md-12" style="margin-top: 5px">          
+                    <div class="form-group"> 
+                        <h:commandButton id="novoEvento" value="Agendar" class="btn btn-primary">
+                            <p:ajax oncomplete="PF('dialogNovoEvento').show();" update=":agenda:panelNovoEvento" />
+                        </h:commandButton>
+                       
+                    </div>
+                </div>
+
+                <div id="teste" class="col-md-12" style="margin-top: 0px">     
+                    <!--<h:commandButton id="btn_fullscreen" image="/Imagem/icons/fullscreen.png" onclick="requestFullScreen(document.body);return false;" style="margin-left: 97%;" />-->
+                    <h:commandButton id="btn_fullscreen" image="/Imagem/icons/fullscreen.png" value="Agendar" style="margin-left: 97%;">
+                        <p:ajax oncomplete="PF('dialogSchedule').show();"  />
+                    </h:commandButton>
+                    <div class="form-group">
+
+                        <center>
+                            <table border="0" width="50%">
+                                <tr style="width: 5%" >
+                                    <ui:repeat value="#{salaController.todosVisiveis()}" var="s" varStatus="status" >
+                                        <td>  
+                                            <p > 
+                                                <h:commandButton disabled="true" style="background-color: #{s.cor} ; width: 10px; height: 15px; border-radius: 3px; border: 0 " /> #{s.nome_sala}
+                                            </p>
+                                        </td> 
+                                    </ui:repeat>
+                                </tr>
+                            </table>
+                        </center>
+                        
+                        <p:schedule id="schedule"
+                                    widgetVar="schedule_agenda"
+                                    value="#{scheduleController.eventos}"  
+                                    style="width: 100%; "
+                                    axisFormat="HH:mm"
+                                    timeFormat="HH:mm"
+                                    locale="pt"
+                                    draggable="false"
+                                    resizable="false"
+                                    aspectRatio="0"
+                                    centerHeaderTemplate="title"
+                                    slotMinutes="30"
+                                    showWeekends="false"
+                                    timeZone="GMT-3"
+                                    allDaySlot="false"
+                                    columnFormat="week: 'dddd dd/MM', month: 'dddd'"
+                                    minTime="6"
+                                    maxTime="22"
+                                    showHeader="true"
+                                    view="agendaWeek" tooltip="true" >
+                            <p:ajax event="dateSelect" listener="#{scheduleController.onDateSelect}" oncomplete="PF('dialogNovoEvento').show()"  update=":agenda:panelNovoEvento" />
+                            <p:ajax event="eventSelect" listener="#{scheduleController.onEventSelect}" oncomplete="PF('dialogNovoEvento').show()" update=":agenda:panelNovoEvento" />
+                            <!--<p:ajax event="eventMove" listener="{scheduleController.onEventMove}" process="@form"  update="@form" />
+                                <p:ajax event="eventResize" listener="{scheduleController.onEventResize}" oncomplete="PF('dialogNovoEvento').show()" update=":agenda:panelNovoEvento"  />-->
+                        </p:schedule>
+                    </div>
+                </div>
+
+                <p:dialog widgetVar="dialogSchedule" width="98%" height="90%" maximizable="true"  showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true" >
+                    <p:panel id="painelSchedule" style="border: 0; border-color: #fff" > 
+                         <h:commandButton id="update" value="Update" class="btn btn-default btn-space">
+                            <p:ajax update=":agenda:schedule2" />
+                        </h:commandButton>
+                        <center >
+                            <table border="0"   width="50%" style="margin-top: -20px;" >
+                                <tr style="width: 5%" >
+                                    <ui:repeat id="repeater" value="#{salaController.todosVisiveis()}" var="s" varStatus="status" >
+                                        <td>  
+                                            <p > 
+                                                <h:commandButton disabled="true" style="background-color: #{s.cor} ; width: 10px; height: 15px; border-radius: 3px; border: 0 " /> #{s.nome_sala}
+                                            </p>
+                                        </td> 
+                                    </ui:repeat>
+                                </tr>
+                            </table>
+                        </center>
+
+                        <p:schedule id="schedule2" 
+                                    widgetVar="schedule_agenda2"
+                                    value="#{scheduleRequestController.eventos}"  
+                                    style="width: 100%; margin-top: -10px; "
+                                    axisFormat="HH:mm"
+                                    timeFormat="HH:mm"
+                                    locale="pt"
+                                    draggable="false"
+                                    resizable="false"
+                                    aspectRatio="0"
+                                    centerHeaderTemplate="title"
+                                    slotMinutes="30"
+                                    showWeekends="false"
+                                    timeZone="GMT-3"
+                                    allDaySlot="false"
+                                    columnFormat="week: 'dddd dd/MM', month: 'dddd'"
+                                    minTime="6"
+                                    maxTime="22"
+                                    showHeader="true"
+                                    view="agendaWeek"   >
+                        </p:schedule>
+                    </p:panel>
+                </p:dialog>
+
+                <p:dialog widgetVar="dialogNovoEvento"  maximizable="false" header="Adicionar Evento" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true"  >
+                    <h:panelGrid id="panelNovoEvento" columns="1" style="width: 300px;" >
+                        <ui:include src="agendamento.xhtml" />
+                    </h:panelGrid>
+                </p:dialog>
+            </h:form>
+
+            <script type="text/javascript">
+                function cancelFullScreen(el) {
+                    var requestMethod = el.cancelFullScreen || el.webkitCancelFullScreen || el.mozCancelFullScreen || el.exitFullscreen;
+                    if (requestMethod) { // cancel full screen.
+                        requestMethod.call(el);
+                    } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+                        var wscript = new ActiveXObject("WScript.Shell");
+                        if (wscript !== null) {
+                            wscript.SendKeys("{F11}");
+                        }
+                    }
+                }
+                function requestFullScreen(el) {
+                    // Supports most browsers and their versions.
+                    var requestMethod = el.requestFullScreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullScreen;
+
+                    if (requestMethod) { // Native full screen.
+                        requestMethod.call(el);
+                    } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+                        var wscript = new ActiveXObject("WScript.Shell");
+                        if (wscript !== null) {
+                            wscript.SendKeys("{F11}");
+                        }
+                    }
+                    return false;
+                }
+
+            </script>
+        </ui:define>
+    </ui:composition>
+</html>

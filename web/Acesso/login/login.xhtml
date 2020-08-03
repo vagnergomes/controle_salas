@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <head>
+        <title>Feira Terrena 2020</title>
+        <meta charset="UTF-8" />
+        <link rel="stylesheet" href="#{request.contextPath}css/resetLogin.css" />
+        <link rel="stylesheet" href="#{request.contextPath}/Css/styleLogin.css" />
+    </head>
+
+    <body>
+        
+            <p:growl />
+            <div class="pen-title">
+
+            <h1></h1>
+            </div>
+            <div style="width: 100%; background-color:  #B14420;" />
+            <div class="module form-module">
+                
+                <div >
+
+                </div>
+                
+                <div class="form">
+                    <h2>Login</h2>
+                    <form method="post" action="#{request.contextPath}/j_spring_security_check">
+                        
+                        <input id="username" type="text" name="j_username"  required="true" placeholder="Usuário"/>
+                        <input id="password" type="password" name="j_password" required="true" placeholder="Senha"/>
+                        <button type="submit" style="border-radius: 3px;" >Entrar</button>
+                    </form>
+                </div>
+
+                <div class="cta">Terrena Agronegócios</div>
+            </div>
+        
+    </body>
+</html>

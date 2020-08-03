@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="../template.xhtml">
+        <ui:define name="titulo"  >
+            <span style="font-size: 22px; font-family: sans-serif; color: #999999 ; "> Novo</span>
+        </ui:define>    
+        <ui:define name="conteudo">
+            <!--<p:growl /> -->
+            <h:form id="cadastro">
+                <h:panelGrid columns="1" style="margin-top: 10px;" >
+
+                    <h:outputLabel value="Nome do Local/Sala" class="output-form required" />
+                    <h:inputText label="titulo" value="#{salaController.sala.nome_sala}" styleClass="form-control input" style="width: 70%;" requiredMessage="Informe o Título" required="true"/>                  
+
+                    <h:outputLabel value="Descrição" class="output-form required" />
+                    <h:inputText label="titulo" value="#{salaController.sala.descricao}" styleClass="form-control input" style="width: 70%;" requiredMessage="Informe o Título" required="true"/>                  
+
+                    <h:panelGrid columns="1">
+                        <h:outputLabel  value="Capacidade: " class="output-form" />
+                        <p:spinner id="qtd_pessoas" value="#{salaController.sala.capacidade}"  />
+                    </h:panelGrid>
+
+                    <h:outputLabel  value="Label: " class="output-form" />
+                    <p:selectBooleanCheckbox value="#{salaController.sala.visivel}" itemLabel="Visível"/>
+
+                    <h:outputLabel value="Cor/Categoria:" class="output-form required"  />                
+                    <p:selectOneMenu 
+                        id="idperfil"
+                        value="#{salaController.sala.cor}"
+                        class="input"
+                        required="true"
+                        requiredMessage="Informe o Local"
+                        style="width: 25%; min-width: 250px; float: left; font-weight:bold;">
+
+                        <f:selectItem
+                            itemLabel="Selecione uma cor"
+                            itemValue="" />
+
+                        <f:selectItem itemLabel="Amarelo" itemValue="orange" />
+                        <f:selectItem itemLabel="Azul" itemValue="blue" />
+                        <f:selectItem itemLabel="Marrom" itemValue="maroon" />
+                        <f:selectItem itemLabel="Verde" itemValue="green" />
+                        <f:selectItem itemLabel="Vermelho" itemValue="red" />
+                    </p:selectOneMenu>
+                </h:panelGrid>
+
+                <div  style="margin-top: 20px">          
+                    <div class="form-group"> 
+                        <p:commandButton value="Adicionar" onclick="PF('dlg1_confirm').show();" class="btn btn-primary btn-space" />
+                    </div>
+
+                    <p:dialog id="confirm" header="Confirmar cadastro?" widgetVar="dlg1_confirm" modal="true" minHeight="40" resizable="false" >
+                        <div style="margin-top: 10px" class="form-group"> 
+                            <h:commandButton value="Confirmar" action="#{salaController.salvar()}" styleClass="btn btn-primary btn-space" />
+                            <h:commandButton onclick="dlg1_confirm.hide()" value="Cancelar" class="btn btn-default btn-space" />                
+                        </div>
+                    </p:dialog>
+                </div>
+
+            <h:panelGrid columns="1" style="margin-top: 10px;" >
+                <p:dataTable id="table_sala"
+                             widgetVar="w_table_sala"
+                             value="#{salaController.salas}"
+                             var="c"
+                             editable="true" 
+                             style="margin-bottom:20px">
+                    <f:facet name="header">
+                        Salas/Locais
+                    </f:facet>
+                    <p:ajax event="rowEdit" listener="#{salaController.onRowEdit}" update=":cadastro:table_sala" />
+                    <p:ajax event="rowEditCancel" listener="#{salaController.onRowCancel}" update=":cadastro:table_sala" />
+                    <p:column >#{c.idSala}</p:column>
+                    <p:column headerText="Nome">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{c.nome_sala}" /></f:facet>
+                            <f:facet name="input"><p:inputText value="#{c.nome_sala}" style="width:100%" label="Nome"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="Descrição">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{c.descricao}" /></f:facet>
+                            <f:facet name="input"><p:inputText value="#{c.descricao}" style="width:100%" label="Descrição"/></f:facet>
+                        </p:cellEditor></p:column>
+                    <p:column headerText="Capacidade">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{c.capacidade}" /></f:facet>
+                            <f:facet name="input"><p:inputText value="#{c.capacidade}" style="width:100%" label="Nome"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="Cor/Categoria">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{c.cor}" /></f:facet>
+                            <f:facet name="input">
+                                <p:selectOneMenu 
+                                    id="idperfil"
+                                    value="#{c.cor}"
+                                    class="input"
+                                    style="width: 25%; min-width: 250px; float: left; font-weight:bold;">
+
+                                    <f:selectItem
+                                        itemLabel="Selecione uma cor"
+                                        itemValue="" />
+
+                                    <f:selectItem itemLabel="Amarelo" itemValue="orange" />
+                                    <f:selectItem itemLabel="Azul" itemValue="blue" />
+                                    <f:selectItem itemLabel="Marrom" itemValue="maroon" />
+                                    <f:selectItem itemLabel="Verde" itemValue="green" />
+                                    <f:selectItem itemLabel="Vermelho" itemValue="red" />
+                                </p:selectOneMenu>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    
+                    <p:column headerText="Visível">
+                        <p:cellEditor >
+                            <f:facet name="output">
+                                <p:selectBooleanCheckbox value="#{c.visivel}" disabled="true" itemLabel=""/>
+                            </f:facet>
+                            <f:facet name="input">
+                                <p:selectBooleanCheckbox value="#{c.visivel}" itemLabel="Visível"/>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+
+                    <p:column style="width:35px">
+                        <p:rowEditor />
+                    </p:column>
+                </p:dataTable>
+            </h:panelGrid>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+    <style type="text/css">
+    .ui-row-editor .ui-row-editor-pencil {
+        margin-left:8px;
+    }
+</style>
+</html>

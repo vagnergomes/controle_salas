@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+        <p:messages id="messages" showDetail="true" closable="true" /> 
+        <h:outputLabel value="Local/Sala" class="output-form required"  />                
+        <p:selectOneMenu 
+            id="idperfil"
+            value="#{agendamentoController.agendamento.sala}"
+            converter="salaConverter"
+            class="input"
+            required="true"
+            requiredMessage="Informe o Local/Sala"
+            style="width: 25%; min-width: 250px; float: left; font-weight:bold;">
+
+            <f:selectItem
+                itemLabel="Selecione o Local/Sala"
+                itemValue="" />
+
+            <f:selectItems
+                value="#{salaController.salas}"
+                var="s"
+                itemLabel="#{s.nome_sala} "
+                itemValue="#{s}"
+                />
+        </p:selectOneMenu>
+
+        <h:outputLabel value="Título" class="output-form required" />
+        <h:inputText label="titulo" value="#{agendamentoController.agendamento.titulo}" styleClass="form-control input"  requiredMessage="Informe o Título" required="true"/>                  
+
+        <h:panelGrid columns="1">
+            <h:outputLabel  value="Quantidade pessoas: " class="output-form" />
+            <p:spinner id="qtd_pessoas" value="#{agendamentoController.agendamento.descritivo.qtd_pessoas}" requiredMessage="Informe a quantidade pessoas." rendered="true" />
+        </h:panelGrid>
+
+        <h:outputLabel  value="Adicinais: " class="output-form" />
+        <p:selectBooleanCheckbox value="#{agendamentoController.agendamento.descritivo.agua}" itemLabel="Água"/>
+        <p:selectBooleanCheckbox value="#{agendamentoController.agendamento.descritivo.cafe}" itemLabel="Café"/>
+        <p:selectBooleanCheckbox value="#{agendamentoController.agendamento.descritivo.frutas}" itemLabel="Frutas"/>
+
+        <h:panelGrid columns="2">  
+            <h:panelGrid columns="1" >
+                <h:outputLabel value="Início" class="output-form required" />
+                <p:calendar id="time" timeZone="GMT-3" size="10" showOn="button" title="Horário" locale="pt" label="Horário" value="#{agendamentoController.agendamento.inicio}"  pattern="dd/MM/yyyy HH:mm" requiredMessage="Informe o horário inicial"  />
+            </h:panelGrid>
+            <h:panelGrid columns="1" >
+                <h:outputLabel value="Fim (Opcional)" class="output-form" />
+                <p:calendar id="time2" timeZone="GMT-3" size="10" showOn="button" title="Horário" locale="pt" label="Horário" value="#{agendamentoController.agendamento.fim}"  pattern="dd/MM/yyyy HH:mm" requiredMessage="Informe o horário final"  />                       
+            </h:panelGrid>
+        </h:panelGrid>
+
+        <h:outputLabel  value="Descrição: " class="output-form" />
+        <p:inputTextarea rows="2" cols="40" value="#{agendamentoController.agendamento.descritivo.adicional}" counter="display" maxlength="100" counterTemplate="{0} caracteres restantes." autoResize="false" />
+        <h:outputText id="display" />
+
+        <div class="col-md-12 " style="margin-top: 0px">          
+            <h:panelGrid columns="2" >
+                <h:commandButton value="Agendar" action="#{agendamentoController.salvar()}"  styleClass="btn btn-primary btn-space" >
+                    <f:ajax execute="@all" render="@all" />
+                </h:commandButton>
+                <h:commandButton value="#{agendamentoController.agendamento.idAgendamento == null? 'Cancelar':'Excluir'}" action="#{agendamentoController.excluir()}" class="btn btn-default btn-space"  >
+                    <f:ajax execute="@all" render="@all" />
+                </h:commandButton>
+            </h:panelGrid>
+        </div>
+</html>

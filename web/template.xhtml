@@ -1,0 +1,160 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <h:head>
+        <title>Reuniões</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+        <!--<link type="text/css" href="#{request.contextPath}/Css/bootstrap.min.css" rel="stylesheet"/>-->
+        <!--<link type="text/css" href="#{request.contextPath}/Css/datepicker3.css" rel="stylesheet"/>-->
+        <link type="text/css" href="#{request.contextPath}/Css/style.css" rel="stylesheet"/>
+
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+        <!--<script src="#{request.contextPath}/Js/lumino.glyphs.js"></script>-->
+
+
+        <script>
+            PrimeFaces.locales['pt'] = {
+                closeText: 'Fechar',
+                prevText: 'Anterior',
+                nextText: 'Próximo',
+                currentText: 'Hoje',
+                monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+                dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+                dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
+                weekHeader: 'Semana',
+                firstDay: 0,
+                isRTL: false,
+                showMonthAfterYear: true,
+                yearSuffix: '',
+                timeOnlyTitle: 'Marque o horário',
+                timeText: 'Horário',
+                hourText: 'Hora',
+                minuteText: 'Minuto',
+                secondText: 'Segundo',
+                ampm: false,
+                month: 'M',
+                week: 'S',
+                day: 'D',
+                allDayText: 'All Day'
+            };
+        </script>
+    </h:head>
+
+    <h:body>
+        <nav style="background-color: #9C331E; border-radius: 0px 0px 0px 25px; height: 18px; margin-left: 10px;" class="navbar navbar-inverse navbar-fixed-top" role="navigation" > 
+            <div class="container-fluid">
+                <div class="navbar-header row">
+                    <a href="#{request.contextPath}/index.xhtml" >
+                        <img class="logo" src="#{request.contextPath}/Imagem/header-logo-terrena-svg.svg" alt="logo-terrena"  />
+                    </a>
+                    <span style="font-size: 20px; color: #FFF "></span> 
+                    <ul style="visibility: hidden;"  class="user-menu">
+                        <h:form >
+                            <a style="margin-right: 20px;" href="#{request.contextPath}/Acesso/login/login.xhtml"  >Login</a>
+                        </h:form>
+                        <h:form >
+                            <li class="dropdown pull-right">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><svg class="glyph stroked male user"><use href="#stroked-male-user"/></svg> #{loginUsuarioController.usuario.pessoa.nome}<span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li style="background-color: #F5F5F5 "><svg style="margin-left: 5px;"  class="glyph stroked male user"><use href="#stroked-male-user"/></svg> #{request.remoteUser}</li>
+                                    <li><a href="#{request.contextPath}/Usuario/perfil.xhtml"><svg class="glyph stroked gear"><use href="#stroked-gear"/></svg> Configurações</a></li>
+                                    <li><a href="#{request.contextPath}/j_spring_security_logout"><svg class="glyph stroked cancel"><use href="#stroked-cancel"/></svg> Sair</a></li>
+                                </ul>
+                            </li>
+                        </h:form>
+                    </ul>
+                </div>
+
+            </div><!-- /.container-fluid -->
+        </nav>
+
+        <div id="menuToggle" >
+
+            <input type="checkbox" />
+
+            <span></span>
+            <span></span>
+            <span></span>
+
+            <ul id="menu-top" >
+                <li class="active" ><svg  class="glyph stroked gear" style="margin-left: 12px;" ><use href="#stroked-gear" ></use></svg> Administrador</li>
+                <!--<a href="#{request.contextPath}/Agendamento/agendamento.xhtml"><li>Cadastro</li></a>-->
+                <a href="#{request.contextPath}/Agendamento/schedule.xhtml"><li>Schedule</li></a>
+                <a href="#{request.contextPath}/Agendamento/dashboard.xhtml"><li>Dashboard</li></a>
+                <a href="#{request.contextPath}/Agendamento/sala.xhtml"><li>Sala</li></a>
+            </ul>
+        </div>
+
+        <div  id="menu" class="col-lg-2 sidebar">
+            <h:form title="Administrador"  >
+                <ul class="nav ">
+                    <li class="active" ><a  href="#"><svg  class="glyph stroked gear"><use href="#stroked-gear"></use></svg> Administrador</a></li>
+                    <!--<li><a href="#{request.contextPath}/Agendamento/agendamento.xhtml">Cadastro</a></li>-->
+                    <li><a href="#{request.contextPath}/Agendamento/schedule.xhtml">Schedule</a></li>
+                    <li><a href="#{request.contextPath}/Agendamento/dashboard.xhtml">Dashboard</a></li>
+                    <li><a href="#{request.contextPath}/Agendamento/sala.xhtml">Sala</a></li>
+                </ul>
+            </h:form>
+
+            <h:form title="Cliente" rendered="#{request.remoteUser == null? false : (loginController.validaSeCliente())}"  >
+                <ul class="nav ">
+                    <li class="active" ><a  href="#"><svg  class="glyph stroked gear"><use href="#stroked-gear"></use></svg> Visitante</a></li>
+                    <li><a href="#{request.contextPath}/Papel/PJ/cadastro-pj.xhtml"><svg class="glyph stroked "></svg>Cliente</a></li>
+                    <li><a href="#{request.contextPath}/Papel/PF/cadastro-pf.xhtml"><svg class="glyph stroked "></svg>Visitantes</a></li>
+                </ul>
+            </h:form>
+
+        </div><!--/.sidebar-->
+
+
+        <div class="row panel-message" >
+            <!--<p:growl id="growl" showDetail="true" sticky="false" life="3000" escape="true" />-->
+            <p:messages id="messages" showDetail="false" closable="true" globalOnly="true" escape="true"  />
+      
+            
+        </div>
+
+        <div class="panel">
+            <div class="row panel-default">
+                <div style="background-color: transparent" class="panel-heading ">
+                    <h:form>
+                        <ui:insert name="titulo"  />
+                    </h:form>
+                </div>
+                <ui:insert name="conteudo" />
+            </div>			
+        </div>  
+
+<!--        <script src="js/jquery-1.11.1.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/chart.min.js"></script>
+        <script src="js/chart-data.js"></script>
+        <script src="js/easypiechart.js"></script>
+        <script src="js/easypiechart-data.js"></script>
+        <script src="js/bootstrap-datepicker.js"></script>-->
+        <script>
+            
+            $('#calendar').datepicker({
+            });
+
+            !function ($) {
+                $(document).on("click", "ul.nav li.parent > a > span.icon", function () {
+                    $(this).find('em:first').toggleClass("glyphicon-minus");
+                });
+                $(".sidebar span.icon").find('em:first').addClass("glyphicon-plus");
+            }(window.jQuery);
+
+        </script>	
+    </h:body>
+</html>
