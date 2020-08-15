@@ -56,12 +56,14 @@ and open the template in the editor.
 
                 <div  style="margin-top: 20px">          
                     <div class="form-group"> 
-                        <p:commandButton value="Adicionar" onclick="PF('dlg1_confirm').show();" class="btn btn-primary btn-space" />
+                        <p:commandButton value="Adicionar" actionListener="#{salaController.salvar()}" class="btn btn-primary btn-space" process="@form" update="@form" />
                     </div>
 
                     <p:dialog id="confirm" header="Confirmar cadastro?" widgetVar="dlg1_confirm" modal="true" minHeight="40" resizable="false" >
                         <div style="margin-top: 10px" class="form-group"> 
-                            <h:commandButton value="Confirmar" action="#{salaController.salvar()}" styleClass="btn btn-primary btn-space" />
+                            <h:commandButton value="Confirmar" action="#{salaController.salvar()}" styleClass="btn btn-primary btn-space"  >
+                                <f:ajax execute="@all" render="@all" />
+                            </h:commandButton>
                             <h:commandButton onclick="dlg1_confirm.hide()" value="Cancelar" class="btn btn-default btn-space" />                
                         </div>
                     </p:dialog>
@@ -121,7 +123,7 @@ and open the template in the editor.
                         </p:cellEditor>
                     </p:column>
                     
-                    <p:column headerText="Visível">
+                    <p:column headerText="Visível" width="5%">
                         <p:cellEditor >
                             <f:facet name="output">
                                 <p:selectBooleanCheckbox value="#{c.visivel}" disabled="true" itemLabel=""/>

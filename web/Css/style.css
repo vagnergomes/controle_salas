@@ -1093,27 +1093,66 @@ h1.page-header {
     background: blue;
     color: white;
 }
+.evento_azul_venc {
+    background: blue;
+    color: white;
+    opacity: 0.2;
+    
+}
 .evento_verde {
    background: green;
    color: white;
  }
- .evento_amarelo {
+.evento_verde_venc {
+   background: green;
+   color: white;
+   opacity: 0.2;
+ }
+.evento_amarelo {
     background: orange;
     color: white;
+}
+.evento_amarelo_venc {
+    background: orange;
+    color: white;
+    opacity: 0.2;
 }
 .evento_vermelho {
    background: red;
    color: white;
  }
+.evento_vermelho_venc {
+   background: red;
+   color: white;
+   opacity: 0.2;
+ }
 .evento_cinza  {
-    background: grey ; 
-    color: white;
+    background: red  ; 
+    color: #eee;
 }
-
+.evento_cinza_venc  {
+    background: red  ; 
+    color: #eee;
+    opacity: 0.2;
+}
 /*.fc-event-inner*/
 .evento_marrom {
     background-color: maroon;
     color: white;
+}
+.evento_marrom_venc {
+    background-color: maroon;
+    color: white;
+    opacity: 0.2;
+}
+.evento_branco {
+    background: white;
+    color: black;
+}
+.evento_branco_venc {
+    background: white;
+    color: black;
+    opacity: 0.2;
 }
 
 .ui-dialog.dialog-teste

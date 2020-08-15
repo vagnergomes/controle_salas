@@ -59,11 +59,11 @@
                         <img class="logo" src="#{request.contextPath}/Imagem/header-logo-terrena-svg.svg" alt="logo-terrena"  />
                     </a>
                     <span style="font-size: 20px; color: #FFF "></span> 
-                    <ul style="visibility: hidden;"  class="user-menu">
+                    <ul class="user-menu">
                         <h:form >
-                            <a style="margin-right: 20px;" href="#{request.contextPath}/Acesso/login/login.xhtml"  >Login</a>
+                            <a style="margin-right: 20px; visibility: hidden" href="#{request.contextPath}/Acesso/login/login.xhtml"  >Login</a>
                         </h:form>
-                        <h:form >
+                        <h:form style="margin-right: 20px; visibility: hidden" >
                             <li class="dropdown pull-right">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><svg class="glyph stroked male user"><use href="#stroked-male-user"/></svg> #{loginUsuarioController.usuario.pessoa.nome}<span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">

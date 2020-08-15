@@ -8,7 +8,10 @@ package br.com.controlesalas.controllers;
 import br.com.controlesalas.entities.Agendamento;
 import br.com.controlesalas.services.AgendamentoService;
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -18,6 +21,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.ScheduleEntryMoveEvent;
 import org.primefaces.event.ScheduleEntryResizeEvent;
 import org.primefaces.event.SelectEvent;
@@ -46,6 +50,8 @@ public class ScheduleController implements Serializable {
 
     private ScheduleEvent event = new DefaultScheduleEvent();
     
+    Date date = new Date();
+    
     public ScheduleController() {
         agendamento = new Agendamento();
 
@@ -54,6 +60,7 @@ public class ScheduleController implements Serializable {
     
     @PostConstruct
     public void init() {
+
         agendamentos = service.todos();
         eventos = new DefaultScheduleModel();
 
@@ -62,13 +69,20 @@ public class ScheduleController implements Serializable {
             String minuto = String.valueOf(e.getFim().getMinutes());
             String cor_sala = e.getSala().getCor();
             String desc = "";
+            boolean venc = false;
+            
             if (e.getFim().getHours() <= 9) {
                 hora = "0" + e.getFim().getHours();
             }
             if (e.getFim().getMinutes() <= 9) {
                 minuto = "0" + e.getFim().getMinutes();
             }
-
+            
+            //valida se evento venceu
+            if(e.getFim().before(date)){
+                venc = true;
+            }
+            
             if(e.getDescritivo().isAgua()){ desc = desc + "A";}
             if(e.getDescritivo().isCafe()){ desc = desc + "C";}
             if(e.getDescritivo().isFrutas()){ desc = desc + "F";}
@@ -78,7 +92,7 @@ public class ScheduleController implements Serializable {
                      e.getTitulo() + "-" + e.getDescritivo().getQtd_pessoas()+"P "+desc,
                      e.getInicio(),
                      e.getFim(),
-                     cor_evento(cor_sala));
+                     cor_evento(cor_sala, venc));
 
             //Passo o id do agendamento pelo getDescrition()
             ev.setDescription(String.valueOf(e.getIdAgendamento()));
@@ -97,25 +111,52 @@ public class ScheduleController implements Serializable {
         eventos = getEventos();
     }
     
-    public String cor_evento(String cor) {
-        if (cor.equals("orange")) {
-            return "evento_amarelo";
-        } else if (cor.equals("blue")) {
-            return "evento_azul";
-        } else if (cor.equals("maroon")) {
-            return "evento_marrom";
-        } else if (cor.equals("green")) {
-            return "evento_verde";
-        }else if (cor.equals("red")) {
-            return "evento_vermelho";
-        } else { 
-            return "evento_cinza";
+    public String cor_evento(String cor, boolean venc) {
+        if (!venc) {
+            if (cor.equals("orange")) {
+                return "evento_amarelo";
+            } else if (cor.equals("blue")) {
+                return "evento_azul";
+            } else if (cor.equals("maroon")) {
+                return "evento_marrom";
+            } else if (cor.equals("green")) {
+                return "evento_verde";
+            } else if (cor.equals("red")) {
+                return "evento_vermelho";
+            } else if (cor.equals("gray")) {
+                return "evento_cinza";
+            } else {
+                return "evento_branco";
+            }
+        }else{
+            if (cor.equals("orange")) {
+                return "evento_amarelo_venc";
+            } else if (cor.equals("blue")) {
+                return "evento_azul_venc";
+            } else if (cor.equals("maroon")) {
+                return "evento_marrom_venc";
+            } else if (cor.equals("green")) {
+                return "evento_verde_venc";
+            } else if (cor.equals("red")) {
+                return "evento_vermelho_venc";
+            } else if (cor.equals("gray")) {
+                return "evento_cinza_venc";
+            } else {
+                return "evento_branco_venc";
+            }
         }
+    }
+    
+    public void cleanAttributes(){
+        getSession().removeAttribute("idEventSelect");
     }
     
     public void onDateSelect(SelectEvent e) throws ParseException {
         getSession().removeAttribute("idEventSelect");
         getSession().setAttribute("dateSelect", e.getObject());
+        RequestContext context = RequestContext.getCurrentInstance();
+        context.execute("PF('dialogNovoEvento').show();");
+       
     }
 
     public void onEventSelect(SelectEvent e) {
@@ -123,6 +164,13 @@ public class ScheduleController implements Serializable {
         //pega o id do agendamento que foi lancado no getDescription
         getSession().removeAttribute("dateSelect");
         getSession().setAttribute("idEventSelect", event.getDescription());
+        RequestContext context = RequestContext.getCurrentInstance();
+        context.execute("PF('dialogNovoEvento').show();");
+//        if(event.getEndDate().after(date)){
+//            context.execute("PF('dialogNovoEvento').show();");
+//        }else{
+//            context.execute("PF('dialogDetalhesEvento').show();");
+//        }
     }
     
     public void onEventResize(ScheduleEntryResizeEvent e) {
@@ -185,6 +233,16 @@ public class ScheduleController implements Serializable {
     public void setEvent(ScheduleEvent event) {
         this.event = event;
     }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+    
+    
 
     public HttpSession getSession() {
         return (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);

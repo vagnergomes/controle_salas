@@ -4,8 +4,8 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:b="http://bootsfaces.net/ui">
+          
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <ui:composition template="../template.xhtml">
         <ui:define name="titulo"  >
@@ -14,7 +14,7 @@
         <ui:define name="conteudo">
             <h:form id="dashboard" >
                 <div class="col-md-12" style="margin-top: 5px">          
-                    <div class="form-group"> 
+                    <div style="margin-right: 20px; visibility: hidden" class="form-group"> 
                         <h:commandButton id="novoEvento" value="Agendar" class="btn btn-primary">
                             <p:ajax oncomplete="PF('dialogNovoEvento').show();" update=":dashboard:panelNovoEvento" />
                         </h:commandButton>
@@ -40,30 +40,90 @@
                                  value="#{agendamentoController.todos()}" 
                                  var="s"
                                  rowIndexVar="rowIx"
-                                 style="width: 100%; margin: 0 auto" 
+                                 style="width: 100%; margin: 0 auto; margin-bottom: 20px" 
                                  sortBy="#{s.inicio}"
-                                 sortOrder="descending" >
-                        <p:column headerText=" " styleClass="#{agendamentoController.cor_evento(s.sala.cor)}" style="width: 1%;"  />
-                        <p:column headerText="Sala/Local"  style="text-align:center; vertical-align: middle;">#{s.sala.nome_sala}</p:column>
-                        <p:column headerText="Titulo" style="text-align:center; vertical-align: middle;">#{s.titulo}</p:column>
-                        <p:column headerText="Início" style="text-align:center; vertical-align: middle;">
+                                 sortOrder="descending"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                                 paginator="true" 
+                                 rows="20">
+
+<!--                        <f:facet name="{Exporters}">
+                            <div style="float:right;padding-top: 5px;">
+                          
+                                <h:commandLink>
+                                    <p:graphicImage name="/Imagem/icons/export/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="table_agenda" fileName="agenda" />
+                                </h:commandLink>
+
+                               <h:commandLink>
+                                    <p:graphicImage name="/Imagem/icons/export/xlsx.png" width="24"/>
+                                    <p:dataExporter type="xlsxstream" target="table_agenda" fileName="agenda" />
+                                </h:commandLink>
+
+                                <h:commandLink>
+                                    <p:graphicImage name="/Imagem/icons/export/pdf.png" width="24"/>
+                                    <p:dataExporter type="pdf" target="table_agenda" fileName="agenda"/>
+                                </h:commandLink>
+
+                                <h:commandLink>
+                                    <p:graphicImage name="/Imagem/icons/export/csv.png" width="24"/>
+                                    <p:dataExporter type="csv" target="table_agenda" fileName="agenda" />
+                                </h:commandLink>
+
+                                <h:commandLink>
+                                    <p:graphicImage name="/Imagem/icons/export/xml.png" width="24"/>
+                                    <p:dataExporter type="xml" target="table_agenda" fileName="agenda" />
+                                </h:commandLink>
+
+                            </div>
+                        </f:facet>-->
+                        <p:column styleClass="#{agendamentoController.cor_evento(s.sala.cor)}" style="width: 1%;"  />
+                        <p:column  style="text-align:center; vertical-align: middle;">
+                            <f:facet name="header">
+                                <h:outputText value="Sala/Local" />
+                            </f:facet>
+                            <h:outputText value="#{s.sala.nome_sala}" />
+                        </p:column>
+                        <p:column style="text-align:center; vertical-align: middle;">
+                             <f:facet name="header">
+                                <h:outputText value="Título" />
+                            </f:facet>
+                            <h:outputText value="#{s.titulo}" />
+                        </p:column>
+                        <p:column style="text-align:center; vertical-align: middle;">
+                            <f:facet name="header">
+                                <h:outputText value="Início" />
+                            </f:facet>
                             <h:outputText value="#{s.inicio}" >
                                 <f:convertDateTime timeZone="GMT-3" pattern="dd/MM/yyyy HH:mm" />
                             </h:outputText>
                         </p:column>
                         <p:column headerText="Fim" style="text-align:center; vertical-align: middle;">
+                            <f:facet name="header">
+                                <h:outputText value="Fim" />
+                            </f:facet>
                             <h:outputText value="#{s.fim}">
                                 <f:convertDateTime timeZone="GMT-3" pattern="dd/MM/yyyy HH:mm" />
                             </h:outputText>
                         </p:column>
-                        <p:column headerText="QTD Pessoas" style="text-align:center; vertical-align: middle; width: 10%">#{s.descritivo.qtd_pessoas}</p:column>
-                        <p:column headerText="Adicionais" style="text-align:center; vertical-align: middle;">#{s.descritivo.agua? 'Água':''} #{s.descritivo.cafe? 'Café':''} #{s.descritivo.frutas? 'Frutas':''}</p:column>
-                        <p:column style="text-align:center; vertical-align: middle; width: 5%;">
+                        <p:column style="text-align:center; vertical-align: middle; width: 10%">
+                            <f:facet name="header">
+                                <h:outputText value="QTD Pessoa" />
+                            </f:facet>
+                            <h:outputText value="#{s.descritivo.qtd_pessoas}" />
+                        </p:column>
+                        <p:column style="text-align:center; vertical-align: middle;">
+                             <f:facet name="header">
+                                <h:outputText value="Adicionais" />
+                            </f:facet>
+                            <h:outputText value="#{s.descritivo.agua? 'Água':''} #{s.descritivo.cafe? 'Café':''} #{s.descritivo.frutas? 'Frutas':''}" />
+                        </p:column>
+<!--                        <p:column style="text-align:center; vertical-align: middle; width: 5%;">
                             <h:commandLink class="btn btn-default"  onclick="PF('dialogNovoEvento').show();" value="" >
                                 <h:graphicImage value="/Imagem/icons/editar.png" />
-                                <f:ajax event="click" listener="#{agendamentoController.editarPorDashboard(s)}" render=":dashboard:panelNovoEvento"/>
+                                <f:ajax event="click" listener="{agendamentoController.editarPorDashboard(s)}" render=":dashboard:panelNovoEvento"/>
                             </h:commandLink>
-                        </p:column>
+                        </p:column>-->
                         <p:column style="text-align:center; vertical-align: middle; width: 5%">
                             <h:commandLink class="btn btn-primary"  onclick="PF('dialogDetalhesEvento').show();" value="" >
                                 <h:graphicImage value="/Imagem/icons/lupa.png" />
@@ -71,7 +131,12 @@
                             </h:commandLink>
                         </p:column>
                     </p:dataTable>
+                 
+                    <p:commandButton value="Export Table as PDF" ajax="false" >
+                        <p:dataExporter type="xlsxstream" target="table_agenda" fileName="employees"/>
+                    </p:commandButton>
                 </div> 
+                
                 <p:dialog  widgetVar="dialogNovoEvento"  maximizable="false" header="Adicionar Evento" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true"   >
                     <h:panelGrid id="panelNovoEvento" columns="1" style="width: 300px;" >
                         <ui:include src="agendamento.xhtml" />

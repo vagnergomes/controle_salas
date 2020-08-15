@@ -48,11 +48,11 @@ and open the template in the editor.
         <h:panelGrid columns="2">  
             <h:panelGrid columns="1" >
                 <h:outputLabel value="Início" class="output-form required" />
-                <p:calendar id="time" timeZone="GMT-3" size="10" showOn="button" title="Horário" locale="pt" label="Horário" value="#{agendamentoController.agendamento.inicio}"  pattern="dd/MM/yyyy HH:mm" requiredMessage="Informe o horário inicial"  />
+                <p:calendar id="time" timeZone="GMT-3" size="12" showOn="button" title="Horário" locale="pt" label="Horário" value="#{agendamentoController.agendamento.inicio}"  pattern="dd/MM/yyyy HH:mm" requiredMessage="Informe o horário inicial"  />
             </h:panelGrid>
             <h:panelGrid columns="1" >
                 <h:outputLabel value="Fim (Opcional)" class="output-form" />
-                <p:calendar id="time2" timeZone="GMT-3" size="10" showOn="button" title="Horário" locale="pt" label="Horário" value="#{agendamentoController.agendamento.fim}"  pattern="dd/MM/yyyy HH:mm" requiredMessage="Informe o horário final"  />                       
+                <p:calendar id="time2" timeZone="GMT-3" size="12" showOn="button" title="Horário" locale="pt" label="Horário" value="#{agendamentoController.agendamento.fim}"  pattern="dd/MM/yyyy HH:mm" requiredMessage="Informe o horário final"  />                       
             </h:panelGrid>
         </h:panelGrid>
 

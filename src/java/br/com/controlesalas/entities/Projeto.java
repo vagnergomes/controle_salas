@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 /**
  *
@@ -31,6 +32,9 @@ public class Projeto implements Serializable {
      
     @Column
     private String logo_img;
+    
+    @ManyToOne
+    private Usuario usuario;
 
     public Long getIdProjeto() {
         return idProjeto;
@@ -62,6 +66,14 @@ public class Projeto implements Serializable {
 
     public void setLogo_img(String logo_img) {
         this.logo_img = logo_img;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     @Override

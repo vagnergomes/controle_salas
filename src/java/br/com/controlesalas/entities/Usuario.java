@@ -5,11 +5,13 @@
 package br.com.controlesalas.entities;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -27,13 +29,18 @@ public class Usuario implements Serializable {
     @Column(length = 45, nullable = false)
     private String usuario;
     
+    @Column(length = 50, nullable = false)
+    private String email;
+    
     @Column(length = 45, nullable = false)
     private String senha;
     
     @Column(nullable = false)
     private String perfil;
-   
 
+    @OneToMany(mappedBy = "Usuario")
+    private List<Projeto> projetos;
+    
     // GET SET
     public Long getIdUsuario() {
         return IdUsuario;
@@ -51,6 +58,14 @@ public class Usuario implements Serializable {
         this.usuario = usuario;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getSenha() {
         return senha;
     }
@@ -65,6 +80,14 @@ public class Usuario implements Serializable {
 
     public void setPerfil(String perfil) {
         this.perfil = perfil;
+    }
+
+    public List<Projeto> getProjetos() {
+        return projetos;
+    }
+
+    public void setProjetos(List<Projeto> projetos) {
+        this.projetos = projetos;
     }
 
     //HASH EQUAlS
