@@ -8,7 +8,8 @@ and open the template in the editor.
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
-
+    <h:form>
+        <h:panelGrid>
         <p:messages id="messages" showDetail="true" closable="true" /> 
         <h:outputLabel value="Local/Sala" class="output-form required"  />                
         <p:selectOneMenu 
@@ -16,10 +17,10 @@ and open the template in the editor.
             value="#{agendamentoController.agendamento.sala}"
             converter="salaConverter"
             class="input"
-            required="true"
-            requiredMessage="Informe o Local/Sala"
+            required="true" 
             style="width: 25%; min-width: 250px; float: left; font-weight:bold;">
-
+            <!-- necessário deixa o required, gero erro ViewEpired-->
+            
             <f:selectItem
                 itemLabel="Selecione o Local/Sala"
                 itemValue="" />
@@ -32,8 +33,9 @@ and open the template in the editor.
                 />
         </p:selectOneMenu>
 
+
         <h:outputLabel value="Título" class="output-form required" />
-        <h:inputText label="titulo" value="#{agendamentoController.agendamento.titulo}" styleClass="form-control input"  requiredMessage="Informe o Título" required="true"/>                  
+        <h:inputText label="titulo" value="#{agendamentoController.agendamento.titulo}" styleClass="form-control input"  />                  
 
         <h:panelGrid columns="1">
             <h:outputLabel  value="Quantidade pessoas: " class="output-form" />
@@ -60,6 +62,7 @@ and open the template in the editor.
         <p:inputTextarea rows="2" cols="40" value="#{agendamentoController.agendamento.descritivo.adicional}" counter="display" maxlength="100" counterTemplate="{0} caracteres restantes." autoResize="false" />
         <h:outputText id="display" />
 
+        </h:panelGrid>
         <div class="col-md-12 " style="margin-top: 0px">          
             <h:panelGrid columns="2" >
                 <h:commandButton value="Agendar" action="#{agendamentoController.salvar()}"  styleClass="btn btn-primary btn-space" >
@@ -70,4 +73,6 @@ and open the template in the editor.
                 </h:commandButton>
             </h:panelGrid>
         </div>
+        
+    </h:form>
 </html>

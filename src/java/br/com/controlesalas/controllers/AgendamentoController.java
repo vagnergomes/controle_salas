@@ -16,14 +16,10 @@ import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
-import javax.faces.application.Application;
-import javax.faces.application.ViewHandler;
-import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
-import org.primefaces.context.RequestContext;
 import org.primefaces.model.LazyScheduleModel;
 import org.primefaces.model.ScheduleModel;
 
@@ -34,52 +30,74 @@ import org.primefaces.model.ScheduleModel;
 @Named
 @RequestScoped
 public class AgendamentoController implements Serializable {
-    
+
     @Inject
     private AgendamentoService service;
-    
+
     private Agendamento agendamento;
     private List<Agendamento> agendamentos;
-    
+
     private ScheduleModel eventos;
     private LazyScheduleModel lazyEventModel;
-    
+
     @PostConstruct
-    public void init(){
-         agendamentos = service.todos();  
-         agendamento = new Agendamento();
-         iniciaObjeto();         
+    public void init() {
+        agendamentos = service.todos();
+        agendamento = new Agendamento();
+        iniciaObjeto();
     }
-    
-    public void salvar(){
-        String erro =  service.salvar(agendamento);
-        if(erro == null){
-            agendamento = new Agendamento();
-            agendamento.setDescritivo(new Descritivo());
-            MensagemUtil.addMensagemInfo("Salvo.");
+
+    public void salvar() {
+        System.out.println("-----1: " + agendamento.getSala());
+        System.out.println("-----2: " + agendamento.getSala().getNome_sala());
+        if(agendamento.getSala() == null){
+            MensagemUtil.addMensagemError("Erro1: os campos obrigatórios deve ser preenchidos.");   
         }else{
-            MensagemUtil.addMensagemError(erro);
+        if (agendamento.getTitulo().isEmpty()) {
+            MensagemUtil.addMensagemError("Erro: os campos obrigatórios deve ser preenchidos.");
+        } else {
+            if (agendamento.getFim().before(agendamento.getInicio())) {
+                MensagemUtil.addMensagemError("Erro: a data final deve ser maior que a data inicial.");
+            } else {
+                String erro = service.salvar(agendamento);
+                if (erro == null) {
+                    agendamento = new Agendamento();
+                    agendamento.setDescritivo(new Descritivo());
+
+                    //RequestContext context = RequestContext.getCurrentInstance();
+//            context.execute("PF('dialogNovoEvento').hide();");
+                    MensagemUtil.addMensagemInfo("Evento salvo.");
+                } else {
+                    MensagemUtil.addMensagemError(erro);
+                }
+            }
         }
+        }
+
     }
-    
+
     //ainda nao funciona para dashboard
-     public void editarPorDashboard(Agendamento a){
+    public void editarPorDashboard(Agendamento a) {
         agendamento = service.obter(a.getIdAgendamento());
     }
-    
-    public void excluir(){
+
+    public void excluir() {
+        if(!agendamento.getTitulo().isEmpty()){
         String erro = service.excluir(agendamento.getIdAgendamento());
-        
-        if(erro == null){
-           MensagemUtil.addMensagemInfo("Excluído."); 
-           agendamento = new Agendamento();
-           agendamento.setDescritivo(new Descritivo());
-        }else{
+
+        if (erro == null) {
+            MensagemUtil.addMensagemInfo("Excluído.");
+            agendamento = new Agendamento();
+            agendamento.setDescritivo(new Descritivo());
+        } else {
             MensagemUtil.addMensagemError(erro);
+        }
+        }else{
+            
         }
     }
 
-     public String cor_evento(String cor) {
+    public String cor_evento(String cor) {
         if (cor.equals("orange")) {
             return "evento_amarelo";
         } else if (cor.equals("blue")) {
@@ -88,23 +106,23 @@ public class AgendamentoController implements Serializable {
             return "evento_marrom";
         } else if (cor.equals("green")) {
             return "evento_verde";
-        }else if (cor.equals("red")) {
+        } else if (cor.equals("red")) {
             return "evento_vermelho";
-        } else { 
+        } else {
             return "evento_cinza";
         }
     }
-    
-   public static Long convertToLong(Object o){
+
+    public static Long convertToLong(Object o) {
         String stringToConvert = String.valueOf(o);
         Long convertedLong = Long.parseLong(stringToConvert);
         return convertedLong;
     }
-    
-    public List<Agendamento> todos(){
+
+    public List<Agendamento> todos() {
         return service.todos();
     }
-    
+
     public void iniciaObjeto() {
         //aqui comeca a recuperar objeto da sessao 
         Object idEvent = getSession().getAttribute("idEventSelect");
@@ -122,13 +140,13 @@ public class AgendamentoController implements Serializable {
 
         } else if (dateSelect == null && idEvent != null) {
             agendamento = service.obter(convertToLong(idEvent));
-            
+
         } else {
             agendamento = new Agendamento();
             agendamento.setDescritivo(new Descritivo());
         }
     }
-    
+
     public Agendamento getAgendamento() {
         return agendamento;
     }
@@ -144,6 +162,8 @@ public class AgendamentoController implements Serializable {
     public void setAgendamentos(List<Agendamento> agendamentos) {
         this.agendamentos = agendamentos;
     }
+
+    
 
     /*--------Schedule---------*/
     public ScheduleModel getEventos() {
@@ -165,5 +185,5 @@ public class AgendamentoController implements Serializable {
     public HttpSession getSession() {
         return (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
     }
-    
+
 }
