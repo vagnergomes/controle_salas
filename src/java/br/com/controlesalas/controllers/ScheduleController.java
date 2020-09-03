@@ -8,14 +8,10 @@ package br.com.controlesalas.controllers;
 import br.com.controlesalas.entities.Agendamento;
 import br.com.controlesalas.services.AgendamentoService;
 import java.io.Serializable;
-import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.ejb.Schedule;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -79,6 +75,7 @@ public class ScheduleController implements Serializable {
             }
             
             //valida se evento venceu
+            
             if(e.getFim().before(date)){
                 venc = true;
             }
@@ -86,6 +83,7 @@ public class ScheduleController implements Serializable {
             if(e.getDescritivo().isAgua()){ desc = desc + "A";}
             if(e.getDescritivo().isCafe()){ desc = desc + "C";}
             if(e.getDescritivo().isFrutas()){ desc = desc + "F";}
+            if(e.getDescritivo().isLanche()){ desc = desc + "L";}
             
             //Passo um metodo para definir o estilo da caixa do evento
             DefaultScheduleEvent ev = new DefaultScheduleEvent(
@@ -242,8 +240,6 @@ public class ScheduleController implements Serializable {
         this.date = date;
     }
     
-    
-
     public HttpSession getSession() {
         return (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
     }

@@ -115,13 +115,13 @@
                     </p:panel>
                 </p:dialog>
 
-                <p:dialog widgetVar="dialogNovoEvento"  maximizable="false" header="Adicionar Evento" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true"  >
+                <p:dialog widgetVar="dialogNovoEvento" maximizable="false" header="Evento" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true"  >
                     <h:panelGrid id="panelNovoEvento" columns="1" style="width: 320px;" >
                         <ui:include src="agendamento.xhtml" />
                     </h:panelGrid>
                 </p:dialog>
 
-                <p:dialog  widgetVar="dialogDetalhesEvento"  maximizable="false" header="Detalhes" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true"   >
+                <p:dialog  widgetVar="dialogDetalhesEvento" maximizable="false" header="Detalhes" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true"   >
                     <h:panelGrid id="panelDetalhesEvento" columns="1" style="width: 300px;" >
                         <h:panelGrid columns="2" > 
                             <h:outputLabel value="Título: " />
@@ -148,6 +148,7 @@
                                 <h:outputLabel style="font-weight: 100" value="#{agendamentoController.agendamento.descritivo.agua? 'Água':''}" />
                                 <h:outputLabel style="font-weight: 100" value="#{agendamentoController.agendamento.descritivo.cafe? 'Café':''}" />
                                 <h:outputLabel style="font-weight: 100" value="#{agendamentoController.agendamento.descritivo.frutas? 'Frutas':''}" />
+                                <h:outputLabel style="font-weight: 100" value="#{agendamentoController.agendamento.descritivo.lanche? 'Lanche':''}" />
                             </h:panelGrid>
 
                             <h:outputLabel value="Observação: " />

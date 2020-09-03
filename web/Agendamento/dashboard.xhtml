@@ -4,7 +4,7 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui"
-          
+
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <ui:composition template="../template.xhtml">
@@ -16,12 +16,26 @@
                 <div class="col-md-12" style="margin-top: 5px">          
                     <div style="margin-right: 20px; visibility: hidden" class="form-group"> 
                         <h:commandButton id="novoEvento" value="Agendar" class="btn btn-primary">
-                            <p:ajax oncomplete="PF('dialogNovoEvento').show();" update=":dashboard:panelNovoEvento" />
+                            <!--<p:ajax oncomplete="PF('dialogNovoEvento').show();" update=":dashboard:panelNovoEvento" />-->
                         </h:commandButton>
                     </div>
                 </div>
 
                 <div id="teste" class="row" style="margin-top: 0px;">
+
+                    <h:panelGrid columns="1" >
+                        <h:outputLabel value="Início" class="output-form required" />
+                        <h:panelGrid columns="2" >
+                            <p:calendar id="time" disabledWeekends="true"  timeZone="GMT-3" size="12" showOn="button" title="Horário" locale="pt" label="Horário" value="#{agendamentoViewController.data_inicio}"  pattern="dd/MM/yyyy HH:mm" requiredMessage="Informe o horário inicial"  />
+
+                            <h:commandButton id="te" class="btn btn-primary"  value="pesquisar" actionListener="#{agendamentoViewController.buscarAgendamentos()}" style="margin-left: 5px;"  >
+                                <f:ajax execute="time, @all" render="dashboard:table_agenda"  />
+                            </h:commandButton>
+
+                        </h:panelGrid>
+                    </h:panelGrid>
+
+
                     <center>
                         <table border="0" width="50%">
                             <tr style="width: 5%" >
@@ -35,149 +49,191 @@
                             </tr>
                         </table>
                     </center>
-                    <p:dataTable id="table_agenda"
-                                 widgetVar="w_table_agenda"
-                                 value="#{agendamentoController.todos()}" 
-                                 var="s"
-                                 rowIndexVar="rowIx"
-                                 style="width: 100%; margin: 0 auto; margin-bottom: 20px" 
-                                 sortBy="#{s.inicio}"
-                                 sortOrder="descending"
-                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
-                                 paginator="true" 
-                                 rows="20">
+                    <h:form >
+                        <h:commandButton style="float:right; margin-right: 10px; margin-bottom: 5px;" image="/Imagem/icons/export/pdf.png"
+                                         onclick="this.form.target = '_blank'" 
+                                         action="#{agendamentoViewController.relatorioAgendamentos('pdf')}" />
+                    </h:form>
+                    <p:scrollPanel  mode="native" style="width:100%;height:800px">
+                        <p:dataTable id="table_agenda"
+                                     widgetVar="w_table_agenda"
+                                     value="#{agendamentoViewController.agendamentos}" 
+                                     var="s"
+                                     rowIndexVar="rowIx"
+                                     style="width: 100%; margin: 0 auto; margin-bottom: 20px" 
+                                     sortBy="#{s.inicio}"
+                                     sortOrder="descending"
+                                     emptyMessage="Nenhum registro foi encontrado.">
 
-<!--                        <f:facet name="{Exporters}">
-                            <div style="float:right;padding-top: 5px;">
-                          
-                                <h:commandLink>
-                                    <p:graphicImage name="/Imagem/icons/export/excel.png" width="24"/>
-                                    <p:dataExporter type="xls" target="table_agenda" fileName="agenda" />
+                            <!--<p:column style="width: 5%;">{s.idAgendamento} </p:column>-->
+                            <p:column styleClass="#{agendamentoViewController.cor_evento(s.sala.cor)}" style="width: 1%;"  />
+                            <p:column headerText="Sala/Local" style="text-align:center; vertical-align: middle;">
+                                <h:outputText value="#{s.sala.nome_sala}" />
+                            </p:column>
+                            <p:column headerText="Título" style="text-align:center; vertical-align: middle;">
+                                <h:outputText value="#{s.titulo}" />
+                            </p:column>
+                            <p:column headerText="Início" style="text-align:center; vertical-align: middle;">
+                                <h:outputText value="#{s.inicio}" >
+                                    <f:convertDateTime timeZone="GMT-3" pattern="dd/MM/yyyy HH:mm" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Fim" style="text-align:center; vertical-align: middle;">
+                                <h:outputText value="#{s.fim}">
+                                    <f:convertDateTime timeZone="GMT-3" pattern="dd/MM/yyyy HH:mm" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column style="text-align:center; vertical-align: middle; width: 10%">
+                                <f:facet name="header">
+                                    <h:outputText value="QTD Pessoas" />
+                                </f:facet>
+                                <h:outputText value="#{s.descritivo.qtd_pessoas}" />
+                            </p:column>
+                            <p:column headerText="Adicionais" style="text-align:center; vertical-align: middle;">
+                                <h:outputText value="#{s.descritivo.agua? 'Água':''} #{s.descritivo.cafe? 'Café':''} #{s.descritivo.frutas? 'Frutas':''} #{s.descritivo.lanche? 'Lanche':''}" />
+                            </p:column>
+                            <p:column width="4%">
+                                <h:commandLink class="btn btn-default"  onclick="PF('dlg_novo_evento').show();" value="" >
+                                    <h:graphicImage value="/Imagem/icons/editar.png" />
+                                    <p:ajax event="click" listener="#{agendamentoViewController.selecionar(s)}" update=":formNovoEvento" process="@this"/>
                                 </h:commandLink>
-
-                               <h:commandLink>
-                                    <p:graphicImage name="/Imagem/icons/export/xlsx.png" width="24"/>
-                                    <p:dataExporter type="xlsxstream" target="table_agenda" fileName="agenda" />
+                            </p:column>
+                            <p:column headerText="" width="4%">
+                                <h:commandLink id="excluir" disabled="false" class="btn btn-primary" onclick="PF('dlg1_confirm').show();" value="" >
+                                    <h:graphicImage value="/Imagem/icons/excluir.png" />
+                                    <p:ajax event="click" listener="#{agendamentoViewController.selecionar(s)}"  update=":formConfirm" process="@this" />
                                 </h:commandLink>
-
-                                <h:commandLink>
-                                    <p:graphicImage name="/Imagem/icons/export/pdf.png" width="24"/>
-                                    <p:dataExporter type="pdf" target="table_agenda" fileName="agenda"/>
+                            </p:column>
+                            <p:column width="4%" >
+                                <h:commandLink id="submit" disabled="false" class="btn btn-primary"  onclick="PF('dlg_detalhes_evento').show();" value="" >
+                                    <h:graphicImage value="/Imagem/icons/lupa.png" />
+                                    <p:ajax event="click" listener="#{agendamentoViewController.selecionar(s)}" update=":formDetalheEvento" process="@this" />
                                 </h:commandLink>
+                            </p:column>
 
-                                <h:commandLink>
-                                    <p:graphicImage name="/Imagem/icons/export/csv.png" width="24"/>
-                                    <p:dataExporter type="csv" target="table_agenda" fileName="agenda" />
-                                </h:commandLink>
+                        </p:dataTable>
+                    </p:scrollPanel>
 
-                                <h:commandLink>
-                                    <p:graphicImage name="/Imagem/icons/export/xml.png" width="24"/>
-                                    <p:dataExporter type="xml" target="table_agenda" fileName="agenda" />
-                                </h:commandLink>
-
-                            </div>
-                        </f:facet>-->
-                        <p:column styleClass="#{agendamentoController.cor_evento(s.sala.cor)}" style="width: 1%;"  />
-                        <p:column  style="text-align:center; vertical-align: middle;">
-                            <f:facet name="header">
-                                <h:outputText value="Sala/Local" />
-                            </f:facet>
-                            <h:outputText value="#{s.sala.nome_sala}" />
-                        </p:column>
-                        <p:column style="text-align:center; vertical-align: middle;">
-                             <f:facet name="header">
-                                <h:outputText value="Título" />
-                            </f:facet>
-                            <h:outputText value="#{s.titulo}" />
-                        </p:column>
-                        <p:column style="text-align:center; vertical-align: middle;">
-                            <f:facet name="header">
-                                <h:outputText value="Início" />
-                            </f:facet>
-                            <h:outputText value="#{s.inicio}" >
-                                <f:convertDateTime timeZone="GMT-3" pattern="dd/MM/yyyy HH:mm" />
-                            </h:outputText>
-                        </p:column>
-                        <p:column headerText="Fim" style="text-align:center; vertical-align: middle;">
-                            <f:facet name="header">
-                                <h:outputText value="Fim" />
-                            </f:facet>
-                            <h:outputText value="#{s.fim}">
-                                <f:convertDateTime timeZone="GMT-3" pattern="dd/MM/yyyy HH:mm" />
-                            </h:outputText>
-                        </p:column>
-                        <p:column style="text-align:center; vertical-align: middle; width: 10%">
-                            <f:facet name="header">
-                                <h:outputText value="QTD Pessoa" />
-                            </f:facet>
-                            <h:outputText value="#{s.descritivo.qtd_pessoas}" />
-                        </p:column>
-                        <p:column style="text-align:center; vertical-align: middle;">
-                             <f:facet name="header">
-                                <h:outputText value="Adicionais" />
-                            </f:facet>
-                            <h:outputText value="#{s.descritivo.agua? 'Água':''} #{s.descritivo.cafe? 'Café':''} #{s.descritivo.frutas? 'Frutas':''}" />
-                        </p:column>
-<!--                        <p:column style="text-align:center; vertical-align: middle; width: 5%;">
-                            <h:commandLink class="btn btn-default"  onclick="PF('dialogNovoEvento').show();" value="" >
-                                <h:graphicImage value="/Imagem/icons/editar.png" />
-                                <f:ajax event="click" listener="{agendamentoController.editarPorDashboard(s)}" render=":dashboard:panelNovoEvento"/>
-                            </h:commandLink>
-                        </p:column>-->
-                        <p:column style="text-align:center; vertical-align: middle; width: 5%">
-                            <h:commandLink class="btn btn-primary"  onclick="PF('dialogDetalhesEvento').show();" value="" >
-                                <h:graphicImage value="/Imagem/icons/lupa.png" />
-                                <f:ajax event="click" listener="#{agendamentoController.editarPorDashboard(s)}" render=":dashboard:panelDetalhesEvento" />
-                            </h:commandLink>
-                        </p:column>
-                    </p:dataTable>
-                 
-                    <p:commandButton value="Export Table as PDF" ajax="false" >
-                        <p:dataExporter type="xlsxstream" target="table_agenda" fileName="employees"/>
-                    </p:commandButton>
-                </div> 
-                
-                <p:dialog  widgetVar="dialogNovoEvento"  maximizable="false" header="Adicionar Evento" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true"   >
-                    <h:panelGrid id="panelNovoEvento" columns="1" style="width: 300px;" >
-                        <ui:include src="agendamento.xhtml" />
-                    </h:panelGrid>
-                </p:dialog>
-
-                <p:dialog  widgetVar="dialogDetalhesEvento"  maximizable="false" header="Detalhes" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true"   >
-                    <h:panelGrid id="panelDetalhesEvento" columns="1" style="width: 300px;" >
-                        <h:panelGrid columns="2" > 
-                            <h:outputLabel value="Título: " />
-                            <h:outputLabel style="font-weight: 100" value="#{agendamentoController.agendamento.titulo}" /> 
-
-                            <h:outputLabel value="Sala/Local: " />
-                            <h:outputLabel style="font-weight: 100" value="#{agendamentoController.agendamento.sala.nome_sala}" /> 
-
-                            <h:outputLabel value="Início: " />
-                            <h:outputLabel style="font-weight: 100" value="#{agendamentoController.agendamento.inicio}" >
-                                <f:convertDateTime timeZone="GMT-3" pattern="dd/MM/yyyy HH:mm" />
-                            </h:outputLabel>
-
-                            <h:outputLabel value="Fim: " />
-                            <h:outputLabel style="font-weight: 100" value="#{agendamentoController.agendamento.fim}" >
-                                <f:convertDateTime timeZone="GMT-3" pattern="dd/MM/yyyy HH:mm" />
-                            </h:outputLabel>
-
-                            <h:outputLabel value="QTD: " />
-                            <h:outputLabel style="font-weight: 100" value="#{agendamentoController.agendamento.descritivo.qtd_pessoas}" /> 
-
-                            <h:outputLabel value="Adicionais: " />
-                            <h:panelGrid columns="1">
-                                <h:outputLabel style="font-weight: 100" value="#{agendamentoController.agendamento.descritivo.agua? 'Água':''}" />
-                                <h:outputLabel style="font-weight: 100" value="#{agendamentoController.agendamento.descritivo.cafe? 'Café':''}" />
-                                <h:outputLabel style="font-weight: 100" value="#{agendamentoController.agendamento.descritivo.frutas? 'Frutas':''}" />
-                            </h:panelGrid>
-
-                            <h:outputLabel value="Observação: " />
-                            <h:outputLabel style="font-weight: 100" value="#{agendamentoController.agendamento.descritivo.adicional}" />
-                        </h:panelGrid>
-                    </h:panelGrid>
-                </p:dialog>
+                </div>
             </h:form>
+
+            <p:dialog id="confirm" header="Confirmar exclusão" widgetVar="dlg1_confirm" modal="true" minHeight="40" resizable="false" >
+                <h:form id="formConfirm" >
+                    <div style="margin-top: 10px" class="form-group"> 
+                        <h:commandButton value="Excluir" action="#{agendamentoViewController.excluir()}" styleClass="btn btn-primary btn-space" />
+                        <h:commandButton onclick="dlg1_confirm.hide()" value="Cancelar" class="btn btn-default btn-space" />                
+                    </div>
+                </h:form>
+            </p:dialog>  
+
+            <p:dialog  widgetVar="dlg_novo_evento"  maximizable="false" header="Evento" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true"   >
+                <h:form id="formNovoEvento">
+                    <h:panelGrid id="panelNovoEvento">
+                        <h:inputHidden value="#{agendamentoViewController.agendamento.idAgendamento}" />
+                        <p:messages id="messages" showDetail="true" closable="true" /> 
+                        <h:outputLabel value="Local/Sala" class="output-form required"  />                
+                        <p:selectOneMenu 
+                            id="idperfil"
+                            value="#{agendamentoViewController.agendamento.sala}"
+                            converter="salaConverter"
+                            class="input"
+                            required="true" 
+                            style="width: 25%; min-width: 250px; float: left; font-weight:bold;">
+                            <!-- necessário deixa o required, gero erro ViewEpired-->
+
+                            <f:selectItem
+                                itemLabel="Selecione o Local/Sala"
+                                itemValue="" />
+
+                            <f:selectItems
+                                value="#{salaController.salas}"
+                                var="s"
+                                itemLabel="#{s.nome_sala} "
+                                itemValue="#{s}"
+                                />
+                        </p:selectOneMenu>
+
+
+                        <h:outputLabel value="Título" class="output-form required" />
+                        <h:inputText label="titulo" value="#{agendamentoViewController.agendamento.titulo}" styleClass="form-control input"  />                  
+
+                        <h:panelGrid columns="1">
+                            <h:outputLabel  value="Quantidade pessoas: " class="output-form" />
+                            <p:spinner id="qtd_pessoas" value="#{agendamentoViewController.agendamento.descritivo.qtd_pessoas}" requiredMessage="Informe a quantidade pessoas." rendered="true" />
+                        </h:panelGrid>
+
+                        <h:outputLabel  value="Adicinais: " class="output-form" />
+                        <p:selectBooleanCheckbox value="#{agendamentoViewController.agendamento.descritivo.agua}" itemLabel="Água"/>
+                        <p:selectBooleanCheckbox value="#{agendamentoViewController.agendamento.descritivo.cafe}" itemLabel="Café"/>
+                        <p:selectBooleanCheckbox value="#{agendamentoViewController.agendamento.descritivo.frutas}" itemLabel="Frutas"/>
+                        <p:selectBooleanCheckbox value="#{agendamentoViewController.agendamento.descritivo.lanche}" itemLabel="Lanche"/>
+
+                        <h:panelGrid columns="2">  
+                            <h:panelGrid columns="1" >
+                                <h:outputLabel value="Início" class="output-form required" />
+                                <p:calendar id="time" disabledWeekends="true"  timeZone="GMT-3" size="12" showOn="button" title="Horário" locale="pt" label="Horário" value="#{agendamentoViewController.agendamento.inicio}"  pattern="dd/MM/yyyy HH:mm" requiredMessage="Informe o horário inicial"  />
+                            </h:panelGrid>
+                            <h:panelGrid columns="1" >
+                                <h:outputLabel value="Fim (Opcional)" class="output-form" />
+                                <p:calendar id="time2" disabledWeekends="true"  timeZone="GMT-3" size="12" showOn="button" title="Horário" locale="pt" label="Horário" value="#{agendamentoViewController.agendamento.fim}"  pattern="dd/MM/yyyy HH:mm" requiredMessage="Informe o horário final"  />                       
+                            </h:panelGrid>
+                        </h:panelGrid>
+
+                        <h:outputLabel  value="Descrição: " class="output-form" />
+                        <p:inputTextarea rows="2" cols="40" value="#{agendamentoViewController.agendamento.descritivo.adicional}" counter="display" maxlength="100" counterTemplate="{0} caracteres restantes." autoResize="false" />
+                        <h:outputText id="display" />
+
+                    </h:panelGrid>
+                    <div class="col-md-12 " style="margin-top: 10px">          
+                        <h:panelGrid columns="2" >
+                            <h:commandButton value="Agendar" action="#{agendamentoViewController.salvar()}"  styleClass="btn btn-primary btn-space" >
+                                <f:ajax execute="@all" render="@all" />
+                            </h:commandButton>
+                            <h:commandButton value="Cancelar" class="btn btn-default btn-space"  >
+                                <f:ajax execute="@all" render="@all" />
+                            </h:commandButton>
+                        </h:panelGrid>
+                    </div>
+
+                </h:form>
+            </p:dialog>
+
+            <p:dialog id="detalheEvento" widgetVar="dlg_detalhes_evento"  maximizable="false" header="Detalhes" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true"   >
+                <h:form id="formDetalheEvento" >
+                    <h:panelGrid id="panelDetalhesEvento" columns="2" style="width: 300px;"  >
+                        <h:outputLabel value="Título: " />
+                        <h:outputLabel style="font-weight: 100" value="#{agendamentoViewController.agendamento.titulo}" /> 
+
+                        <h:outputLabel value="Sala/Local: " />
+                        <h:outputLabel style="font-weight: 100" value="#{agendamentoViewController.agendamento.sala.nome_sala}" /> 
+
+                        <h:outputLabel value="Início: " />
+                        <h:outputLabel style="font-weight: 100" value="#{agendamentoViewController.agendamento.inicio}" >
+                            <f:convertDateTime timeZone="GMT-3" pattern="dd/MM/yyyy HH:mm" />
+                        </h:outputLabel>
+
+                        <h:outputLabel value="Fim: " />
+                        <h:outputLabel style="font-weight: 100" value="#{agendamentoViewController.agendamento.fim}" >
+                            <f:convertDateTime timeZone="GMT-3" pattern="dd/MM/yyyy HH:mm" />
+                        </h:outputLabel>
+
+                        <h:outputLabel value="QTD: " />
+                        <h:outputLabel style="font-weight: 100" value="#{agendamentoViewController.agendamento.descritivo.qtd_pessoas}" /> 
+
+                        <h:outputLabel value="Adicionais: " />
+                        <h:panelGrid columns="1">
+                            <p:selectBooleanCheckbox value="#{agendamentoViewController.agendamento.descritivo.agua}" itemLabel="Água" disabled="true"/>
+                            <p:selectBooleanCheckbox value="#{agendamentoViewController.agendamento.descritivo.cafe}" itemLabel="Café" disabled="true"/>
+                            <p:selectBooleanCheckbox value="#{agendamentoViewController.agendamento.descritivo.frutas}" itemLabel="Frutas" disabled="true"/>
+                            <p:selectBooleanCheckbox value="#{agendamentoViewController.agendamento.descritivo.lanche}" itemLabel="Lanche" disabled="true"/>
+                        </h:panelGrid>
+
+                        <h:outputLabel value="Observação: " />
+                        <h:outputLabel style="font-weight: 100" value="#{agendamentoViewController.agendamento.descritivo.adicional}" />
+                    </h:panelGrid>
+                </h:form>
+            </p:dialog>
+
         </ui:define>      
     </ui:composition>
 </html>

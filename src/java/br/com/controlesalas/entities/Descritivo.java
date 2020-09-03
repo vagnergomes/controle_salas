@@ -36,6 +36,9 @@ public class Descritivo implements Serializable {
     private boolean frutas;
     
     @Column
+    private boolean lanche;
+    
+    @Column
     private String adicional;
 
     public Long getIdDescritivo() {
@@ -76,6 +79,14 @@ public class Descritivo implements Serializable {
 
     public void setFrutas(boolean frutas) {
         this.frutas = frutas;
+    }
+
+    public boolean isLanche() {
+        return lanche;
+    }
+
+    public void setLanche(boolean lanche) {
+        this.lanche = lanche;
     }
 
     public String getAdicional() {

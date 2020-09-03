@@ -38,8 +38,8 @@ public class Usuario implements Serializable {
     @Column(nullable = false)
     private String perfil;
 
-    @OneToMany(mappedBy = "Usuario")
-    private List<Projeto> projetos;
+//    @OneToMany(mappedBy = "Usuario")
+//    private List<Organizacao> organizacao;
     
     // GET SET
     public Long getIdUsuario() {
@@ -82,13 +82,13 @@ public class Usuario implements Serializable {
         this.perfil = perfil;
     }
 
-    public List<Projeto> getProjetos() {
-        return projetos;
-    }
-
-    public void setProjetos(List<Projeto> projetos) {
-        this.projetos = projetos;
-    }
+//    public List<Organizacao> getOrganizacao() {
+//        return organizacao;
+//    }
+//
+//    public void setOrganizacao(List<Organizacao> organizacao) {
+//        this.organizacao = organizacao;
+//    }
 
     //HASH EQUAlS
     @Override

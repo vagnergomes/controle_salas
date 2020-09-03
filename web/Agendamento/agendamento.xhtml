@@ -10,6 +10,7 @@ and open the template in the editor.
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:form>
         <h:panelGrid>
+        <h:inputHidden value="#{agendamentoController.agendamento.idAgendamento}" />
         <p:messages id="messages" showDetail="true" closable="true" /> 
         <h:outputLabel value="Local/Sala" class="output-form required"  />                
         <p:selectOneMenu 
@@ -46,15 +47,16 @@ and open the template in the editor.
         <p:selectBooleanCheckbox value="#{agendamentoController.agendamento.descritivo.agua}" itemLabel="Água"/>
         <p:selectBooleanCheckbox value="#{agendamentoController.agendamento.descritivo.cafe}" itemLabel="Café"/>
         <p:selectBooleanCheckbox value="#{agendamentoController.agendamento.descritivo.frutas}" itemLabel="Frutas"/>
+        <p:selectBooleanCheckbox value="#{agendamentoController.agendamento.descritivo.lanche}" itemLabel="Lanche"/>
 
         <h:panelGrid columns="2">  
             <h:panelGrid columns="1" >
                 <h:outputLabel value="Início" class="output-form required" />
-                <p:calendar id="time" timeZone="GMT-3" size="12" showOn="button" title="Horário" locale="pt" label="Horário" value="#{agendamentoController.agendamento.inicio}"  pattern="dd/MM/yyyy HH:mm" requiredMessage="Informe o horário inicial"  />
+                <p:calendar id="time" disabledWeekends="true"  timeZone="GMT-3" size="12" showOn="button" title="Horário" locale="pt" label="Horário" value="#{agendamentoController.agendamento.inicio}"  pattern="dd/MM/yyyy HH:mm" requiredMessage="Informe o horário inicial"  />
             </h:panelGrid>
             <h:panelGrid columns="1" >
                 <h:outputLabel value="Fim (Opcional)" class="output-form" />
-                <p:calendar id="time2" timeZone="GMT-3" size="12" showOn="button" title="Horário" locale="pt" label="Horário" value="#{agendamentoController.agendamento.fim}"  pattern="dd/MM/yyyy HH:mm" requiredMessage="Informe o horário final"  />                       
+                <p:calendar id="time2" disabledWeekends="true"  timeZone="GMT-3" size="12" showOn="button" title="Horário" locale="pt" label="Horário" value="#{agendamentoController.agendamento.fim}"  pattern="dd/MM/yyyy HH:mm" requiredMessage="Informe o horário final"  />                       
             </h:panelGrid>
         </h:panelGrid>
 
@@ -63,7 +65,7 @@ and open the template in the editor.
         <h:outputText id="display" />
 
         </h:panelGrid>
-        <div class="col-md-12 " style="margin-top: 0px">          
+        <div class="col-md-12 " style="margin-top: 10px">          
             <h:panelGrid columns="2" >
                 <h:commandButton value="Agendar" action="#{agendamentoController.salvar()}"  styleClass="btn btn-primary btn-space" >
                     <f:ajax execute="@all" render="@all" />

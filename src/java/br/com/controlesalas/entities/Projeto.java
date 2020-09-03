@@ -7,12 +7,14 @@ package br.com.controlesalas.entities;
 
 import java.io.Serializable;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -33,8 +35,11 @@ public class Projeto implements Serializable {
     @Column
     private String logo_img;
     
-    @ManyToOne
-    private Usuario usuario;
+    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    private Configuracao config;
+    
+//    @ManyToOne
+//    private Usuario usuario;
 
     public Long getIdProjeto() {
         return idProjeto;
@@ -68,13 +73,23 @@ public class Projeto implements Serializable {
         this.logo_img = logo_img;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
+    public Configuracao getConfig() {
+        return config;
     }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void setConfig(Configuracao config) {
+        this.config = config;
     }
+    
+    
+
+//    public Usuario getUsuario() {
+//        return usuario;
+//    }
+//
+//    public void setUsuario(Usuario usuario) {
+//        this.usuario = usuario;
+//    }
 
     @Override
     public int hashCode() {

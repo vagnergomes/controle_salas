@@ -7,10 +7,14 @@ package br.com.controlesalas.controllers;
 
 import br.com.controlesalas.entities.Agendamento;
 import br.com.controlesalas.entities.Descritivo;
-import br.com.controlesalas.entities.Sala;
+import br.com.controlesalas.relatorios.Rel_Agendamento;
 import br.com.controlesalas.services.AgendamentoService;
 import br.com.controlesalas.util.MensagemUtil;
+import java.io.IOException;
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -19,9 +23,13 @@ import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.servlet.http.HttpSession;
+import org.primefaces.event.SelectEvent;
 import org.primefaces.model.LazyScheduleModel;
 import org.primefaces.model.ScheduleModel;
+import org.quartz.SchedulerException;
 
 /**
  *
@@ -35,82 +43,70 @@ public class AgendamentoController implements Serializable {
     private AgendamentoService service;
 
     private Agendamento agendamento;
-    private List<Agendamento> agendamentos;
 
     private ScheduleModel eventos;
     private LazyScheduleModel lazyEventModel;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date data_inicio;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date data_fim;
+
+    Date data = new Date(System.currentTimeMillis());
+    Timestamp dateTime = new Timestamp(data.getTime());
+
+    public AgendamentoController() {
+    }
+
     @PostConstruct
     public void init() {
-        agendamentos = service.todos();
         agendamento = new Agendamento();
         iniciaObjeto();
     }
 
     public void salvar() {
-        System.out.println("-----1: " + agendamento.getSala());
-        System.out.println("-----2: " + agendamento.getSala().getNome_sala());
-        if(agendamento.getSala() == null){
-            MensagemUtil.addMensagemError("Erro1: os campos obrigatórios deve ser preenchidos.");   
-        }else{
-        if (agendamento.getTitulo().isEmpty()) {
+        if (agendamento.getSala() == null) {
             MensagemUtil.addMensagemError("Erro: os campos obrigatórios deve ser preenchidos.");
         } else {
-            if (agendamento.getFim().before(agendamento.getInicio())) {
-                MensagemUtil.addMensagemError("Erro: a data final deve ser maior que a data inicial.");
+            if (agendamento.getTitulo().isEmpty()) {
+                MensagemUtil.addMensagemError("Erro: os campos obrigatórios deve ser preenchidos.");
             } else {
-                String erro = service.salvar(agendamento);
-                if (erro == null) {
-                    agendamento = new Agendamento();
-                    agendamento.setDescritivo(new Descritivo());
-
-                    //RequestContext context = RequestContext.getCurrentInstance();
-//            context.execute("PF('dialogNovoEvento').hide();");
-                    MensagemUtil.addMensagemInfo("Evento salvo.");
+                if (agendamento.getFim().before(agendamento.getInicio())) {
+                    MensagemUtil.addMensagemError("Erro: a data final deve ser maior que a data inicial.");
                 } else {
-                    MensagemUtil.addMensagemError(erro);
+//                agendamento.setTerminado(false);
+                    String erro = service.salvar(agendamento);
+                    if (erro == null) {
+                        agendamento = new Agendamento();
+                        agendamento.setDescritivo(new Descritivo());
+
+                        //RequestContext context = RequestContext.getCurrentInstance();
+//            context.execute("PF('dialogNovoEvento').hide();");
+                        MensagemUtil.addMensagemInfo("Evento salvo.");
+                    } else {
+                        MensagemUtil.addMensagemError(erro);
+                    }
                 }
             }
         }
-        }
-
-    }
-
-    //ainda nao funciona para dashboard
-    public void editarPorDashboard(Agendamento a) {
-        agendamento = service.obter(a.getIdAgendamento());
     }
 
     public void excluir() {
-        if(!agendamento.getTitulo().isEmpty()){
-        String erro = service.excluir(agendamento.getIdAgendamento());
+        if (!agendamento.getTitulo().isEmpty()) {
+            String erro = service.excluir(agendamento.getIdAgendamento());
+            if (erro == null) {
+                MensagemUtil.addMensagemInfo("Excluído.");
+                agendamento = new Agendamento();
+                agendamento.setDescritivo(new Descritivo());
 
-        if (erro == null) {
-            MensagemUtil.addMensagemInfo("Excluído.");
-            agendamento = new Agendamento();
-            agendamento.setDescritivo(new Descritivo());
+            } else {
+                MensagemUtil.addMensagemError(erro);
+            }
         } else {
-            MensagemUtil.addMensagemError(erro);
-        }
-        }else{
-            
-        }
-    }
 
-    public String cor_evento(String cor) {
-        if (cor.equals("orange")) {
-            return "evento_amarelo";
-        } else if (cor.equals("blue")) {
-            return "evento_azul";
-        } else if (cor.equals("maroon")) {
-            return "evento_marrom";
-        } else if (cor.equals("green")) {
-            return "evento_verde";
-        } else if (cor.equals("red")) {
-            return "evento_vermelho";
-        } else {
-            return "evento_cinza";
         }
+        getSession().removeAttribute("idExcluir");
     }
 
     public static Long convertToLong(Object o) {
@@ -146,6 +142,29 @@ public class AgendamentoController implements Serializable {
             agendamento.setDescritivo(new Descritivo());
         }
     }
+    
+//    public void onRowSelect(SelectEvent event) {
+//        Object ob = event.getObject();
+//        System.out.println("-----OB:"+ ob );
+//        Agendamento a = (Agendamento) ob;
+//        System.out.println("-----AG:"+ a.getTitulo() );
+//    }
+    
+    public void relatorioAgendamentos(String formato) throws SQLException, SchedulerException {
+        Rel_Agendamento rel = new Rel_Agendamento();
+        String driver = "com.mysql.jdbc.JDBC4Connection";
+        String url = "jdbc:mysql://localhost:3306/controle_salas?characterEncoding=latin1&useConfigs=maxPerformance&allowPublicKeyRetrieval=true&useSSL=false";
+        String usuario = "root";
+        String senha = "admin";
+        Connection conexao = null;
+
+        try {
+            System.setProperty("jdbc.Drivers", driver);
+            conexao = DriverManager.getConnection(url, usuario, senha);
+        } catch (SQLException ex) {
+        }
+        rel.getAgendamentos(conexao, data_inicio, data_fim, formato);
+    }
 
     public Agendamento getAgendamento() {
         return agendamento;
@@ -155,15 +174,22 @@ public class AgendamentoController implements Serializable {
         this.agendamento = agendamento;
     }
 
-    public List<Agendamento> getAgendamentos() {
-        return agendamentos;
+    public Date getData_inicio() {
+        return data_inicio;
     }
 
-    public void setAgendamentos(List<Agendamento> agendamentos) {
-        this.agendamentos = agendamentos;
+    public void setData_fim(Date data_fim) {
+        this.data_fim = data_fim;
     }
 
-    
+    public Date getData_fim() {
+        return data_fim;
+    }
+
+    public void setData_inicio(Date data_inicio) {
+        this.data_inicio = data_inicio;
+    }
+
 
     /*--------Schedule---------*/
     public ScheduleModel getEventos() {

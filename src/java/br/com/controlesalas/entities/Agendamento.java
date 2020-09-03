@@ -120,6 +120,8 @@ public class Agendamento implements Serializable {
     }
 
     
+
+    
     //Equals e HashCode
     @Override
     public int hashCode() {

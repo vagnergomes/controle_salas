@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="../template.xhtml">
+        <ui:define name="titulo"  >
+            <span style="font-size: 22px; font-family: sans-serif; color: #999999 ; "> Nova Feira</span>
+        </ui:define>    
+        <ui:define name="conteudo">
+            <!--<p:growl /> -->
+            <h:form id="cadastro">
+                <h:panelGrid columns="1" style="margin-top: 10px;" >
+
+                     <h:outputLabel value="Nome" class="output-form required" />
+                     <h:inputText label="nome" value="#{projetoController.projeto.nome}" styleClass="form-control input" style="width: 70%;" requiredMessage="Informe o Nome" required="true"/>
+
+                    
+                    <h:outputLabel value="Descrição" class="output-form required" />
+                    <h:inputText label="descricao" value="#{projetoController.projeto.descricao}" styleClass="form-control input" style="width: 70%;" />
+
+                    <h:outputLabel value="img_logo" class="output-form required" />
+                    <h:inputText label="img_logo" value="#{projetoController.projeto.logo_img}" styleClass="form-control input" style="width: 70%;" />
+                    
+
+                   </h:panelGrid>
+
+
+                <div class="col-md-12" style="margin-top: 40px">          
+                    <div class="form-group"> 
+                        <p:commandButton value="Novo" onclick="PF('dlg1_confirm').show();" class="btn btn-primary btn-space" />
+                    </div>
+
+                    <p:dialog id="confirm" header="Confirmar projeto?" widgetVar="dlg1_confirm" modal="true" minHeight="40" resizable="false" >
+                        <div style="margin-top: 10px" class="form-group"> 
+                            <h:commandButton value="Confirmar" action="#{projetoController.salvar()}" styleClass="btn btn-primary btn-space" >
+                            <f:setPropertyActionListener target="#{projetoController.config.terminados_opaco}" value="true"/>
+                            <f:setPropertyActionListener target="#{projetoController.config.rotulos_visivel}" value="true"/>
+                            <f:setPropertyActionListener target="#{projetoController.config.exports_visivel }" value="true"/>
+                            </h:commandButton>
+                            <h:commandButton onclick="dlg1_confirm.hide()" value="Cancelar" class="btn btn-default btn-space" />                
+                        </div>
+                    </p:dialog>
+                </div>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

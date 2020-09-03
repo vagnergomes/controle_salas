@@ -13,6 +13,5 @@
              org.primefaces.util.ComponentUtils
         </javax.el-resolver>      
     </application>
-    
    
 </faces-config>

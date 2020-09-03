@@ -5,14 +5,16 @@
  */
 package br.com.controlesalas.controllers;
 
+import br.com.controlesalas.entities.Agendamento;
 import br.com.controlesalas.entities.Sala;
 import br.com.controlesalas.services.SalaService;
 import br.com.controlesalas.util.MensagemUtil;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
-import javax.faces.application.FacesMessage;;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -31,14 +33,17 @@ public class SalaController implements Serializable {
 
     private Sala sala;
     private List<Sala> salas;
+    private List<Agendamento> agendamentos;
 
     @PostConstruct
     public void init() {
         sala = new Sala();
         salas = service.todos();
+        agendamentos =  new ArrayList<>();
     }
 
-    public void salvar() {
+    public void salvar(){
+        System.out.println("---ID salvar: " +sala.getIdSala());
         String erro = service.salvar(sala);
         if (erro == null) {
             MensagemUtil.addMensagemInfo("Salvo.");
@@ -46,16 +51,47 @@ public class SalaController implements Serializable {
             MensagemUtil.addMensagemError("Erro ao salvar: " + erro);
         }
     }
+    
+    public void editar(Sala sala){
+        this.sala = sala;
+    }
+  
+    public void excluir(Sala sala) {
+        try {
+            agendamentos = service.agendamentosSala(sala.getIdSala());
+            if (agendamentos.size() > 0) {
+                MensagemUtil.addMensagemError("Erro: existem Agendamentos vinculados à esse Local/Sala.");
+            } else {
+                String erro = service.excluir(sala.getIdSala());
+                if (erro == null) {
+                    MensagemUtil.addMensagemInfo("Excluído.");
+                    agendamentos = new ArrayList<>();
+                } else {
+                    MensagemUtil.addMensagemError("Erro ao excluir: " + erro);
+                }
+            }
+        } catch (Exception ex) {
+            ex.getStackTrace();
+        }
+    }
 
+    public void agendamentosSala(Sala sala){
+        agendamentos = service.agendamentosSala(sala.getIdSala());
+        this.sala = sala;
+//        RequestContext context = RequestContext.getCurrentInstance();
+//        context.execute("PF('dialogAgendamentosSala').show();");
+    }
+ 
     public void onRowEdit(RowEditEvent event) {
-
-        System.out.println("----editar: " + event.getObject());
         sala = ((Sala) event.getObject());
-        System.out.println("----editar2: " + sala.getCapacidade());
+        System.out.println("---Sala:" + sala.getNome_sala());
         String erro = service.salvar(sala);
         if (erro == null) {
+            System.out.println("----Salvou 3");
             MensagemUtil.addMensagemInfo("Salvo.");
+            
         } else {
+            System.out.println("----Não salvou 4");
             MensagemUtil.addMensagemError("Erro ao salvar: " + erro);
         }
     }
@@ -89,4 +125,13 @@ public class SalaController implements Serializable {
         this.salas = salas;
     }
 
+    public List<Agendamento> getAgendamentos() {
+        return agendamentos;
+    }
+
+    public void setAgendamentos(List<Agendamento> agendamentos) {
+        this.agendamentos = agendamentos;
+    }
+    
+    
 }
