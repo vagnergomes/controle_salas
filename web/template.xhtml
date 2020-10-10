@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:h="http://java.sun.com/jsf/html">
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
         <title>Reuniões</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -18,9 +19,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
-        <!--<script src="#{request.contextPath}/Js/lumino.glyphs.js"></script>-->
-
-
+        <script src="#{request.contextPath}/Js/lumino.glyphs.js"></script>
+     
         <script>
             PrimeFaces.locales['pt'] = {
                 closeText: 'Fechar',
@@ -56,20 +56,22 @@
             <div class="container-fluid">
                 <div class="navbar-header row">
                     <a href="#{request.contextPath}/index.xhtml" >
-                        <img class="logo" src="#{request.contextPath}/Imagem/header-logo-terrena-svg.svg" alt="logo-terrena"  />
+                        <p:graphicImage value="#{configController.foto}"  cache="false" width="177px" height="52px"   />
                     </a>
-                    <span style="font-size: 20px; color: #FFF "></span> 
+                    <span style="font-size: 20px; color: #FFF ">#{configController.configuracao.titulo_cabecalho}</span> 
+                    <!--<span style="font-size: 20px; color: #FFF; background-color: #999; ">DESATIVADO</span>--> 
                     <ul class="user-menu">
                         <h:form >
                             <a style="margin-right: 20px; visibility: hidden" href="#{request.contextPath}/Acesso/login/login.xhtml"  >Login</a>
                         </h:form>
-                        <h:form style="margin-right: 20px; visibility: hidden" >
+                        <h:form style="margin-right: 20px; margin-top: -20px " >
                             <li class="dropdown pull-right">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><svg class="glyph stroked male user"><use href="#stroked-male-user"/></svg> #{loginUsuarioController.usuario.pessoa.nome}<span class="caret"></span></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><svg class="glyph stroked male-user"><use href="#stroked-male-user"/></svg> Administrador<span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li style="background-color: #F5F5F5 "><svg style="margin-left: 5px;"  class="glyph stroked male user"><use href="#stroked-male-user"/></svg> #{request.remoteUser}</li>
-                                    <li><a href="#{request.contextPath}/Usuario/perfil.xhtml"><svg class="glyph stroked gear"><use href="#stroked-gear"/></svg> Configurações</a></li>
-                                    <li><a href="#{request.contextPath}/j_spring_security_logout"><svg class="glyph stroked cancel"><use href="#stroked-cancel"/></svg> Sair</a></li>
+                                    <li><a style=" #{configController.projetoSelec()? '':'pointer-events: none; color: #c3c3c3;'}"  href="#{request.contextPath}/Configuracao/config.xhtml"><svg class="glyph stroked gear"><use href="#stroked-gear"/></svg> Configurações</a></li>
+                                    <li><a href="#{request.contextPath}/Projeto/projetos_desat.xhtml"> Desativados</a></li>
+
+                                    <li style="visibility: hidden;" ><a href="#{request.contextPath}/j_spring_security_logout"><svg class="glyph stroked cancel"><use href="#stroked-cancel"/></svg> Sair</a></li>
                                 </ul>
                             </li>
                         </h:form>
@@ -88,30 +90,39 @@
             <span></span>
 
             <ul id="menu-top" >
-                <li class="active" ><svg  class="glyph stroked gear" style="margin-left: 12px;" ><use href="#stroked-gear" ></use></svg> Administrador</li>
+                <li class="active" ><svg  class="glyph stroked gear" style="margin-left: 12px;" ><use href="#stroked-gear" ></use></svg> Gerenciar</li>
                 <!--<a href="#{request.contextPath}/Agendamento/agendamento.xhtml"><li>Cadastro</li></a>-->
-                <a href="#{request.contextPath}/Agendamento/schedule.xhtml"><li>Schedule</li></a>
-                <a href="#{request.contextPath}/Agendamento/dashboard.xhtml"><li>Dashboard</li></a>
-                <a href="#{request.contextPath}/Agendamento/sala.xhtml"><li>Sala</li></a>
+                <a href="#{request.contextPath}/Agendamento/schedule.xhtml"><li><svg class="glyph stroked calendar"><use href="#stroked-calendar"/></svg>Schedule</li></a>
+                <a href="#{request.contextPath}/Agendamento/dashboard.xhtml"><li><svg class="glyph stroked clipboard with paper"><use href="#stroked-clipboard-with-paper"/></svg>Dashboard</li></a>
+                <a href="#{request.contextPath}/Agendamento/sala.xhtml"><li><svg class="glyph stroked table"><use href="#stroked-table"/></svg>Sala</li></a>
+
+                <h:outputLink class="btn" value="#{request.contextPath}/Projeto/projetos.xhtml"  style="width: 100%; text-align: left; margin-top: 20px;"  >
+                    Projetos
+                    <f:ajax event="click" listener="#{configController.limpaIdProjeto()}" />
+                </h:outputLink>
             </ul>
+
         </div>
 
         <div  id="menu" class="col-lg-2 sidebar">
-            <h:form title="Administrador"  >
+            <h:form title="Gerenciar" rendered="#{configController.projetoSelec()}"  >
                 <ul class="nav ">
-                    <li class="active" ><a  href="#"><svg  class="glyph stroked gear"><use href="#stroked-gear"></use></svg> Administrador</a></li>
+                    <li class="active" ><a  href="#"><svg  class="glyph stroked gear"><use href="#stroked-gear"></use></svg> Gerenciar</a></li>
                     <!--<li><a href="#{request.contextPath}/Agendamento/agendamento.xhtml">Cadastro</a></li>-->
-                    <li><a href="#{request.contextPath}/Agendamento/schedule.xhtml">Schedule</a></li>
-                    <li><a href="#{request.contextPath}/Agendamento/dashboard.xhtml">Dashboard</a></li>
-                    <li><a href="#{request.contextPath}/Agendamento/sala.xhtml">Sala</a></li>
+                    <li><a href="#{request.contextPath}/Agendamento/schedule.xhtml"><svg class="glyph stroked calendar"><use href="#stroked-calendar"/></svg>Schedule</a></li>
+                    <li><a href="#{request.contextPath}/Agendamento/dashboard.xhtml"><svg class="glyph stroked clipboard with paper"><use href="#stroked-clipboard-with-paper"/></svg>Dashboard</a></li>
+                    <li><a href="#{request.contextPath}/Agendamento/sala.xhtml"><svg class="glyph stroked table"><use href="#stroked-table"/></svg>Sala</a></li>
                 </ul>
             </h:form>
 
-            <h:form title="Cliente" rendered="#{request.remoteUser == null? false : (loginController.validaSeCliente())}"  >
+
+            <h:form title="Projeto"   >
                 <ul class="nav ">
-                    <li class="active" ><a  href="#"><svg  class="glyph stroked gear"><use href="#stroked-gear"></use></svg> Visitante</a></li>
-                    <li><a href="#{request.contextPath}/Papel/PJ/cadastro-pj.xhtml"><svg class="glyph stroked "></svg>Cliente</a></li>
-                    <li><a href="#{request.contextPath}/Papel/PF/cadastro-pf.xhtml"><svg class="glyph stroked "></svg>Visitantes</a></li>
+                    <!--<li><a href="{request.contextPath}/Projeto/projeto.xhtml"><svg class="glyph stroked "></svg>Novo Projeto</a></li>-->
+                    <h:outputLink class="btn" value="#{request.contextPath}/Projeto/projetos.xhtml"  style="width: 100%; text-align: left"  >
+                        Projetos
+                        <f:ajax event="click" listener="#{configController.limpaIdProjeto()}" />
+                    </h:outputLink>
                 </ul>
             </h:form>
 
@@ -121,8 +132,8 @@
         <div class="row panel-message" >
             <!--<p:growl id="growl" showDetail="true" sticky="false" life="3000" escape="true" />-->
             <p:messages id="messages" showDetail="false" closable="true" globalOnly="true" escape="true"  />
-      
-            
+
+
         </div>
 
         <div class="panel">
@@ -136,15 +147,15 @@
             </div>			
         </div>  
 
-<!--        <script src="js/jquery-1.11.1.min.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-        <script src="js/chart.min.js"></script>
-        <script src="js/chart-data.js"></script>
-        <script src="js/easypiechart.js"></script>
-        <script src="js/easypiechart-data.js"></script>
-        <script src="js/bootstrap-datepicker.js"></script>-->
+        <!--        <script src="js/jquery-1.11.1.min.js"></script>
+                <script src="js/bootstrap.min.js"></script>
+                <script src="js/chart.min.js"></script>
+                <script src="js/chart-data.js"></script>
+                <script src="js/easypiechart.js"></script>
+                <script src="js/easypiechart-data.js"></script>
+                <script src="js/bootstrap-datepicker.js"></script>-->
         <script>
-            
+
             $('#calendar').datepicker({
             });
 

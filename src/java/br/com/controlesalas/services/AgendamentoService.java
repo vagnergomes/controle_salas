@@ -65,9 +65,8 @@ public class AgendamentoService implements Serializable {
         }
     }
     
-    public Date ultimoAgendamento(){
+     public Date ultimoAgendamento(){
         Query query = em.createNativeQuery("Select c.inicio from Agendamento as c order by c.inicio desc limit 1 ");
-        
         if(query.getResultList().isEmpty()){
             return null;
         }
@@ -79,10 +78,17 @@ public class AgendamentoService implements Serializable {
         return query.getResultList();
     }
     
-    public List<Agendamento> todosData(Date inicio, Date fim){
-        TypedQuery<Agendamento> query = em.createQuery("Select c from Agendamento as c Where c.inicio >= ?1 and c.fim <= ?2", Agendamento.class);
-        query.setParameter(1, inicio);
-        query.setParameter(2, fim);
+    public List<Agendamento> todosProjeto(Long id){
+        TypedQuery<Agendamento> query = em.createQuery("Select c from Agendamento as c Where c.sala.projeto.idProjeto = ?1 Order By c.inicio DESC", Agendamento.class);
+        query.setParameter(1, id);
+        return query.getResultList();
+    }
+    
+    public List<Agendamento> todosData(Date inicio, Date fim, Long id){
+        TypedQuery<Agendamento> query = em.createQuery("Select c from Agendamento as c Where c.sala.projeto.idProjeto = ?1 and c.inicio >= ?2 and c.fim <= ?3", Agendamento.class);
+        query.setParameter(1, id);
+        query.setParameter(2, inicio);
+        query.setParameter(3, fim);
         return query.getResultList();
     }
     

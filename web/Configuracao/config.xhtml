@@ -1,0 +1,94 @@
+<ui:composition template="../template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+    <ui:define name="titulo">
+        <span style="margin-left: -20px; font-size: 22px; font-family: sans-serif; color: #999999 ; "> Configurações  </span>
+    </ui:define>
+
+    <ui:define name="conteudo">
+        <h:form id="form_projeto" >   
+            <h:panelGrid>
+                <p:messages id="messages1" showDetail="true" closable="true" />
+                <h4 style="margin-top: 20px; margin-bottom: 5px;" >Projeto </h4>
+                <h:outputLabel value="Nome:" class="output-form" />
+                <h:inputText label="titulo" value="#{projetoController.projeto.nome}" styleClass="form-control input"  />  
+
+                <h:outputLabel  value="Descrição: " class="output-form" />
+                <p:inputTextarea rows="2" cols="40" value="#{projetoController.projeto.descricao}" counter="display" maxlength="100" counterTemplate="{0} caracteres restantes." autoResize="false" />
+                <h:outputText id="display" />
+            </h:panelGrid>
+            <div class="col-md-12 " style="margin-top: 10px; margin-bottom: 20px;">          
+                <h:panelGrid columns="2" >
+                    <h:commandButton value="Salvar" action="#{projetoController.salvar()}"  styleClass="btn btn-primary btn-space" >
+                        <f:ajax execute="form_projeto" render="form_projeto" />
+                    </h:commandButton>
+<!--                    <h:commandButton value="Canelar" class="btn btn-default btn-space"  >
+                        <f:ajax execute="@all" render="@all" />
+                    </h:commandButton>-->
+                </h:panelGrid>
+            </div>
+        </h:form>
+
+        <h:form id="form_config" enctype="multipart/form-data">
+            
+            <h:panelGrid>
+                <p:messages id="messages2" showDetail="true" closable="true"  /> 
+                <h4 style="margin-top: 20px; margin-bottom: 5px;" >Geral </h4>
+                <h:inputHidden value="#{configController.configuracao.idConfig}" />
+
+                <h:outputLabel value="Título do cabeçalho:" class="output-form" />
+                <h:inputText label="Título:" value="#{configController.configuracao.titulo_cabecalho}" styleClass="form-control input"  />  
+
+                <h:outputLabel value="Logotipo:" class="output-form" />
+                <p:fileUpload  mode="advanced" multiple="false" auto="true" fileUploadListener="#{configController.upload}"   /> 
+            </h:panelGrid>
+
+            <h:panelGrid>
+                <h:outputLabel value="Visualização e Relatório:" class="output-form" />
+                <p:selectBooleanCheckbox value="#{configController.configuracao.exports_visivel}" itemLabel="Permitir exportar."/>
+                <p:selectBooleanCheckbox value="#{configController.configuracao.rotulos_visivel}" itemLabel="Rotulação de Sala/Local"/>
+                <p:selectBooleanCheckbox value="#{configController.configuracao.terminados_opaco}" itemLabel="Eventos terminados opaco."/>   
+                <p:selectBooleanCheckbox value="#{configController.configuracao.show_weekends}" itemLabel="Fim de semana."/> 
+                
+                <h:outputLabel value="Visualização do calendário:" class="output-form" />
+                <p:selectOneMenu 
+                        id="idperfil"
+                        value="#{configController.configuracao.view_agenda}"
+                        class="input"
+                        style="width: 25%; min-width: 250px; float: left; font-weight:bold;">
+
+                        <f:selectItem
+                            itemLabel="Selecione"
+                            itemValue="" />
+
+                        <f:selectItem itemLabel="Dia" itemValue="agendaDay" />
+                        <f:selectItem itemLabel="Semana" itemValue="agendaWeek" />
+                        <f:selectItem itemLabel="Mês" itemValue="month" />
+                    </p:selectOneMenu>
+                
+                <h:outputLabel value="Logotipo do relatório:" class="output-form" />
+                <p:fileUpload  mode="advanced" multiple="false" auto="true" fileUploadListener="#{configController.upload2}"  />
+            </h:panelGrid>
+            
+            
+            <div class="col-md-12 " style="margin-top: 10px; margin-bottom: 20px;">          
+                <h:panelGrid columns="2" >
+                    <h:commandButton value="Salvar" action="#{configController.salvar()}"  styleClass="btn btn-primary btn-space" >
+                        <f:ajax execute="form_config" render="form_config" />
+                    </h:commandButton>
+<!--                    <h:commandButton value="Canelar" class="btn btn-default btn-space"  >
+                        <f:ajax execute="@all" render="@all" />
+                    </h:commandButton>-->
+                </h:panelGrid>
+            </div>
+
+        </h:form>
+        
+         
+    </ui:define>
+</ui:composition>

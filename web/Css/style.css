@@ -1092,67 +1092,94 @@ h1.page-header {
 .evento_azul {
     background: blue;
     color: white;
+    font-size: 10px;
+    line-height: 1.1;
 }
 .evento_azul_venc {
     background: blue;
     color: white;
     opacity: 0.2;
-    
+    font-size: 10px;
+    line-height: 1.1;
 }
 .evento_verde {
    background: green;
    color: white;
+   font-size: 10px;
+   line-height: 1.1;
  }
 .evento_verde_venc {
    background: green;
    color: white;
    opacity: 0.2;
+   font-size: 10px;
+   line-height: 1.1;
  }
 .evento_amarelo {
     background: orange;
     color: white;
+    font-size: 10px;
+    line-height: 1.1;
 }
 .evento_amarelo_venc {
     background: orange;
     color: white;
+    font-size: 10px;
+    line-height: 1.1;
     opacity: 0.2;
 }
 .evento_vermelho {
    background: red;
    color: white;
+   font-size: 10px;
+   line-height: 1.1;
  }
 .evento_vermelho_venc {
    background: red;
    color: white;
    opacity: 0.2;
+   font-size: 10px;
+   line-height: 1.1;
  }
 .evento_cinza  {
     background: red  ; 
     color: #eee;
+    font-size: 10px;
+    line-height: 1.1;
 }
 .evento_cinza_venc  {
     background: red  ; 
     color: #eee;
     opacity: 0.2;
+    font-size: 10px;
+    line-height: 1.1;
 }
 /*.fc-event-inner*/
 .evento_marrom {
     background-color: maroon;
     color: white;
+    font-size: 10px;
+    line-height: 1.1;
 }
 .evento_marrom_venc {
     background-color: maroon;
     color: white;
     opacity: 0.2;
+    font-size: 10px;
+    line-height: 1.1;
 }
 .evento_branco {
     background: white;
     color: black;
+    font-size: 10px;
+    line-height: 1.1;
 }
 .evento_branco_venc {
     background: white;
     color: black;
     opacity: 0.2;
+    font-size: 10px;
+    line-height: 1.1;
 }
 
 .ui-dialog.dialog-teste
@@ -1166,4 +1193,12 @@ h1.page-header {
 
 .color{
     background-color: red;
+}
+
+.panel-projeto-oculto{
+    display: none;
+}
+
+.panel-projeto:hover .panel-projeto-oculto{
+    display: block;
 }

@@ -39,7 +39,7 @@
                     <center>
                         <table border="0" width="50%">
                             <tr style="width: 5%" >
-                                <ui:repeat value="#{salaController.todosVisiveis()}" var="s" varStatus="status" >
+                                <ui:repeat rendered="#{configController.configuracao.rotulos_visivel}" value="#{salaController.rotulos()}" var="s" varStatus="status" >
                                     <td>  
                                         <p > 
                                             <h:commandButton disabled="true" style="background-color: #{s.cor} ; width: 10px; height: 15px; border-radius: 3px; border: 0 " /> #{s.nome_sala}
@@ -50,7 +50,7 @@
                         </table>
                     </center>
                     <h:form >
-                        <h:commandButton style="float:right; margin-right: 10px; margin-bottom: 5px;" image="/Imagem/icons/export/pdf.png"
+                        <h:commandButton rendered="#{configController.configuracao.exports_visivel}" style="float:right; margin-right: 10px; margin-bottom: 5px;" image="/Imagem/icons/export/pdf.png"
                                          onclick="this.form.target = '_blank'" 
                                          action="#{agendamentoViewController.relatorioAgendamentos('pdf')}" />
                     </h:form>

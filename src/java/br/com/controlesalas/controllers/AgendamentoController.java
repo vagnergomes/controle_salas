@@ -7,6 +7,7 @@ package br.com.controlesalas.controllers;
 
 import br.com.controlesalas.entities.Agendamento;
 import br.com.controlesalas.entities.Descritivo;
+import br.com.controlesalas.entities.Projeto;
 import br.com.controlesalas.relatorios.Rel_Agendamento;
 import br.com.controlesalas.services.AgendamentoService;
 import br.com.controlesalas.util.MensagemUtil;
@@ -43,6 +44,8 @@ public class AgendamentoController implements Serializable {
     private AgendamentoService service;
 
     private Agendamento agendamento;
+    
+    private Projeto projeto;
 
     private ScheduleModel eventos;
     private LazyScheduleModel lazyEventModel;
@@ -62,6 +65,7 @@ public class AgendamentoController implements Serializable {
     @PostConstruct
     public void init() {
         agendamento = new Agendamento();
+        projeto = (Projeto) getSession().getAttribute("projetoSelecionado");
         iniciaObjeto();
     }
 
@@ -116,7 +120,7 @@ public class AgendamentoController implements Serializable {
     }
 
     public List<Agendamento> todos() {
-        return service.todos();
+        return service.todosProjeto(projeto.getIdProjeto());
     }
 
     public void iniciaObjeto() {
@@ -150,21 +154,21 @@ public class AgendamentoController implements Serializable {
 //        System.out.println("-----AG:"+ a.getTitulo() );
 //    }
     
-    public void relatorioAgendamentos(String formato) throws SQLException, SchedulerException {
-        Rel_Agendamento rel = new Rel_Agendamento();
-        String driver = "com.mysql.jdbc.JDBC4Connection";
-        String url = "jdbc:mysql://localhost:3306/controle_salas?characterEncoding=latin1&useConfigs=maxPerformance&allowPublicKeyRetrieval=true&useSSL=false";
-        String usuario = "root";
-        String senha = "admin";
-        Connection conexao = null;
-
-        try {
-            System.setProperty("jdbc.Drivers", driver);
-            conexao = DriverManager.getConnection(url, usuario, senha);
-        } catch (SQLException ex) {
-        }
-        rel.getAgendamentos(conexao, data_inicio, data_fim, formato);
-    }
+//    public void relatorioAgendamentos(String formato) throws SQLException, SchedulerException {
+//        Rel_Agendamento rel = new Rel_Agendamento();
+//        String driver = "com.mysql.jdbc.JDBC4Connection";
+//        String url = "jdbc:mysql://localhost:3306/controle_salas?characterEncoding=latin1&useConfigs=maxPerformance&allowPublicKeyRetrieval=true&useSSL=false";
+//        String usuario = "root";
+//        String senha = "admin";
+//        Connection conexao = null;
+//
+//        try {
+//            System.setProperty("jdbc.Drivers", driver);
+//            conexao = DriverManager.getConnection(url, usuario, senha);
+//        } catch (SQLException ex) {
+//        }
+//        rel.getAgendamentos(conexao, data_inicio, data_fim, formato);
+//    }
 
     public Agendamento getAgendamento() {
         return agendamento;
@@ -200,6 +204,14 @@ public class AgendamentoController implements Serializable {
         this.eventos = eventos;
     }
 
+    public Projeto getProjeto() {
+        return projeto;
+    }
+
+    public void setProjeto(Projeto projeto) {
+        this.projeto = projeto;
+    }
+    
     public LazyScheduleModel getLazyEventModel() {
         return lazyEventModel;
     }

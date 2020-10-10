@@ -12,26 +12,20 @@ and open the template in the editor.
 
     <ui:composition template="../template.xhtml">
         <ui:define name="titulo"  >
-            <span style="font-size: 22px; font-family: sans-serif; color: #999999 ; "> Projetos</span>
+            <span style="font-size: 22px; font-family: sans-serif; color: #999999 ; "> Projetos Desativados</span>
         </ui:define>    
         <ui:define name="conteudo">
             <h:form id="cadastro">
-                <div class="col-md-12" style="margin-top: 5px">          
-                    <div class="form-group"> 
-                        <h:commandButton styleClass="btn btn-primary" value="Novo" >
-                            <p:ajax oncomplete="PF('dlg_novo_projeto').show()" rendered=":cadastro:panel_novo_projeto" /> 
-                        </h:commandButton>
-                    </div>
-                </div>
 
                 <p:inputText style="visibility: hidden;" disabled="true" value="" />
-                <h:panelGrid columns="5" style="margin-top: 10px; margin-bottom: 20px; " >
+                <h:panelGrid columns="5" style="margin-top: 10px; margin-bottom: 20px; border-color: transparent" >
 
-                    <!--<div class="col-md-12" style="margin-top: 20px">-->    
-                        <p:dataGrid var="c" value="#{projetoController.todosAtivos()}" 
-                                    columns="8"  
+                    <div class="col-md-12" style="margin-top: 20px">    
+                        <p:dataGrid var="c" 
+                                    value="#{projetoController.todosDesativados()}" 
+                                    columns="8" 
+                                    style="border: none !important;" 
                                     id="grid_salas"
-                                    style="border: none !important;"
                                     emptyMessage="Nenhum registro encontrado.">
 
                             <p:panel  style="text-align:center; width: 100%; border-color: transparent">
@@ -41,11 +35,11 @@ and open the template in the editor.
                                         <center><h:outputLabel value="#{c.nome}" /></center>
                                     </h:commandButton> 
 
-                                    <h:panelGrid class="panel-projeto-oculto" columns="1" style="width: 100%; margin-left: 16%; margin-top: -80px;" >
-                                        <h:panelGrid columns="2" style=""  >
-                                            <h:commandLink class="btn btn-default"   value="" >
-                                                <h:graphicImage value="/Imagem/icons/visao.png" />
-                                                <p:ajax event="click" listener="#{projetoController.selecionarProjeto(c)}"  process="@this"/>
+                                    <h:panelGrid class="panel-projeto-oculto" columns="1" style="width: 100%; margin-left: 12%; margin-top: -82px; " >
+                                        <h:panelGrid columns="2"  >
+                                            <h:commandLink class="btn btn-success"  onclick="PF('dlg1_confirm_ativar').show();" value="Ativar" >
+<!--                                                <h:graphicImage value="/Imagem/icons/visao.png" />-->
+                                                <p:ajax event="click" listener="#{projetoController.selecionar(c)}"  process="@this"/>
                                             </h:commandLink>
                                             <h:commandLink id="excluir" disabled="false" class="btn btn-primary" onclick="PF('dlg1_confirm').show();" value="" style="margin-left: 5px;" >
                                                 <h:graphicImage value="/Imagem/icons/excluir.png" />
@@ -59,37 +53,30 @@ and open the template in the editor.
                             </p:panel>
 
                         </p:dataGrid>
-                    <!--</div>-->
+                    </div>
                 </h:panelGrid>
 
-
-                <p:dialog widgetVar="dlg_novo_projeto"  maximizable="false" header="Projeto" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true" >
-                    <h:panelGrid id="panel_novo_projeto" columns="1" style="width: 320px;" >
-                        <ui:include src="projeto.xhtml" />
-                    </h:panelGrid>
-                </p:dialog>
 
             </h:form>
              <p:dialog id="confirm" header="Confirmar" widgetVar="dlg1_confirm" modal="true" minHeight="40" resizable="false" >
                     <h:form id="formConfirm" >
-                        <p:outputLabel > Você não está excluindo este projeto. Ele será desativado e poderá ser ativado novamente a qualquer momento. </p:outputLabel>
+                        <p:outputLabel > O projeto será excluído permanentemente.</p:outputLabel>
                         <div style="margin-top: 10px" class="form-group"> 
-                            <h:commandButton value="Excluir" actionListener="#{projetoController.desativar()}" styleClass="btn btn-primary btn-space" />
+                            <h:commandButton value="Excluir" actionListener="#{projetoController.excluir()}" styleClass="btn btn-primary btn-space" />
                             <h:commandButton onclick="dlg1_confirm.hide()" value="Cancelar" class="btn btn-default btn-space" />                
                         </div>
                     </h:form>
                 </p:dialog>  
+            
+            <p:dialog id="confirm_ativar" header="Confirmar" widgetVar="dlg1_confirm_ativar" modal="true" minHeight="40" resizable="false" >
+                    <h:form id="formConfirmAtivar" >
+                        <p:outputLabel > O projeto será ativado.</p:outputLabel>
+                        <div style="margin-top: 10px" class="form-group"> 
+                            <h:commandButton value="Ativar" actionListener="#{projetoController.ativar()}" styleClass="btn btn-primary btn-space" />
+                            <h:commandButton onclick="dlg1_confirm_ativar.hide()" value="Cancelar" class="btn btn-default btn-space" />                
+                        </div>
+                    </h:form>
+                </p:dialog> 
         </ui:define>
     </ui:composition>
-   
-    
-    <style type="text/css">
-    
-    .ui-datagrid-data .ui-widget-content {
-        border: 1px solid #dddddd;
-        background: #ffffff;
-        color: #00aeef;
-    }
- 
-</style>
 </html>

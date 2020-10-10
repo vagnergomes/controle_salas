@@ -98,8 +98,7 @@
 		<queryString>
 			<![CDATA[select ag.*,
        s.*,
-       d.*,
-       p.*
+       d.*
 from Agendamento as ag
 inner join Sala as s
 on s.idSala = ag.idSala
@@ -107,10 +106,7 @@ on s.idSala = ag.idSala
 inner join Descritivo as d
 on d.idDescritivo = ag.descritivo_idDescritivo
 
-inner join Projeto as p
-on p.idProjeto = s.idProjeto
-
-where p.idProjeto = $P{idProjeto} and ag.inicio >= $P{inicio} and ag.fim <= $P{fim}
+where s.idProjeto = $P{idProjeto} and ag.inicio >= $P{inicio} and ag.fim <= $P{fim}
 order by ag.inicio desc]]>
 		</queryString>
 		<field name="IDAGENDAMENTO" class="java.lang.Long">
@@ -170,12 +166,6 @@ order by ag.inicio desc]]>
 		<field name="QTD_PESSOAS" class="java.lang.Integer">
 			<fieldDescription><![CDATA[]]></fieldDescription>
 		</field>
-		<field name="NOME" class="java.lang.String">
-			<fieldDescription><![CDATA[]]></fieldDescription>
-		</field>
-		<field name="CONFIG_IDCONFIG" class="java.lang.Long">
-			<fieldDescription><![CDATA[]]></fieldDescription>
-		</field>
 	</subDataset>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["C:\\Users\\vagner.gomes\\Documents\\iReports\\"]]></defaultValueExpression>
@@ -187,14 +177,9 @@ order by ag.inicio desc]]>
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[select inicio, fim, sala.idProjeto, projeto.nome from agendamento
+		<![CDATA[select inicio, fim, sala.idProjeto from agendamento
 inner join sala
-on agendamento.idSala = sala.idSala
-
-inner join projeto
-on projeto.idProjeto = sala.idProjeto
-
-where projeto.idProjeto = $P{idProjeto}]]>
+on agendamento.idSala = sala.idSala]]>
 	</queryString>
 	<field name="inicio" class="java.sql.Timestamp">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -203,9 +188,6 @@ where projeto.idProjeto = $P{idProjeto}]]>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="idProjeto" class="java.lang.Long">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nome" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<background>
@@ -247,13 +229,6 @@ where projeto.idProjeto = $P{idProjeto}]]>
 					<font fontName="Arial"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{fim}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="347" y="39" width="100" height="20" forecolor="#666666" uuid="b652eb46-2d3a-4d8e-8b0d-1e617a38cc93"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="12" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>

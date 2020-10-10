@@ -22,7 +22,7 @@
 			<pen lineWidth="0.5" lineColor="#999999"/>
 		</box>
 	</style>
-	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+	<style name="table_TD" mode="Opaque" backcolor="#BFE1FF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#999999"/>
 		</box>
@@ -91,6 +91,7 @@
 		<parameter name="inicio" class="java.sql.Timestamp">
 			<parameterDescription><![CDATA[]]></parameterDescription>
 		</parameter>
+		<parameter name="fim" class="java.sql.Timestamp"/>
 		<queryString>
 			<![CDATA[select ag.*,
        s.*,
@@ -102,7 +103,8 @@ on s.idSala = ag.idSala
 inner join Descritivo as d
 on d.idDescritivo = ag.descritivo_idDescritivo
 
-where ag.inicio >= $P{inicio}]]>
+where ag.inicio >= $P{inicio} and ag.fim <= $P{fim}
+order by ag.inicio desc]]>
 		</queryString>
 		<field name="IDAGENDAMENTO" class="java.lang.Long">
 			<fieldDescription><![CDATA[]]></fieldDescription>
@@ -164,6 +166,7 @@ where ag.inicio >= $P{inicio}]]>
 	</parameter>
 	<parameter name="inicio" class="java.sql.Timestamp"/>
 	<parameter name="fim" class="java.sql.Timestamp"/>
+	<parameter name="logo_img" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select inicio, fim from agendamento]]>
 	</queryString>
@@ -179,23 +182,39 @@ where ag.inicio >= $P{inicio}]]>
 	<title>
 		<band height="67" splitType="Stretch">
 			<staticText>
-				<reportElement style="Column header" x="628" y="46" width="92" height="15" uuid="64a75f3b-3224-4af2-b2f5-8fcfc6a1854a"/>
-				<text><![CDATA[A partir de:]]></text>
+				<reportElement style="Column header" x="705" y="29" width="27" height="15" uuid="64a75f3b-3224-4af2-b2f5-8fcfc6a1854a"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[De:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="337" y="20" width="121" height="32" uuid="d251c29b-2c56-4396-a33a-a19992f3a403"/>
-				<textElement>
+				<reportElement style="Column header" x="337" y="11" width="121" height="32" uuid="d251c29b-2c56-4396-a33a-a19992f3a403"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="16"/>
 				</textElement>
 				<text><![CDATA[Agendamentos]]></text>
 			</staticText>
 			<image>
 				<reportElement x="0" y="0" width="160" height="64" uuid="2ba2706d-1f31-439c-a203-d41edbc0b2ed"/>
-				<imageExpression><![CDATA["C:\\Users\\vagner.gomes\\Documents\\Plano de fundo Celulares\\terrena.png"]]></imageExpression>
+				<imageExpression><![CDATA[$P{logo_img}]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement x="700" y="47" width="100" height="20" uuid="5f066a27-9786-49ca-9033-2378e808de21"/>
+				<reportElement x="732" y="29" width="70" height="15" forecolor="#666666" uuid="5f066a27-9786-49ca-9033-2378e808de21"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$P{inicio}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="705" y="44" width="27" height="15" uuid="6313bb46-c93a-4ffc-8133-4d02070e7360"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Até:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="732" y="44" width="70" height="15" forecolor="#666666" uuid="2995a1b3-b8ea-4ad9-a249-5a1f4cdcc29b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fim}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -210,15 +229,18 @@ where ag.inicio >= $P{inicio}]]>
 			<componentElement>
 				<reportElement key="table 1" style="Title" mode="Opaque" x="0" y="0" width="802" height="291" backcolor="#CCCCCC" uuid="8fd8253c-f40c-4868-bab2-561b8ae86746"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="Dataset_agendamento" uuid="f3703742-e52b-48ea-94d0-2ff231050fb1">
+					<datasetRun subDataset="Dataset_agendamento" uuid="243e0574-6a60-4b42-b305-44b76d31243c">
 						<datasetParameter name="inicio">
 							<datasetParameterExpression><![CDATA[$P{inicio}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="fim">
+							<datasetParameterExpression><![CDATA[$P{fim}]]></datasetParameterExpression>
 						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
 					<jr:column width="136" uuid="4af48548-8b69-4f00-a2e3-2ed1b77d9346">
-						<jr:tableHeader style="table 1_TH" height="30" rowSpan="1"/>
-						<jr:tableFooter style="table 1_TH" height="30" rowSpan="1"/>
+						<jr:tableHeader style="table 1_TH" height="0" rowSpan="1"/>
+						<jr:tableFooter style="table 1_TH" height="0" rowSpan="1"/>
 						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement x="20" y="0" width="90" height="30" uuid="4676f47e-7ebe-491b-aee2-c2b0e8f8275b"/>
@@ -228,18 +250,18 @@ where ag.inicio >= $P{inicio}]]>
 								<text><![CDATA[SALA/LOCAL]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="table 1_CH" height="30" rowSpan="1"/>
-						<jr:detailCell style="table 1_TD" height="30" rowSpan="1">
+						<jr:columnFooter style="table 1_CH" height="0" rowSpan="1"/>
+						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
 							<textField>
-								<reportElement x="20" y="6" width="90" height="20" uuid="34ca561e-412f-4b92-ac0d-d3d50b5cc3db"/>
+								<reportElement x="19" y="0" width="90" height="20" backcolor="#00CC00" uuid="34ca561e-412f-4b92-ac0d-d3d50b5cc3db"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<textFieldExpression><![CDATA[$F{NOME_SALA}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="171" uuid="b9ba945f-5a7c-43bd-97aa-9f6493a15a29">
-						<jr:tableHeader style="table 1_TH" height="30" rowSpan="1"/>
-						<jr:tableFooter style="table 1_TH" height="30" rowSpan="1"/>
+						<jr:tableHeader style="table 1_TH" height="0" rowSpan="1"/>
+						<jr:tableFooter style="table 1_TH" height="0" rowSpan="1"/>
 						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement x="38" y="0" width="90" height="30" uuid="a5459d17-9e98-4c31-87ca-d49415405bed"/>
@@ -249,18 +271,18 @@ where ag.inicio >= $P{inicio}]]>
 								<text><![CDATA[TITULO]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="table 1_CH" height="30" rowSpan="1"/>
-						<jr:detailCell style="table 1_TD" height="30" rowSpan="1">
+						<jr:columnFooter style="table 1_CH" height="0" rowSpan="1"/>
+						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
 							<textField>
-								<reportElement x="38" y="6" width="90" height="20" uuid="0914c130-3815-4272-8cc6-3777ea6f2be2"/>
+								<reportElement x="38" y="0" width="90" height="20" uuid="0914c130-3815-4272-8cc6-3777ea6f2be2"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<textFieldExpression><![CDATA[$F{TITULO}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="90" uuid="04ac3393-e799-4f82-91b5-5f2f01600fb8">
-						<jr:tableHeader style="table 1_TH" height="30" rowSpan="1"/>
-						<jr:tableFooter style="table 1_TH" height="30" rowSpan="1"/>
+						<jr:tableHeader style="table 1_TH" height="0" rowSpan="1"/>
+						<jr:tableFooter style="table 1_TH" height="0" rowSpan="1"/>
 						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement x="0" y="0" width="90" height="30" uuid="fe041eda-3f00-43c3-b945-7523a04b53de"/>
@@ -270,18 +292,18 @@ where ag.inicio >= $P{inicio}]]>
 								<text><![CDATA[INICIO]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="table 1_CH" height="30" rowSpan="1"/>
-						<jr:detailCell style="table 1_TD" height="30" rowSpan="1">
+						<jr:columnFooter style="table 1_CH" height="0" rowSpan="1"/>
+						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
 							<textField>
-								<reportElement x="0" y="6" width="90" height="20" uuid="32ba1e65-4e96-495f-a232-fb9a36b09fa4"/>
+								<reportElement x="0" y="0" width="90" height="20" uuid="32ba1e65-4e96-495f-a232-fb9a36b09fa4"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<textFieldExpression><![CDATA[$F{INICIO}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="90" uuid="28c57231-8479-4ed9-b169-982e3f83385c">
-						<jr:tableHeader style="table 1_TH" height="30" rowSpan="1"/>
-						<jr:tableFooter style="table 1_TH" height="30" rowSpan="1"/>
+						<jr:tableHeader style="table 1_TH" height="0" rowSpan="1"/>
+						<jr:tableFooter style="table 1_TH" height="0" rowSpan="1"/>
 						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement x="0" y="0" width="90" height="30" uuid="1a8f0029-496c-4905-af3e-1398296e8236"/>
@@ -291,18 +313,18 @@ where ag.inicio >= $P{inicio}]]>
 								<text><![CDATA[FIM]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="table 1_CH" height="30" rowSpan="1"/>
-						<jr:detailCell style="table 1_TD" height="30" rowSpan="1">
+						<jr:columnFooter style="table 1_CH" height="0" rowSpan="1"/>
+						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
 							<textField>
-								<reportElement x="0" y="6" width="90" height="20" uuid="33450e7f-c58c-47bc-935c-0fb13d7eb462"/>
+								<reportElement x="0" y="0" width="90" height="20" uuid="33450e7f-c58c-47bc-935c-0fb13d7eb462"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<textFieldExpression><![CDATA[$F{FIM}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="69" uuid="a670c844-61f6-4ec1-b314-64184cecd871">
-						<jr:tableHeader style="table 1_TH" height="30" rowSpan="1"/>
-						<jr:tableFooter style="table 1_TH" height="30" rowSpan="1"/>
+						<jr:tableHeader style="table 1_TH" height="0" rowSpan="1"/>
+						<jr:tableFooter style="table 1_TH" height="0" rowSpan="1"/>
 						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement x="0" y="0" width="69" height="30" uuid="4546564e-9aff-48cf-9ab5-71d4b0cc4b36"/>
@@ -312,18 +334,18 @@ where ag.inicio >= $P{inicio}]]>
 								<text><![CDATA[PESSOAS]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="table 1_CH" height="30" rowSpan="1"/>
-						<jr:detailCell style="table 1_TD" height="30" rowSpan="1">
+						<jr:columnFooter style="table 1_CH" height="0" rowSpan="1"/>
+						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
 							<textField>
-								<reportElement x="0" y="6" width="69" height="20" uuid="26a0d84d-c8ac-41e0-91ab-7e83e7d1ca04"/>
+								<reportElement x="0" y="0" width="69" height="20" uuid="26a0d84d-c8ac-41e0-91ab-7e83e7d1ca04"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<textFieldExpression><![CDATA[$F{QTD_PESSOAS}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="61" uuid="e41a8d3d-bdb6-472e-b9c7-e67b51e6eb8d">
-						<jr:tableHeader style="table 1_TH" height="30" rowSpan="1"/>
-						<jr:tableFooter style="table 1_TH" height="30" rowSpan="1"/>
+						<jr:tableHeader style="table 1_TH" height="0" rowSpan="1"/>
+						<jr:tableFooter style="table 1_TH" height="0" rowSpan="1"/>
 						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement x="0" y="0" width="61" height="30" uuid="fabc81c9-be42-4fc2-ae61-87d636202de8"/>
@@ -333,18 +355,18 @@ where ag.inicio >= $P{inicio}]]>
 								<text><![CDATA[ÁGUA]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="table 1_CH" height="30" rowSpan="1"/>
-						<jr:detailCell style="table 1_TD" height="30" rowSpan="1">
+						<jr:columnFooter style="table 1_CH" height="0" rowSpan="1"/>
+						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
 							<textField>
-								<reportElement x="0" y="6" width="61" height="20" uuid="2783949e-0141-4cde-b352-0dd5e219c3fc"/>
+								<reportElement x="0" y="0" width="61" height="20" uuid="2783949e-0141-4cde-b352-0dd5e219c3fc"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<textFieldExpression><![CDATA[$F{AGUA}.equals(true)? "X":""]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="61" uuid="de56f610-ac07-400d-a3e9-010a442d0bef">
-						<jr:tableHeader style="table 1_TH" height="30" rowSpan="1"/>
-						<jr:tableFooter style="table 1_TH" height="30" rowSpan="1"/>
+						<jr:tableHeader style="table 1_TH" height="0" rowSpan="1"/>
+						<jr:tableFooter style="table 1_TH" height="0" rowSpan="1"/>
 						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement x="0" y="0" width="61" height="30" uuid="d0a9eacd-181b-470f-84a7-357743308188"/>
@@ -354,18 +376,18 @@ where ag.inicio >= $P{inicio}]]>
 								<text><![CDATA[CÁFE]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="table 1_CH" height="30" rowSpan="1"/>
-						<jr:detailCell style="table 1_TD" height="30" rowSpan="1">
+						<jr:columnFooter style="table 1_CH" height="0" rowSpan="1"/>
+						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
 							<textField>
-								<reportElement x="0" y="6" width="61" height="20" uuid="b3886d06-8e28-4561-b925-4fcbe191cce9"/>
+								<reportElement x="0" y="0" width="61" height="20" uuid="b3886d06-8e28-4561-b925-4fcbe191cce9"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<textFieldExpression><![CDATA[$F{CAFE}.equals(true)? "X":""]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="61" uuid="fd218672-7464-4d7b-b070-c77145a58715">
-						<jr:tableHeader style="table 1_TH" height="30" rowSpan="1"/>
-						<jr:tableFooter style="table 1_TH" height="30" rowSpan="1"/>
+						<jr:tableHeader style="table 1_TH" height="0" rowSpan="1"/>
+						<jr:tableFooter style="table 1_TH" height="0" rowSpan="1"/>
 						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement x="0" y="0" width="61" height="30" uuid="219eb774-e26a-4e9d-98d6-b699d3232784"/>
@@ -375,18 +397,18 @@ where ag.inicio >= $P{inicio}]]>
 								<text><![CDATA[FRUTAS]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="table 1_CH" height="30" rowSpan="1"/>
-						<jr:detailCell style="table 1_TD" height="30" rowSpan="1">
+						<jr:columnFooter style="table 1_CH" height="0" rowSpan="1"/>
+						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
 							<textField>
-								<reportElement x="0" y="6" width="61" height="20" uuid="566fdd0e-28a7-4cbc-9adf-ebf73303d5d3"/>
+								<reportElement x="0" y="0" width="61" height="20" uuid="566fdd0e-28a7-4cbc-9adf-ebf73303d5d3"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<textFieldExpression><![CDATA[$F{FRUTAS}.equals(true)? "X":""]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="61" uuid="03a74cb9-a8dc-4cbd-97f7-d97f4537cbcf">
-						<jr:tableHeader style="table 1_TH" height="30" rowSpan="1"/>
-						<jr:tableFooter style="table 1_TH" height="30" rowSpan="1"/>
+						<jr:tableHeader style="table 1_TH" height="0" rowSpan="1"/>
+						<jr:tableFooter style="table 1_TH" height="0" rowSpan="1"/>
 						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement x="0" y="0" width="61" height="30" uuid="1f8a20f9-ad34-42f1-9d54-5515465e6d25"/>
@@ -396,10 +418,10 @@ where ag.inicio >= $P{inicio}]]>
 								<text><![CDATA[LANCHE]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="table 1_CH" height="30" rowSpan="1"/>
-						<jr:detailCell style="table 1_TD" height="30" rowSpan="1">
+						<jr:columnFooter style="table 1_CH" height="0" rowSpan="1"/>
+						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
 							<textField>
-								<reportElement x="0" y="6" width="61" height="20" uuid="24d49ce0-c5a7-4ae9-8498-8c67d4d97bc1"/>
+								<reportElement x="0" y="0" width="61" height="20" uuid="24d49ce0-c5a7-4ae9-8498-8c67d4d97bc1"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<textFieldExpression><![CDATA[$F{LANCHE}.equals(true)? "X":""]]></textFieldExpression>
 							</textField>

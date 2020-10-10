@@ -6,6 +6,7 @@
 package br.com.controlesalas.controllers;
 
 import br.com.controlesalas.entities.Agendamento;
+import br.com.controlesalas.entities.Projeto;
 import br.com.controlesalas.entities.Sala;
 import br.com.controlesalas.services.SalaService;
 import br.com.controlesalas.util.MensagemUtil;
@@ -18,6 +19,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpSession;
 import org.primefaces.event.RowEditEvent;
 
 /**
@@ -34,16 +36,20 @@ public class SalaController implements Serializable {
     private Sala sala;
     private List<Sala> salas;
     private List<Agendamento> agendamentos;
+    private Projeto projeto;
 
     @PostConstruct
     public void init() {
         sala = new Sala();
-        salas = service.todos();
         agendamentos =  new ArrayList<>();
+        projeto =  (Projeto) getSession().getAttribute("projetoSelecionado");
+        salas = service.todos(projeto.getIdProjeto());
     }
 
     public void salvar(){
         System.out.println("---ID salvar: " +sala.getIdSala());
+        Projeto proj = (Projeto) getSession().getAttribute("projetoSelecionado");
+        sala.setProjeto(proj);
         String erro = service.salvar(sala);
         if (erro == null) {
             MensagemUtil.addMensagemInfo("Salvo.");
@@ -102,11 +108,11 @@ public class SalaController implements Serializable {
     }
 
     public List<Sala> todos() {
-        return service.todos();
+        return service.todos(projeto.getIdProjeto());
     }
 
-    public List<Sala> todosVisiveis() {
-        return service.todosVisiveis();
+    public List<Sala> rotulos() {
+        return service.rotulos(projeto.getIdProjeto());
     }
 
     public Sala getSala() {
@@ -131,6 +137,20 @@ public class SalaController implements Serializable {
 
     public void setAgendamentos(List<Agendamento> agendamentos) {
         this.agendamentos = agendamentos;
+    }
+
+    public Projeto getProjeto() {
+        return projeto;
+    }
+
+    public void setProjeto(Projeto projeto) {
+        this.projeto = projeto;
+    }
+    
+    
+    
+    public HttpSession getSession() {
+        return (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
     }
     
     

@@ -11,6 +11,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 /**
@@ -38,9 +39,44 @@ public class ProjetoService implements Serializable{
         }
     }
     
+    public Projeto obter(Long id){
+        return em.find(Projeto.class, id);
+    }
+    
     public List<Projeto> todos(){
         TypedQuery<Projeto> query = em.createQuery("Select c from Projeto as c", Projeto.class);
         return query.getResultList();
+    }
+    
+     public String excluir(Long id) {
+        try {
+            Projeto p = obter(id);
+            em.remove(p);
+            return null;
+        } catch (Exception ex) {
+            return "Erro: " + ex.getMessage();
+        }
+    }
+    
+    public List<Projeto> todosAtivos(){
+        TypedQuery<Projeto> query = em.createQuery("Select c from Projeto as c where c.ativo = 1", Projeto.class);
+        return query.getResultList();
+    }
+    
+    public List<Projeto> todosDesativados(){
+        TypedQuery<Projeto> query = em.createQuery("Select c from Projeto as c where c.ativo = 0", Projeto.class);
+        return query.getResultList();
+    }
+    
+    public void desativar(Projeto projeto){
+        Query query = em.createNativeQuery("update Projeto as p set p.ativo = 0 where p.idProjeto = "+projeto.getIdProjeto());
+        query.executeUpdate();
+    }
+    
+    public void ativar(Projeto projeto){
+        Query query = em.createNativeQuery("update Projeto as p set p.ativo = 1 where p.idProjeto = "+projeto.getIdProjeto());
+//        query.setParameter(1, projeto.getIdProjeto());
+        query.executeUpdate();
     }
             
     

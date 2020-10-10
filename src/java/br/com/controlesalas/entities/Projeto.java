@@ -6,6 +6,7 @@
 package br.com.controlesalas.entities;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,6 +15,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 /**
@@ -31,12 +33,15 @@ public class Projeto implements Serializable {
     
     @Column
     private String descricao;
-     
-    @Column
-    private String logo_img;
     
-    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @Column
+    private boolean ativo;
+    
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Configuracao config;
+    
+    @OneToMany(mappedBy = "Projeto", cascade = CascadeType.REMOVE)
+    private List<Sala> Salas ;
     
 //    @ManyToOne
 //    private Usuario usuario;
@@ -65,14 +70,14 @@ public class Projeto implements Serializable {
         this.descricao = descricao;
     }
 
-    public String getLogo_img() {
-        return logo_img;
+    public boolean isAtivo() {
+        return ativo;
     }
 
-    public void setLogo_img(String logo_img) {
-        this.logo_img = logo_img;
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
     }
-
+   
     public Configuracao getConfig() {
         return config;
     }
@@ -80,6 +85,15 @@ public class Projeto implements Serializable {
     public void setConfig(Configuracao config) {
         this.config = config;
     }
+
+    public List<Sala> getSalas() {
+        return Salas;
+    }
+
+    public void setSalas(List<Sala> Salas) {
+        this.Salas = Salas;
+    }
+    
     
     
 

@@ -16,6 +16,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 /**
@@ -44,8 +46,12 @@ public class Sala implements Serializable {
     @Column
     private boolean visivel;
     
-    @OneToMany(mappedBy = "Sala")
+    @OneToMany(mappedBy = "Sala", cascade = CascadeType.REMOVE)
     private List<Agendamento> agendamentos ;
+    
+    @ManyToOne
+    @JoinColumn(name = "idProjeto")
+    private Projeto projeto;
 
     public Long getIdSala() {
         return idSala;
@@ -77,6 +83,14 @@ public class Sala implements Serializable {
 
     public void setAgendamentos(List<Agendamento> agendamentos) {
         this.agendamentos = agendamentos;
+    }
+
+    public Projeto getProjeto() {
+        return projeto;
+    }
+
+    public void setProjeto(Projeto projeto) {
+        this.projeto = projeto;
     }
 
     public int getCapacidade() {

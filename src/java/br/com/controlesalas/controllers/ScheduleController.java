@@ -6,6 +6,7 @@
 package br.com.controlesalas.controllers;
 
 import br.com.controlesalas.entities.Agendamento;
+import br.com.controlesalas.entities.Projeto;
 import br.com.controlesalas.services.AgendamentoService;
 import java.io.Serializable;
 import java.text.ParseException;
@@ -40,6 +41,8 @@ public class ScheduleController implements Serializable {
 
     private Agendamento agendamento;
     private List<Agendamento> agendamentos;
+    
+    private Projeto projeto;
 
     private ScheduleModel eventos;
     private LazyScheduleModel lazyEventModel;
@@ -56,8 +59,8 @@ public class ScheduleController implements Serializable {
     
     @PostConstruct
     public void init() {
-
-        agendamentos = service.todos();
+        projeto = (Projeto) getSession().getAttribute("projetoSelecionado");
+        agendamentos = service.todosProjeto(projeto.getIdProjeto());
         eventos = new DefaultScheduleModel();
 
         for (final Agendamento e : agendamentos) {
@@ -239,6 +242,16 @@ public class ScheduleController implements Serializable {
     public void setDate(Date date) {
         this.date = date;
     }
+
+    public Projeto getProjeto() {
+        return projeto;
+    }
+
+    public void setProjeto(Projeto projeto) {
+        this.projeto = projeto;
+    }
+    
+    
     
     public HttpSession getSession() {
         return (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);

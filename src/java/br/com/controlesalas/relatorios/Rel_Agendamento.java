@@ -10,6 +10,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -20,10 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.enterprise.concurrent.Trigger;
 import javax.faces.context.FacesContext;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.servlet.http.HttpServletResponse;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -31,16 +30,7 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
-import net.sf.jasperreports.view.JasperViewer;
-import org.quartz.Job;
-import org.quartz.JobDetail;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
-import org.quartz.SchedulerFactory;
-import org.quartz.TriggerUtils;
-import org.quartz.impl.StdSchedulerFactory;
 
 /**
  *
@@ -62,7 +52,7 @@ public class Rel_Agendamento implements Serializable {
     /*
     defina um parametro: List<Objeto> lista, se usar JavaBean DataSource
      */
-    public void getAgendamentos(Connection conexao, Date data_inicio, Date data_fim, String formato) {
+    public void getAgendamentos(Connection conexao, Date data_inicio, Date data_fim, String formato, String url_logo, Long idProjeto, boolean download) {
         Timestamp ts = new Timestamp(data_inicio.getTime());
         Timestamp ts2 = new Timestamp(data_fim.getTime());        
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -71,14 +61,18 @@ public class Rel_Agendamento implements Serializable {
         String fim_s = format.format(ts2);
         Timestamp inicio = Timestamp.valueOf(inicio_s);
         Timestamp fim = Timestamp.valueOf(fim_s);
+        
+        // pega url de contexto do projeto 
+        //String webcontents = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/");
 
         stream = this.getClass().getResourceAsStream("/Report/report1.jasper");
         Map<String, Object> params = new HashMap<>();
         baos = new ByteArrayOutputStream();
-        boolean download = false;
         String tipo = (download == true ? "attachement" : "inline");
         params.put("inicio", inicio);
         params.put("fim", fim);
+        params.put("logo_img", url_logo);
+        params.put("idProjeto", idProjeto);
         params.put("REPORT_CONNECTION", conexao);
         try {
 

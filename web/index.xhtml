@@ -7,21 +7,19 @@ and open the template in the editor.
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:ui="http://java.sun.com/jsf/facelets">
 
-    <ui:composition template="/template.xhtml">
+    <ui:composition template="template.xhtml">
         <ui:define name="titulo"  >
-            <span style="margin: 0 auto; font-size: 22px; font-family: sans-serif; color: #999999 ; "> Início </span>
-   </ui:define>  
+            <span style="font-size: 22px; font-family: sans-serif; color: #999999 ; "> Início</span>
+        </ui:define>    
         <ui:define name="conteudo">
-            <!--<p:growl /> -->
-            <!--<h:outputLink value="#{request.contextPath}/Comprovante/comprovantes.xhtml" style="float: left;" styleClass="btn btn-primary btn-space">Comprovantes</h:outputLink>
-            
-            /--><h:form id="inicio" style="width: 100%; margin-top: 50px">                 
-                    <h:outputLabel value="" />
-                
+            <h:form id="cadastro" >
+                <h:panelGrid columns="1" width="30%" style="margin-top: 10px; margin-bottom: 100px; float: left;" >
+                    <p:inputText style="visibility: hidden;" disabled="true" value="" />
+                </h:panelGrid>
             </h:form>
         </ui:define>
     </ui:composition>
+  
 </html>

@@ -7,10 +7,12 @@ package br.com.controlesalas.controllers;
 
 import br.com.controlesalas.entities.Agendamento;
 import br.com.controlesalas.entities.Descritivo;
+import br.com.controlesalas.entities.Projeto;
 import br.com.controlesalas.relatorios.Rel_Agendamento;
 import br.com.controlesalas.services.AgendamentoService;
+import br.com.controlesalas.services.ConfigService;
 import br.com.controlesalas.util.MensagemUtil;
-import java.io.IOException;
+import java.io.File;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -40,13 +42,19 @@ public class AgendamentoViewController implements Serializable {
 
     @Inject
     private AgendamentoService service;
+    
+    @Inject
+    private ConfigService service_config;
 
     private Agendamento agendamento;
     private List<Agendamento> agendamentos;
+    
+    private Projeto projeto;
+    private Object idProjeto;
 
     private ScheduleModel eventos;
     private LazyScheduleModel lazyEventModel;
-
+    
     @Temporal(TemporalType.TIMESTAMP)
     private Date data_inicio;
 
@@ -56,21 +64,22 @@ public class AgendamentoViewController implements Serializable {
     Date data = new Date(System.currentTimeMillis());
     Timestamp dateTime = new Timestamp(data.getTime());
 
-
     @PostConstruct
-    public void init() {
+    public void init(){
         agendamento = new Agendamento();
+        idProjeto =  getSession().getAttribute("idConfigSelecionado");
+        projeto = (Projeto) getSession().getAttribute("projetoSelecionado");
 //        agendamentos = new ArrayList<>();
         data_inicio = dateTime;
-        System.out.println("----Inico:"+data_inicio);
         data_fim = ultimoAgendamento();
         data_inicio.setHours(0);
         data_inicio.setMinutes(0);
         data_inicio.setSeconds(0);
         data_fim.setHours(23);
         data_fim.setMinutes(0);
-        data_fim.setSeconds(0);
-        agendamentos = service.todosData(data_inicio, data_fim);
+        data_fim.setSeconds(0);   
+        agendamentos = service.todosData(data_inicio, data_fim, projeto.getIdProjeto());
+        
     }
     
     public void salvar() {
@@ -100,15 +109,6 @@ public class AgendamentoViewController implements Serializable {
         }
     }
 
-    //ainda nao funciona para dashboard
-//    public void editarPorDashboard(Agendamento agendamento) {
-//        this.agendamento = agendamento;
-//        //getSession().setAttribute("idExcluir", agendamento.getIdAgendamento());
-//    }
-//
-//    public void detalhes(Agendamento ag) throws IOException {
-//        agendamento = ag;
-//    }
     public void excluir() {
         if (!agendamento.getTitulo().isEmpty()) {
             String erro = service.excluir(agendamento.getIdAgendamento());
@@ -130,20 +130,6 @@ public class AgendamentoViewController implements Serializable {
         agendamento = ag;
     }
 
-//    public void excluirPorId(Agendamento agendamento) {
-//        if (!agendamento.getTitulo().isEmpty()) {
-//            String erro = service.excluir(agendamento.getIdAgendamento());
-//            if (erro == null) {
-//                MensagemUtil.addMensagemInfo("Excluído.");
-//                agendamento = new Agendamento();
-//                agendamento.setDescritivo(new Descritivo());
-//            } else {
-//                MensagemUtil.addMensagemError(erro);
-//            }
-//        } else {
-//
-//        }
-//    }
     public String cor_evento(String cor) {
         if (cor.equals("orange")) {
             return "evento_amarelo";
@@ -167,10 +153,44 @@ public class AgendamentoViewController implements Serializable {
     }
 
     public void buscarAgendamentos() {
-        agendamentos = service.todosData(data_inicio, data_fim);
+//        String idProjeto = (String) ;
+        agendamentos = service.todosData(data_inicio, data_fim, projeto.getIdProjeto());
     }
 
     public void relatorioAgendamentos(String formato) throws SQLException, SchedulerException {
+        Rel_Agendamento rel = new Rel_Agendamento();
+        
+        String path = "C:/controlesalas/imgs/logo-padrao.png";
+        
+        if (idProjeto != null) {
+            int id = ((Long)idProjeto).intValue();
+            String url_logo = service_config.obterUrl(id);
+            File file = new File(url_logo);
+            if (file.exists()) {
+                int pos = file.getName().lastIndexOf(".");
+                //nome = file.getName();
+                String tipo = file.getName().substring(pos + 1);
+                String nome = file.getName().substring(0, pos) + "_rel";
+                int pos2 = url_logo.lastIndexOf("/");
+                path = url_logo.substring(0, pos2) + "/" + nome + "." + tipo;
+            }
+        }
+
+        String driver = "com.mysql.jdbc.JDBC4Connection";
+        String url = "jdbc:mysql://localhost:3306/controle_salas?characterEncoding=latin1&useConfigs=maxPerformance&allowPublicKeyRetrieval=true&useSSL=false";
+        String usuario = "root";
+        String senha = "admin";
+        Connection conexao = null;
+
+        try {
+            System.setProperty("jdbc.Drivers", driver);
+            conexao = DriverManager.getConnection(url, usuario, senha);
+        } catch (SQLException ex) {
+        }
+        rel.getAgendamentos(conexao, data_inicio, data_fim, formato, path, projeto.getIdProjeto(), false);
+    }
+    
+    public void relatorioAutoAgendamentos(String formato) throws SQLException, SchedulerException {
         Rel_Agendamento rel = new Rel_Agendamento();
         String driver = "com.mysql.jdbc.JDBC4Connection";
         String url = "jdbc:mysql://localhost:3306/controle_salas?characterEncoding=latin1&useConfigs=maxPerformance&allowPublicKeyRetrieval=true&useSSL=false";
@@ -183,10 +203,10 @@ public class AgendamentoViewController implements Serializable {
             conexao = DriverManager.getConnection(url, usuario, senha);
         } catch (SQLException ex) {
         }
-        rel.getAgendamentos(conexao, data_inicio, data_fim, formato);
+        rel.getAgendamentos(conexao, data_inicio, data_fim, formato, "", projeto.getIdProjeto(), true);
     }
 
-    public Date ultimoAgendamento() {
+    public Date ultimoAgendamento() {    
         data_fim = service.ultimoAgendamento();
         if(data_fim == null){
             data_fim = dateTime;
@@ -195,11 +215,11 @@ public class AgendamentoViewController implements Serializable {
     }
 
     public List<Agendamento> todos() {
-        return service.todos();
+        return service.todosProjeto(projeto.getIdProjeto());
     }
 
     public List<Agendamento> todosData() {
-        return service.todosData(data_inicio, data_fim);
+        return service.todosData(data_inicio, data_fim, projeto.getIdProjeto());
     }
 
 //    public void onRowSelect(SelectEvent event) {
@@ -239,6 +259,16 @@ public class AgendamentoViewController implements Serializable {
     public void setData_inicio(Date data_inicio) {
         this.data_inicio = data_inicio;
     }
+
+    public Projeto getProjeto() {
+        return projeto;
+    }
+
+    public void setProjeto(Projeto projeto) {
+        this.projeto = projeto;
+    }
+    
+    
 
 
     /*--------Schedule---------*/

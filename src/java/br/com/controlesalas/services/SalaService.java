@@ -62,13 +62,15 @@ public class SalaService implements Serializable {
         }
     }
     
-    public List<Sala> todos(){
-        TypedQuery<Sala> query = em.createQuery("Select c from Sala as c", Sala.class);
+    public List<Sala> todos(Long id){
+        TypedQuery<Sala> query = em.createQuery("Select c from Sala as c where c.projeto.idProjeto = ?1", Sala.class);
+        query.setParameter(1, id);
         return query.getResultList();
     }
     
-    public List<Sala> todosVisiveis(){
-        TypedQuery<Sala> query = em.createQuery("Select c from Sala as c Where c.visivel = True", Sala.class);
+    public List<Sala> rotulos(Long id){
+        TypedQuery<Sala> query = em.createQuery("Select c from Sala as c Where c.visivel = True and c.projeto.idProjeto = ?1", Sala.class);
+         query.setParameter(1, id);
         return query.getResultList();
     }
     

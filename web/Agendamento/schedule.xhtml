@@ -24,6 +24,7 @@
 
                 <div id="teste" class="col-md-12" style="margin-top: 0px">     
                     <!--<h:commandButton id="btn_fullscreen" image="/Imagem/icons/fullscreen.png" onclick="requestFullScreen(document.body);return false;" style="margin-left: 97%;" />-->
+                    
                     <h:commandButton id="btn_fullscreen" image="/Imagem/icons/fullscreen.png" value="Agendar" style="margin-left: 97%;">
                         <p:ajax oncomplete="PF('dialogSchedule').show();"  />
                     </h:commandButton>
@@ -32,7 +33,7 @@
                         <center>
                             <table border="0" width="50%">
                                 <tr style="width: 5%" >
-                                    <ui:repeat value="#{salaController.todosVisiveis()}" var="s" varStatus="status" >
+                                    <ui:repeat rendered="#{configController.configuracao.rotulos_visivel}" value="#{salaController.rotulos()}" var="s" varStatus="status" >
                                         <td>  
                                             <p > 
                                                 <h:commandButton disabled="true" style="background-color: #{s.cor} ; width: 10px; height: 15px; border-radius: 3px; border: 0 " /> #{s.nome_sala}
@@ -55,14 +56,14 @@
                                     aspectRatio="2"
                                     centerHeaderTemplate="title"
                                     slotMinutes="30"
-                                    showWeekends="false"
+                                    showWeekends="#{configController.configuracao.show_weekends}"
                                     timeZone="GMT-3"
                                     allDaySlot="false"
                                     columnFormat="week: 'dddd dd/MM', month: 'dddd'"
                                     minTime="6"
                                     maxTime="22"
                                     showHeader="true"
-                                    view="agendaWeek" tooltip="true" >
+                                    view="#{configController.configuracao.view_agenda}" tooltip="false" >
                             <p:ajax event="dateSelect" listener="#{scheduleController.onDateSelect}"   update=":agenda" />
                             <p:ajax event="eventSelect" listener="#{scheduleController.onEventSelect}"  update=":agenda" />
                             <!--<p:ajax event="eventMove" listener="{scheduleController.onEventMove}" process="@form"  update="@form" />
@@ -72,14 +73,23 @@
                 </div>
 
                 <p:dialog widgetVar="dialogSchedule" width="98%" height="90%" maximizable="true"  showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true" >
-                    <p:panel id="painelSchedule" style="border: 0; border-color: #fff" > 
-                        <h:commandButton id="update" value="Atualizar" class="btn btn-default btn-space">
-                            <p:ajax update=":agenda:schedule2" />
-                        </h:commandButton>
+                    <div class="row" >
+                        <div style="margin-left: 30px; float: left;">
+                            <h:commandButton id="update" value="Atualizar" class="btn btn-default btn-space" >
+                                <p:ajax update=":agenda:schedule2" />
+                            </h:commandButton> 
+                        </div>
+                        <div style="margin-left: 85%; margin-bottom: 0px; font-size: 18px; float: left;">
+                            <p:clock pattern="HH:mm:ss" mode="server" />
+                        </div>       
+
+                    </div>
+                    <p:panel id="painelSchedule" style="border: 0; border-color: #fff; margin-top: 20px;" >
+
                         <center >
                             <table border="0"   width="50%" style="margin-top: -20px;" >
                                 <tr style="width: 5%" >
-                                    <ui:repeat id="repeater" value="#{salaController.todosVisiveis()}" var="s" varStatus="status" >
+                                    <ui:repeat id="repeater" rendered="#{configController.configuracao.rotulos_visivel}" value="#{salaController.rotulos()}" var="s" varStatus="status" >
                                         <td>  
                                             <p > 
                                                 <h:commandButton disabled="true" style="background-color: #{s.cor} ; width: 10px; height: 15px; border-radius: 3px; border: 0 " /> #{s.nome_sala}
@@ -103,14 +113,14 @@
                                     aspectRatio="1.5"
                                     centerHeaderTemplate="title"
                                     slotMinutes="30"
-                                    showWeekends="false"
+                                    showWeekends="#{configController.configuracao.show_weekends}"
                                     timeZone="GMT-3"
                                     allDaySlot="false"
                                     columnFormat="week: 'dddd dd/MM', month: 'dddd'"
                                     minTime="6"
                                     maxTime="22"
                                     showHeader="true"
-                                    view="agendaWeek"   >
+                                    view="#{configController.configuracao.view_agenda}"   >
                         </p:schedule>
                     </p:panel>
                 </p:dialog>

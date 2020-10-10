@@ -153,8 +153,9 @@ and open the template in the editor.
                                 </p:column>
                             </p:dataTable>
                         </p:scrollPanel>
+                        <h:outputLabel style="font-weight: 100" value="#{salaController.agendamentos.size()} agentamento#{salaController.agendamentos.size() > 1? 's':''}" />
+
                 </h:form>
-                <h:outputLabel style="font-weight: 100" value="#{salaController.sala.nome_sala}#{salaController.agendamentos.size()} agentamento#{salaController.agendamentos.size() > 1? 's':''}" />
             </p:dialog>
 
         </ui:define>
