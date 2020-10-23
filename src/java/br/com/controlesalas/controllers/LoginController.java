@@ -4,17 +4,21 @@
  */
 package br.com.controlesalas.controllers;
 
+
+import br.com.controlesalas.entities.Role;
 import br.com.controlesalas.entities.Usuario;
 import br.com.controlesalas.services.UsuarioService;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-//import org.springframework.security.core.Authentication;;
-//import org.springframework.security.core.context.SecurityContext;
-//import org.springframework.security.core.context.SecurityContextHolder;
-//import org.springframework.security.core.userdetails.User;
+import javax.servlet.http.HttpSession;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 
 /**
  *
@@ -27,40 +31,84 @@ public class LoginController implements Serializable {
     @Inject
     private UsuarioService service;
   
-    private Usuario usuario; 
+    protected Usuario usuario;
     
-   
+    
     @PostConstruct
     public void init() {
         usuario = new Usuario();
-      
-//        SecurityContext context = SecurityContextHolder.getContext();
-//        if (context instanceof SecurityContext) {
-//            Authentication authentication = context.getAuthentication();
-//            if (authentication instanceof Authentication) {
-//                usuario = service.consultaPorUsuario(((User) authentication.getPrincipal()).getUsername());
-//            }
-//        }
-        
+        SecurityContext context = SecurityContextHolder.getContext();
+        if (context instanceof SecurityContext) {
+            Authentication authentication = context.getAuthentication();
+            if (authentication instanceof Authentication) {
+                usuario = service.consultaPorUsuario(((User) authentication.getPrincipal()).getUsername());
+                getSession().setAttribute("idUsuario", usuario.getIdUsuario());
+            }
+        }
+
     }
 
     public void reset() {
         init();
     }
+    
+//    public void encrypt() throws NoSuchAlgorithmException, UnsupportedEncodingException {
+//        String senha = "admin";
+//
+//        MessageDigest algorithm = MessageDigest.getInstance("SHA-256");
+//        byte messageDigest[] = algorithm.digest(senha.getBytes("UTF-8"));
+//
+//        System.out.println(Arrays.toString(messageDigest));
+//    }
+//    
+//    public static String encriptPassword(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+//        MessageDigest messageDigest =  MessageDigest.getInstance("SHA-256");
+//        messageDigest.update(password.getBytes("UTF-8"));
+//        return new BigInteger(1, messageDigest.digest()).toString(16);
+//    }
 
-    public String nomeDoUsuario() {
-        return usuario.getUsuario();
+    
+    public boolean verificaSAdmin() {
+        boolean admin = true;
+        Role r = new Role();
+        for(Role role : usuario.getRoles()){
+            r = role;
+        }
+        if (r.getNome_role().equals("super_administrador")) {
+            return admin;
+        } else {
+            return false;
+        }
     }
 
-    public boolean validaSeAdmin() {
-        return usuario.getPerfil().equals("Administrador"); 
+    public boolean verificaAdmin() {
+        boolean admin = true;
+         Role r = new Role();
+        for(Role role : usuario.getRoles()){
+            r = role;
+        }
+        String papel = r.getNome_role();
+        if (papel.equals("administrador")){
+            return admin;
+        } else {
+            return false;
+        }
     }
 
-    public boolean validaSeCliente() {
-        return usuario.getPerfil().equals("Cliente");
+    public boolean verificaUsuario() {
+        boolean admin = true;
+         Role r = new Role();
+        for(Role role : usuario.getRoles()){
+            r = role;
+        }
+        String papel = r.getNome_role();
+        if (papel.equals("usuario")){
+            return admin;
+        } else {
+            return false;
+        }
     }
-
-    //GET SET
+    
     public Usuario getUsuario() {
         return usuario;
     }
@@ -69,4 +117,11 @@ public class LoginController implements Serializable {
         this.usuario = usuario;
     }
 
-}
+    public HttpSession getSession() {
+        return (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+    }
+  
+
+    }
+
+

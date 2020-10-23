@@ -18,7 +18,8 @@ and open the template in the editor.
             <h:form id="cadastro">
                 <div class="col-md-12" style="margin-top: 5px">          
                     <div class="form-group"> 
-                        <h:commandButton styleClass="btn btn-primary" value="Novo" >
+                       
+                        <h:commandButton rendered="#{loginController.verificaSAdmin() or loginController.verificaAdmin()}" styleClass="btn btn-primary" value="Novo" >
                             <p:ajax oncomplete="PF('dlg_novo_projeto').show()" rendered=":cadastro:panel_novo_projeto" /> 
                         </h:commandButton>
                     </div>
@@ -26,7 +27,6 @@ and open the template in the editor.
 
                 <p:inputText style="visibility: hidden;" disabled="true" value="" />
                 <h:panelGrid columns="5" style="margin-top: 10px; margin-bottom: 20px; " >
-
                     <!--<div class="col-md-12" style="margin-top: 20px">-->    
                         <p:dataGrid var="c" value="#{projetoController.todosAtivos()}" 
                                     columns="8"  
@@ -41,7 +41,7 @@ and open the template in the editor.
                                         <center><h:outputLabel value="#{c.nome}" /></center>
                                     </h:commandButton> 
 
-                                    <h:panelGrid class="panel-projeto-oculto" columns="1" style="width: 100%; margin-left: 16%; margin-top: -80px;" >
+                                    <h:panelGrid rendered="#{loginController.verificaSAdmin() or loginController.verificaAdmin()}" class="panel-projeto-oculto" columns="1" style="width: 100%; margin-left: 16%; margin-top: -80px;" >
                                         <h:panelGrid columns="2" style=""  >
                                             <h:commandLink class="btn btn-default"   value="" >
                                                 <h:graphicImage value="/Imagem/icons/visao.png" />

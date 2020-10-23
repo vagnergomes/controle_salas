@@ -9,10 +9,13 @@ import br.com.controlesalas.entities.Configuracao;
 import br.com.controlesalas.entities.Projeto;
 import static br.com.controlesalas.entities.Projeto_.Salas;
 import br.com.controlesalas.entities.Sala;
+import br.com.controlesalas.entities.Usuario;
 import br.com.controlesalas.services.ProjetoService;
+import br.com.controlesalas.services.UsuarioService;
 import br.com.controlesalas.util.MensagemUtil;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
@@ -27,10 +30,13 @@ import javax.servlet.http.HttpSession;
  */
 @Named
 @RequestScoped
-public class ProjetoController  implements Serializable{
+public class ProjetoController implements Serializable{
     
     @Inject
     private ProjetoService service;
+    
+    @Inject
+    private UsuarioService usuario_service;
     
     private Projeto projeto;
     private Projeto projetoEditar;
@@ -38,15 +44,18 @@ public class ProjetoController  implements Serializable{
     private List<Sala> salas;
     private Object idProjeto;
     
+    Long idUsuario;
+    
+    
     public ProjetoController(){
         
     }
     
     @PostConstruct
     public void init(){
-        
+        idUsuario = (Long) getSession().getAttribute("idUsuario");
         idProjeto =  getSession().getAttribute("idConfigSelecionado");
-        
+        //Long idUsuario = (Long) getSession().getAttribute("idUsuario");
         if(idProjeto == null){
             projeto = new Projeto();
             config = new Configuracao();
@@ -61,8 +70,15 @@ public class ProjetoController  implements Serializable{
     }
      
     public void salvar() {
+       // System.out.println("------IdSessao:" + usuario.getUsuario());
         if (idProjeto == null) {
-            System.out.println("Entrou salvar");
+//            Long idUsuario = (Long) getSession().getAttribute("idUsuario");
+            Usuario usuario = new Usuario();
+            usuario = usuario_service.obter(idUsuario);
+            List<Usuario> usuarios = new ArrayList<>();
+
+            usuarios.add(usuario);
+            projeto.setUsuarios(usuarios);
             config.setExports_visivel(true);
             config.setRotulos_visivel(true);
             config.setTerminados_opaco(true);
@@ -70,15 +86,12 @@ public class ProjetoController  implements Serializable{
             config.setUrl_img_logo("C:/controlesalas/imgs/logo-padrao.png");
             config.setShow_weekends(true);
             config.setView_agenda("agendaWeek");
-            System.out.println("passou logo");
             projeto.setAtivo(true);
-            System.out.println("passou ativo");
         }
 
         projeto.setConfig(config);
         String erro = service.salvar(projeto);
         if (erro == null) {
-            System.out.println("salvo");
             projeto = new Projeto();
             MensagemUtil.addMensagemInfo("Projeto Salvo.");
         } else {
@@ -96,16 +109,15 @@ public class ProjetoController  implements Serializable{
         } else{
             MensagemUtil.addMensagemError("Erro ao excluir projeto.");
             System.out.println("Erro excluir projeto: " + erro);
-        }
-            
+        }    
     }
     
     public List<Projeto> todosAtivos() {
-        return service.todosAtivos();
+        return service.todosAtivos(idUsuario);
     }
     
     public List<Projeto> todosDesativados() {
-        return service.todosDesativados();
+        return service.todosDesativados(idUsuario);
     }
     
     public List<Projeto> todos() {
@@ -209,6 +221,22 @@ public class ProjetoController  implements Serializable{
 
     public void setIdProjeto(Object idProjeto) {
         this.idProjeto = idProjeto;
+    }
+
+    public List<Sala> getSalas() {
+        return salas;
+    }
+
+    public void setSalas(List<Sala> salas) {
+        this.salas = salas;
+    }
+
+    public Long getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(Long idUsuario) {
+        this.idUsuario = idUsuario;
     }
     
     

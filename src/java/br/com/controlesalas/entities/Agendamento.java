@@ -18,12 +18,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author vagner.gomes
  */
 @Entity
+@XmlRootElement
 public class Agendamento implements Serializable {
     
     @Id

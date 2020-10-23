@@ -2,12 +2,19 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
 	<ui:composition template="../../template.xhtml">	
 		<ui:define name="conteudo">
-			<div id="acessonegado">
-				<h:outputLink   value="#{request.contextPath}/index.xhtml">Você não possui permissão para acessar esta página.</h:outputLink>
-			</div>
-		</ui:define>
-	</ui:composition>
+                    <div id="acessonegado">
+                        <h:outputLink   value="#{request.contextPath}/index.xhtml">Você não possui permissão para acessar esta página.</h:outputLink>
+                        <h:form id="hidden" >
+                            <h:panelGrid columns="1" width="30%" style="margin-top: 10px; margin-bottom: 100px; float: left;" >
+                                <p:inputText style="visibility: hidden;" disabled="true" value="" />
+                            </h:panelGrid>
+                        </h:form>
+                        
+                    </div>
+                </ui:define>
+        </ui:composition>
 </html>

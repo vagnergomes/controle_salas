@@ -5,13 +5,18 @@
 package br.com.controlesalas.entities;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -29,18 +34,28 @@ public class Usuario implements Serializable {
     @Column(length = 45, nullable = false)
     private String usuario;
     
-    @Column(length = 50, nullable = false)
+    @Column(length = 100)
+    private String nome_completo;
+    
+    @Column(length = 50)
     private String email;
     
-    @Column(length = 45, nullable = false)
+    @Column(length = 64, nullable = false)
     private String senha;
     
-    @Column(nullable = false)
-    private String perfil;
 
-//    @OneToMany(mappedBy = "Usuario")
-//    private List<Organizacao> organizacao;
+    @ManyToMany(cascade = CascadeType.DETACH)
+    @JoinTable(
+            name = "usuarios_roles",
+            joinColumns = {@JoinColumn(
+                    name = "usuario_id")},
+            inverseJoinColumns = {@JoinColumn(
+                    name = "role_id")})
+    private List<Role> roles;
     
+     @ManyToMany(mappedBy = "usuarios")
+    private List<Projeto> projetos;
+
     // GET SET
     public Long getIdUsuario() {
         return IdUsuario;
@@ -58,6 +73,22 @@ public class Usuario implements Serializable {
         this.usuario = usuario;
     }
 
+    public String getNome_completo() {
+        return nome_completo;
+    }
+
+    public void setNome_completo(String nome_completo) {
+        this.nome_completo = nome_completo;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+    
     public String getEmail() {
         return email;
     }
@@ -74,21 +105,13 @@ public class Usuario implements Serializable {
         this.senha = senha;
     }
 
-    public String getPerfil() {
-        return perfil;
+    public List<Projeto> getProjetos() {
+        return projetos;
     }
 
-    public void setPerfil(String perfil) {
-        this.perfil = perfil;
+    public void setProjetos(List<Projeto> projetos) {
+        this.projetos = projetos;
     }
-
-//    public List<Organizacao> getOrganizacao() {
-//        return organizacao;
-//    }
-//
-//    public void setOrganizacao(List<Organizacao> organizacao) {
-//        this.organizacao = organizacao;
-//    }
 
     //HASH EQUAlS
     @Override
@@ -112,4 +135,5 @@ public class Usuario implements Serializable {
         }
         return true;
     }
+
 }

@@ -19,12 +19,15 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author vagner.gomes
  */
 @Entity
+@XmlRootElement
 public class Sala implements Serializable {
     
     @Id
@@ -77,6 +80,7 @@ public class Sala implements Serializable {
         this.descricao = descricao;
     }
 
+    @XmlTransient
     public List<Agendamento> getAgendamentos() {
         return agendamentos;
     }

@@ -6,7 +6,10 @@
 package br.com.controlesalas.services;
 
 import br.com.controlesalas.entities.Agendamento;
+import br.com.controlesalas.entities.Descritivo;
+import br.com.controlesalas.entities.Sala;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -92,4 +95,27 @@ public class AgendamentoService implements Serializable {
         return query.getResultList();
     }
     
+    public List<Agendamento> todos_WS() {
+        List<Agendamento> agendamentos = new ArrayList<>();
+        try {
+            TypedQuery<Agendamento> query = em.createQuery("Select c from Agendamento as c Order By c.inicio DESC ", Agendamento.class);
+            agendamentos = query.getResultList();
+        } catch (Exception ex) {
+            ex.getMessage();
+        }
+        return agendamentos;
+    }
+    
+    public List<Agendamento> todos_projeto_WS(int idProjeto){
+        List<Agendamento> agendamentos = new ArrayList<>();
+        try{
+            TypedQuery<Agendamento> query = em.createQuery("Select c from Agendamento as c Where c.sala.projeto.idProjeto = ?1 Order By c.inicio DESC", Agendamento.class);
+            query.setParameter(1, idProjeto);
+            agendamentos = query.getResultList();
+        }catch(Exception ex){
+            ex.getMessage();
+        }
+        return agendamentos;
+    }
+
 }

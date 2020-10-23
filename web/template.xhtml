@@ -66,12 +66,12 @@
                         </h:form>
                         <h:form style="margin-right: 20px; margin-top: -20px " >
                             <li class="dropdown pull-right">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><svg class="glyph stroked male-user"><use href="#stroked-male-user"/></svg> Administrador<span class="caret"></span></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><svg class="glyph stroked male-user"><use href="#stroked-male-user"/></svg> #{request.remoteUser}<span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a style=" #{configController.projetoSelec()? '':'pointer-events: none; color: #c3c3c3;'}"  href="#{request.contextPath}/Configuracao/config.xhtml"><svg class="glyph stroked gear"><use href="#stroked-gear"/></svg> Configurações</a></li>
-                                    <li><a href="#{request.contextPath}/Projeto/projetos_desat.xhtml"> Desativados</a></li>
+                                    <li style="visibility: #{loginController.verificaUsuario()? 'hidden':'visible'}" ><a style=" #{configController.projetoSelec()? '':'pointer-events: none; color: #c3c3c3;'}"  href="#{request.contextPath}/Configuracao/config.xhtml"><svg class="glyph stroked gear"><use href="#stroked-gear"/></svg> Configurações</a></li>
+                                    <li style="visibility: #{loginController.verificaUsuario()? 'hidden':'visible'}" ><a href="#{request.contextPath}/Projeto/projetos_desat.xhtml"> Desativados</a></li>
 
-                                    <li style="visibility: hidden;" ><a href="#{request.contextPath}/j_spring_security_logout"><svg class="glyph stroked cancel"><use href="#stroked-cancel"/></svg> Sair</a></li>
+                                    <li ><a href="#{request.contextPath}/j_spring_security_logout"><svg class="glyph stroked cancel"><use href="#stroked-cancel"/></svg> Sair</a></li>
                                 </ul>
                             </li>
                         </h:form>
@@ -94,7 +94,7 @@
                 <!--<a href="#{request.contextPath}/Agendamento/agendamento.xhtml"><li>Cadastro</li></a>-->
                 <a href="#{request.contextPath}/Agendamento/schedule.xhtml"><li><svg class="glyph stroked calendar"><use href="#stroked-calendar"/></svg>Schedule</li></a>
                 <a href="#{request.contextPath}/Agendamento/dashboard.xhtml"><li><svg class="glyph stroked clipboard with paper"><use href="#stroked-clipboard-with-paper"/></svg>Dashboard</li></a>
-                <a href="#{request.contextPath}/Agendamento/sala.xhtml"><li><svg class="glyph stroked table"><use href="#stroked-table"/></svg>Sala</li></a>
+                <a style="visibility: #{loginController.verificaUsuario()? 'hidden':'visible'}" href="#{request.contextPath}/Agendamento/sala.xhtml"><li><svg class="glyph stroked table"><use href="#stroked-table"/></svg>Sala</li></a>
 
                 <h:outputLink class="btn" value="#{request.contextPath}/Projeto/projetos.xhtml"  style="width: 100%; text-align: left; margin-top: 20px;"  >
                     Projetos
@@ -111,7 +111,7 @@
                     <!--<li><a href="#{request.contextPath}/Agendamento/agendamento.xhtml">Cadastro</a></li>-->
                     <li><a href="#{request.contextPath}/Agendamento/schedule.xhtml"><svg class="glyph stroked calendar"><use href="#stroked-calendar"/></svg>Schedule</a></li>
                     <li><a href="#{request.contextPath}/Agendamento/dashboard.xhtml"><svg class="glyph stroked clipboard with paper"><use href="#stroked-clipboard-with-paper"/></svg>Dashboard</a></li>
-                    <li><a href="#{request.contextPath}/Agendamento/sala.xhtml"><svg class="glyph stroked table"><use href="#stroked-table"/></svg>Sala</a></li>
+                    <li style="visibility: #{loginController.verificaUsuario()? 'hidden':'visible'}" ><a href="#{request.contextPath}/Agendamento/sala.xhtml"><svg class="glyph stroked table"><use href="#stroked-table"/></svg>Sala</a></li>
                 </ul>
             </h:form>
 
@@ -125,6 +125,7 @@
                     </h:outputLink>
                 </ul>
             </h:form>
+   
 
         </div><!--/.sidebar-->
 

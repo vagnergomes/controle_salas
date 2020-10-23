@@ -15,14 +15,19 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author vagner.gomes
  */
 @Entity
+@XmlRootElement
 public class Projeto implements Serializable {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -42,6 +47,15 @@ public class Projeto implements Serializable {
     
     @OneToMany(mappedBy = "Projeto", cascade = CascadeType.REMOVE)
     private List<Sala> Salas ;
+     
+     @ManyToMany(cascade = CascadeType.DETACH)
+    @JoinTable(
+            name = "projetos_usuarios",
+            joinColumns = {@JoinColumn(
+                    name = "projeto_id")},
+            inverseJoinColumns = {@JoinColumn(
+                    name = "usuario_id")})
+    private List<Usuario> usuarios;
     
 //    @ManyToOne
 //    private Usuario usuario;
@@ -93,8 +107,14 @@ public class Projeto implements Serializable {
     public void setSalas(List<Sala> Salas) {
         this.Salas = Salas;
     }
-    
-    
+
+    public List<Usuario> getUsuarios() {
+        return usuarios;
+    }
+
+    public void setUsuarios(List<Usuario> usuarios) {
+        this.usuarios = usuarios;
+    }
     
 
 //    public Usuario getUsuario() {

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+	 
+    <http auto-config="true" access-denied-page="/Acesso/error/negado.xhtml">
+         
+        <intercept-url pattern="/Agendamento/Schedule.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_USUARIO" />
+        <intercept-url pattern="/Agendamento/Dashboard.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_USUARIO" />
+        <intercept-url pattern="/Agendamento/Sala.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN" />
+        <intercept-url pattern="/Projeto/projetos.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_USUARIO" />
+        <intercept-url pattern="/Projeto/projetos_desat.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN" />
+        <intercept-url pattern="/Projeto/projeto.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN" />
+        <intercept-url pattern="/Configuracao/config.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN" />
+               
+        <form-login login-page="/Acesso/login/login.xhtml" 
+                    always-use-default-target="true"
+                    default-target-url="/index.xhtml" 
+                    authentication-failure-url="/Acesso/login/login.xhtml?login_error=1"  />
+        
+        <logout logout-success-url="/Acesso/login/login.xhtml"  />
+    </http>
+	 	
+    <beans:bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
+        <beans:property name="url" value="jdbc:mysql://localhost:3306/controle_salas?useSSL=false" />
+        <beans:property name="driverClassName" value="com.mysql.jdbc.Driver" />
+        <beans:property name="username" value="root" />
+        <beans:property name="password" value="admin" />
+    </beans:bean>
+	    
+    <beans:bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">  
+        <beans:property name="basename" value="classpath:org/springframework/security/messages"/>  
+    </beans:bean>  
+	
+    <authentication-manager>
+        <authentication-provider >
+            <password-encoder ref="bcryptEncoder" />
+            <jdbc-user-service data-source-ref="dataSource"
+                               users-by-username-query="SELECT usuario, senha, 'true' as ativo FROM usuario WHERE usuario = ?"
+                               authorities-by-username-query="
+                                          SELECT usuario,
+                                                CASE 
+                                                WHEN r.NOME_ROLE = 'super_administrador' THEN 'ROLE_SUPER_ADMIN'
+                                                ELSE (CASE WHEN r.NOME_ROLE = 'administrador' THEN 'ROLE_ADMIN'
+                                                ELSE (CASE WHEN r.NOME_ROLE = 'usuario' THEN 'ROLE_USUARIO'
+                                                ELSE '' END) END) END AS permissao
+                                        FROM usuario  u
+                                        inner join usuarios_roles as ur
+                                        on u.idUsuario = ur.usuario_id
+                                        
+                                        left join role r
+                                        on ur.role_id = r.idRole
+                                        
+                                        WHERE usuario = ?"
+            />
+            
+        </authentication-provider>
+<!--        <user-service>
+            <user name="administrador" password="$2a$10$PZL3MAfZs.tr5fm4YyhzEeIBeryTQdliDy0b7ZjZ24d6WF8kL4lm2" authorities="ROLE_SUPER_ADMIN" />
+        </user-service>    -->
+    </authentication-manager>
+    
+    <!--Referencia para passwor-encoder -->
+    <beans:bean id="bcryptEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+
+</beans:beans>

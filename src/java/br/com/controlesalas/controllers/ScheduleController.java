@@ -6,6 +6,7 @@
 package br.com.controlesalas.controllers;
 
 import br.com.controlesalas.entities.Agendamento;
+import br.com.controlesalas.entities.Configuracao;
 import br.com.controlesalas.entities.Projeto;
 import br.com.controlesalas.services.AgendamentoService;
 import java.io.Serializable;
@@ -53,7 +54,6 @@ public class ScheduleController implements Serializable {
     
     public ScheduleController() {
         agendamento = new Agendamento();
-
     }
     
     
@@ -113,39 +113,41 @@ public class ScheduleController implements Serializable {
     }
     
     public String cor_evento(String cor, boolean venc) {
-        if (!venc) {
-            if (cor.equals("orange")) {
-                return "evento_amarelo";
+        String retorno = null;
+        if (venc && projeto.getConfig().isTerminados_opaco()) {
+             if (cor.equals("orange")) {
+                retorno = "evento_amarelo_venc";
             } else if (cor.equals("blue")) {
-                return "evento_azul";
+                retorno = "evento_azul_venc";
             } else if (cor.equals("maroon")) {
-                return "evento_marrom";
+                retorno = "evento_marrom_venc";
             } else if (cor.equals("green")) {
-                return "evento_verde";
+                retorno = "evento_verde_venc";
             } else if (cor.equals("red")) {
-                return "evento_vermelho";
+                retorno = "evento_vermelho_venc";
             } else if (cor.equals("gray")) {
-                return "evento_cinza";
+                retorno = "evento_cinza_venc";
             } else {
-                return "evento_branco";
-            }
+                retorno = "evento_branco_venc";
+            }       
         }else{
             if (cor.equals("orange")) {
-                return "evento_amarelo_venc";
+                retorno = "evento_amarelo";
             } else if (cor.equals("blue")) {
-                return "evento_azul_venc";
+                retorno = "evento_azul";
             } else if (cor.equals("maroon")) {
-                return "evento_marrom_venc";
+                retorno = "evento_marrom";
             } else if (cor.equals("green")) {
-                return "evento_verde_venc";
+                retorno = "evento_verde";
             } else if (cor.equals("red")) {
-                return "evento_vermelho_venc";
+                retorno = "evento_vermelho";
             } else if (cor.equals("gray")) {
-                return "evento_cinza_venc";
+                retorno = "evento_cinza";
             } else {
-                return "evento_branco_venc";
+                retorno = "evento_branco";
             }
         }
+        return retorno;
     }
     
     public void cleanAttributes(){

@@ -36,11 +36,15 @@ public class UsuarioService implements Serializable {
             em.flush();
             return null;
         }catch(Exception ex){
-            return "Erro: " + ex.getMessage();
+            return "Erro: " + ex.getStackTrace();
         }
     }
     
-    public Usuario obter(int id){
+    public Usuario obterInt(int id){
+        return em.find(Usuario.class, id);
+    }
+    
+    public Usuario obter(Long id){
         return em.find(Usuario.class, id);
     }
     
@@ -53,7 +57,7 @@ public class UsuarioService implements Serializable {
     public String excluir (int id)
     {
         try{
-            Usuario p = obter(id);
+            Usuario p = obterInt(id);
             em.remove(p);
             return null;
         }catch(Exception ex){

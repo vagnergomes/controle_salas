@@ -50,7 +50,7 @@
                         </table>
                     </center>
                     <h:form >
-                        <h:commandButton rendered="#{configController.configuracao.exports_visivel}" style="float:right; margin-right: 10px; margin-bottom: 5px;" image="/Imagem/icons/export/pdf.png"
+                        <h:commandButton rendered="#{configController.configuracao.exports_visivel and loginController.verificaSAdmin() or loginController.verificaAdmin()}" style="float:right; margin-right: 10px; margin-bottom: 5px;" image="/Imagem/icons/export/pdf.png"
                                          onclick="this.form.target = '_blank'" 
                                          action="#{agendamentoViewController.relatorioAgendamentos('pdf')}" />
                     </h:form>
@@ -92,13 +92,13 @@
                             <p:column headerText="Adicionais" style="text-align:center; vertical-align: middle;">
                                 <h:outputText value="#{s.descritivo.agua? 'Água':''} #{s.descritivo.cafe? 'Café':''} #{s.descritivo.frutas? 'Frutas':''} #{s.descritivo.lanche? 'Lanche':''}" />
                             </p:column>
-                            <p:column width="4%">
+                            <p:column width="4%" rendered="#{loginController.verificaSAdmin() or loginController.verificaAdmin()}" >
                                 <h:commandLink class="btn btn-default"  onclick="PF('dlg_novo_evento').show();" value="" >
                                     <h:graphicImage value="/Imagem/icons/editar.png" />
                                     <p:ajax event="click" listener="#{agendamentoViewController.selecionar(s)}" update=":formNovoEvento" process="@this"/>
                                 </h:commandLink>
                             </p:column>
-                            <p:column headerText="" width="4%">
+                            <p:column headerText="" width="4%" rendered="#{loginController.verificaSAdmin() or loginController.verificaAdmin()}" >
                                 <h:commandLink id="excluir" disabled="false" class="btn btn-primary" onclick="PF('dlg1_confirm').show();" value="" >
                                     <h:graphicImage value="/Imagem/icons/excluir.png" />
                                     <p:ajax event="click" listener="#{agendamentoViewController.selecionar(s)}"  update=":formConfirm" process="@this" />

@@ -43,11 +43,6 @@ public class ProjetoService implements Serializable{
         return em.find(Projeto.class, id);
     }
     
-    public List<Projeto> todos(){
-        TypedQuery<Projeto> query = em.createQuery("Select c from Projeto as c", Projeto.class);
-        return query.getResultList();
-    }
-    
      public String excluir(Long id) {
         try {
             Projeto p = obter(id);
@@ -57,14 +52,21 @@ public class ProjetoService implements Serializable{
             return "Erro: " + ex.getMessage();
         }
     }
-    
-    public List<Projeto> todosAtivos(){
-        TypedQuery<Projeto> query = em.createQuery("Select c from Projeto as c where c.ativo = 1", Projeto.class);
+     
+      public List<Projeto> todos(){
+        TypedQuery<Projeto> query = em.createQuery("Select c from Projeto as c", Projeto.class);
         return query.getResultList();
     }
     
-    public List<Projeto> todosDesativados(){
-        TypedQuery<Projeto> query = em.createQuery("Select c from Projeto as c where c.ativo = 0", Projeto.class);
+    public List<Projeto> todosAtivos(Long idUsuario){
+        TypedQuery<Projeto> query = em.createQuery("Select p from Projeto as p LEFT JOIN p.usuarios as u WHERE u.IdUsuario = ?1 and p.ativo = 1 ", Projeto.class);
+        query.setParameter(1, idUsuario);
+        return query.getResultList();
+    }
+    
+    public List<Projeto> todosDesativados(Long idUsuario){
+        TypedQuery<Projeto> query = em.createQuery("Select p from Projeto as p LEFT JOIN p.usuarios as u WHERE u.IdUsuario = ?1 and p.ativo = 0 ", Projeto.class);
+        query.setParameter(1, idUsuario);
         return query.getResultList();
     }
     

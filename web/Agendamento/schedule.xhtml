@@ -15,7 +15,7 @@
                 <p:poll id="poll" interval="60"  process="repeater, painelSchedule" update="repeater, painelSchedule"  />
                 <div class="col-md-12" style="margin-top: 5px">          
                     <div class="form-group"> 
-                        <h:commandButton id="novoEvento" value="Agendar" class="btn btn-primary">
+                        <h:commandButton rendered="#{loginController.verificaSAdmin() or loginController.verificaAdmin()}" id="novoEvento" value="Agendar" class="btn btn-primary">
                             <p:ajax listener="#{scheduleController.cleanAttributes()}" oncomplete="PF('dialogNovoEvento').show();" update=":agenda:panelNovoEvento" />
                         </h:commandButton>
 
@@ -64,8 +64,8 @@
                                     maxTime="22"
                                     showHeader="true"
                                     view="#{configController.configuracao.view_agenda}" tooltip="false" >
-                            <p:ajax event="dateSelect" listener="#{scheduleController.onDateSelect}"   update=":agenda" />
-                            <p:ajax event="eventSelect" listener="#{scheduleController.onEventSelect}"  update=":agenda" />
+                            <p:ajax disabled="#{loginController.verificaUsuario()}" event="dateSelect" listener="#{scheduleController.onDateSelect}"   update=":agenda" />
+                            <p:ajax disabled="#{loginController.verificaUsuario()}" event="eventSelect" listener="#{scheduleController.onEventSelect}"  update=":agenda" />
                             <!--<p:ajax event="eventMove" listener="{scheduleController.onEventMove}" process="@form"  update="@form" />
                                 <p:ajax event="eventResize" listener="{scheduleController.onEventResize}" oncomplete="PF('dialogNovoEvento').show()" update=":agenda:panelNovoEvento"  />-->
                         </p:schedule>

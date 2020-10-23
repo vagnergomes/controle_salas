@@ -35,21 +35,27 @@ and open the template in the editor.
                     <p:inputText id="usuario" value="#{usuarioController.usuario.usuario}" styleClass="form-control input" />
 
                     <h:outputLabel value="E-mail" class="output-form required" />
-                    <h:inputText id="email" value="#{usuarioController.usuario.email}" styleClass="form-control input" requiredMessage="Informe o E-mail" validatorMessage="Informe um E-mail válido." required="true">        
+                    <h:inputText id="email" value="#{usuarioController.usuario.email}" styleClass="form-control input"  >        
                         <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
                     </h:inputText>
 
                     <h:panelGrid columns="1" id="matchGrid" >
                         <h:panelGrid columns="1">
                             <h:outputLabel for="pwd1" value="Senha: *" class="output-form required" />
-                            <p:password id="pwd1" value="#{usuarioController.usuario.senha}" styleClass="form-control input" match="pwd2" label="Password 1" required="true" />
+                            <p:password id="pwd1" value="#{usuarioController.usuario.senha}" styleClass="form-control input" match="pwd2" label="Password 1" />
                         </h:panelGrid>
                         <h:panelGrid columns="1">
                             <h:outputLabel for="pwd2" value="Confirmar: *" class="output-form required" />
-                            <p:password id="pwd2" value="#{usuarioController.usuario.senha}" styleClass="form-control input" label="Password 2" required="true" />
+                            <p:password id="pwd2" value="#{usuarioController.usuario.senha}" styleClass="form-control input" label="Password 2"  />
                         </h:panelGrid>
                     </h:panelGrid>
+             
+                    
+                    <p:selectManyCheckbox id="grid" value="#{usuarioController.usuario.roles}" layout="grid" columns="3" converter="roleConverter" >
+                        <f:selectItems value="#{roleController.roles}" var="role" itemLabel="#{role.nome_role}" itemValue="#{role}" />
+                    </p:selectManyCheckbox>
 
+ 
                     <p:commandButton  value="Cadastrar" styleClass="btn btn-primary"
                                       actionListener="#{usuarioController.novoAdmin()}"  update="messages">
                     </p:commandButton> 
