@@ -6,6 +6,7 @@
 package br.com.controlesalas.services;
 
 
+import br.com.controlesalas.entities.Org;
 import br.com.controlesalas.entities.Usuario;
 import java.io.Serializable;
 import java.util.List;
@@ -54,11 +55,17 @@ public class UsuarioService implements Serializable {
         return query.getResultList();
     }
     
-    public String excluir (int id)
+    public List<Usuario> todosPorOrg(Long idOrg){
+        TypedQuery<Usuario> query = em.createQuery("Select u from Usuario as u LEFT JOIN u.orgs as o WHERE o.idOrg = ?1", Usuario.class);
+        query.setParameter(1, idOrg);
+        return query.getResultList();
+    }
+    
+    public String excluir (Long id)
     {
         try{
-            Usuario p = obterInt(id);
-            em.remove(p);
+            Usuario u = obter(id);
+            em.remove(u);
             return null;
         }catch(Exception ex){
             return "Erro: " + ex.getMessage();
@@ -70,4 +77,11 @@ public class UsuarioService implements Serializable {
           query.setParameter(1, username);
           return (Usuario) query.getSingleResult();
     }
+    
+    public Org getOrg(Long idUsuario){
+        TypedQuery<Org> query = em.createQuery("Select p from Org as p LEFT JOIN p.usuarios as u WHERE u.IdUsuario = ?1", Org.class);
+        query.setParameter(1, idUsuario);
+        return query.getSingleResult();
+    }
+    
 }

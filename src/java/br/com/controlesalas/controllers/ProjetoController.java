@@ -6,6 +6,7 @@
 package br.com.controlesalas.controllers;
 
 import br.com.controlesalas.entities.Configuracao;
+import br.com.controlesalas.entities.Org;
 import br.com.controlesalas.entities.Projeto;
 import static br.com.controlesalas.entities.Projeto_.Salas;
 import br.com.controlesalas.entities.Sala;
@@ -45,6 +46,7 @@ public class ProjetoController implements Serializable{
     private Object idProjeto;
     
     Long idUsuario;
+    Long idOrg;
     
     
     public ProjetoController(){
@@ -54,6 +56,8 @@ public class ProjetoController implements Serializable{
     @PostConstruct
     public void init(){
         idUsuario = (Long) getSession().getAttribute("idUsuario");
+        Org org = (Org) getSession().getAttribute("org");
+        idOrg = org.getIdOrg();
         idProjeto =  getSession().getAttribute("idConfigSelecionado");
         //Long idUsuario = (Long) getSession().getAttribute("idUsuario");
         if(idProjeto == null){
@@ -72,13 +76,9 @@ public class ProjetoController implements Serializable{
     public void salvar() {
        // System.out.println("------IdSessao:" + usuario.getUsuario());
         if (idProjeto == null) {
-//            Long idUsuario = (Long) getSession().getAttribute("idUsuario");
-            Usuario usuario = new Usuario();
-            usuario = usuario_service.obter(idUsuario);
-            List<Usuario> usuarios = new ArrayList<>();
-
-            usuarios.add(usuario);
-            projeto.setUsuarios(usuarios);
+            Org org =  (Org) getSession().getAttribute("org");
+            
+            projeto.setOrg(org);
             config.setExports_visivel(true);
             config.setRotulos_visivel(true);
             config.setTerminados_opaco(true);
@@ -108,16 +108,21 @@ public class ProjetoController implements Serializable{
             MensagemUtil.addMensagemInfo("Projeto excluído.");
         } else{
             MensagemUtil.addMensagemError("Erro ao excluir projeto.");
-            System.out.println("Erro excluir projeto: " + erro);
         }    
     }
     
     public List<Projeto> todosAtivos() {
-        return service.todosAtivos(idUsuario);
+        return service.todosAtivos(idOrg);
+    }
+    
+    public List<Projeto> todosAtivosUsuario() {
+        System.out.println("---idOrg: " + idOrg);
+        System.out.println("---idOrg: " + idUsuario);
+        return service.todosAtivosUsuario(idOrg, idUsuario);
     }
     
     public List<Projeto> todosDesativados() {
-        return service.todosDesativados(idUsuario);
+        return service.todosDesativados(idOrg);
     }
     
     public List<Projeto> todos() {
@@ -237,6 +242,14 @@ public class ProjetoController implements Serializable{
 
     public void setIdUsuario(Long idUsuario) {
         this.idUsuario = idUsuario;
+    }
+
+    public Long getIdOrg() {
+        return idOrg;
+    }
+
+    public void setIdOrg(Long idOrg) {
+        this.idOrg = idOrg;
     }
     
     

@@ -5,6 +5,7 @@
 package br.com.controlesalas.controllers;
 
 
+import br.com.controlesalas.entities.Org;
 import br.com.controlesalas.entities.Role;
 import br.com.controlesalas.entities.Usuario;
 import br.com.controlesalas.services.UsuarioService;
@@ -37,11 +38,16 @@ public class LoginController implements Serializable {
     @PostConstruct
     public void init() {
         usuario = new Usuario();
+        Org org = new Org();
+        //Long idOrg = null;
         SecurityContext context = SecurityContextHolder.getContext();
         if (context instanceof SecurityContext) {
             Authentication authentication = context.getAuthentication();
             if (authentication instanceof Authentication) {
                 usuario = service.consultaPorUsuario(((User) authentication.getPrincipal()).getUsername());
+                org = service.getOrg(usuario.getIdUsuario());
+                
+                getSession().setAttribute("org", org);
                 getSession().setAttribute("idUsuario", usuario.getIdUsuario());
             }
         }

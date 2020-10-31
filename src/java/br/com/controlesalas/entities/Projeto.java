@@ -18,9 +18,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.xml.bind.annotation.XmlRootElement;
+import jdk.nashorn.internal.objects.Global;
 
 /**
  *
@@ -48,17 +50,20 @@ public class Projeto implements Serializable {
     @OneToMany(mappedBy = "Projeto", cascade = CascadeType.REMOVE)
     private List<Sala> Salas ;
      
-     @ManyToMany(cascade = CascadeType.DETACH)
-    @JoinTable(
-            name = "projetos_usuarios",
-            joinColumns = {@JoinColumn(
-                    name = "projeto_id")},
-            inverseJoinColumns = {@JoinColumn(
-                    name = "usuario_id")})
-    private List<Usuario> usuarios;
+//    @ManyToMany(cascade = CascadeType.DETACH)
+//    @JoinTable(
+//            name = "projetos_usuarios",
+//            joinColumns = {@JoinColumn(
+//                    name = "projeto_id")},
+//            inverseJoinColumns = {@JoinColumn(
+//                    name = "usuario_id")})
+//    private List<Usuario> usuarios;
+     
+     
     
-//    @ManyToOne
-//    private Usuario usuario;
+    @ManyToOne
+    @JoinColumn(name = "idOrg")
+    private Org org;
 
     public Long getIdProjeto() {
         return idProjeto;
@@ -108,14 +113,24 @@ public class Projeto implements Serializable {
         this.Salas = Salas;
     }
 
-    public List<Usuario> getUsuarios() {
-        return usuarios;
+//    public List<Usuario> getUsuarios() {
+//        return usuarios;
+//    }
+//
+//    public void setUsuarios(List<Usuario> usuarios) {
+//        this.usuarios = usuarios;
+//    }
+
+    public Org getOrg() {
+        return org;
     }
 
-    public void setUsuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
+    public void setOrg(Org org) {
+        this.org = org;
     }
+
     
+
 
 //    public Usuario getUsuario() {
 //        return usuario;

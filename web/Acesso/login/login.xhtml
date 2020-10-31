@@ -35,7 +35,17 @@ and open the template in the editor.
                         <input id="username" type="text" name="j_username"  required="true" placeholder="Usuário"/>
                         <input id="password" type="password" name="j_password" required="true" placeholder="Senha"/>
                         <button type="submit" style="border-radius: 3px;" >Entrar</button>
+                        
+                        
+                        <h:panelGrid width="100%"  style="margin-top: 15px;">
+                        <center >
+                            <a style="margin-top: 20px;" href="#{request.contextPath}/Usuario/novo_admin.xhtml">cadastrar</a>
+                        </center>
+                    </h:panelGrid>
+                    
                     </form>
+                    
+                    
                 </div>
 
                 <div class="cta">@Copyright</div>

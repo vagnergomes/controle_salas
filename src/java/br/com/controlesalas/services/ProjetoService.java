@@ -58,14 +58,33 @@ public class ProjetoService implements Serializable{
         return query.getResultList();
     }
     
-    public List<Projeto> todosAtivos(Long idUsuario){
-        TypedQuery<Projeto> query = em.createQuery("Select p from Projeto as p LEFT JOIN p.usuarios as u WHERE u.IdUsuario = ?1 and p.ativo = 1 ", Projeto.class);
-        query.setParameter(1, idUsuario);
+//    public List<Projeto> todosAtivos(Long idUsuario){
+//        TypedQuery<Projeto> query = em.createQuery("Select p from Projeto as p LEFT JOIN p.usuarios as u WHERE u.IdUsuario = ?1 and p.ativo = 1 ", Projeto.class);
+//        query.setParameter(1, idUsuario);
+//        return query.getResultList();
+//    }
+      
+//      public List<Projeto> todosDesativados(Long idUsuario){
+//        TypedQuery<Projeto> query = em.createQuery("Select p from Projeto as p LEFT JOIN p.usuarios as u WHERE u.IdUsuario = ?1 and p.ativo = 0 ", Projeto.class);
+//        query.setParameter(1, idUsuario);
+//        return query.getResultList();
+//    }
+    
+    public List<Projeto> todosAtivos(Long idOrg){
+        TypedQuery<Projeto> query = em.createQuery("Select p from Projeto as p Where p.org.idOrg = ?1 and p.ativo = 1 ", Projeto.class);
+        query.setParameter(1, idOrg);
+        return query.getResultList();
+    }
+    
+    public List<Projeto> todosAtivosUsuario(Long idOrg, Long idUsuario){
+        TypedQuery<Projeto> query = em.createQuery("Select p.projeto from Projeto_Usuario as p Where p.projeto.org.idOrg = '"+idOrg+"' and p.usuario.IdUsuario = '"+idUsuario+"' and p.projeto.ativo = 1 ", Projeto.class);
+//        query.setParameter(1, idUsuario);
+//        query.setParameter(1, idUsuario);
         return query.getResultList();
     }
     
     public List<Projeto> todosDesativados(Long idUsuario){
-        TypedQuery<Projeto> query = em.createQuery("Select p from Projeto as p LEFT JOIN p.usuarios as u WHERE u.IdUsuario = ?1 and p.ativo = 0 ", Projeto.class);
+        TypedQuery<Projeto> query = em.createQuery("Select p from Projeto as p WHERE p.org.idOrg = ?1 and p.ativo = 0 ", Projeto.class);
         query.setParameter(1, idUsuario);
         return query.getResultList();
     }

@@ -47,7 +47,6 @@ public class SalaController implements Serializable {
     }
 
     public void salvar(){
-        System.out.println("---ID salvar: " +sala.getIdSala());
         Projeto proj = (Projeto) getSession().getAttribute("projetoSelecionado");
         sala.setProjeto(proj);
         String erro = service.salvar(sala);
@@ -90,14 +89,11 @@ public class SalaController implements Serializable {
  
     public void onRowEdit(RowEditEvent event) {
         sala = ((Sala) event.getObject());
-        System.out.println("---Sala:" + sala.getNome_sala());
         String erro = service.salvar(sala);
         if (erro == null) {
-            System.out.println("----Salvou 3");
             MensagemUtil.addMensagemInfo("Salvo.");
             
         } else {
-            System.out.println("----Não salvou 4");
             MensagemUtil.addMensagemError("Erro ao salvar: " + erro);
         }
     }

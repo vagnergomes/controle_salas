@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <ui:composition template="../template.xhtml">
+        <ui:define name="titulo"  >
+            <span style="margin-left: 10px; font-size: 22px; font-family: sans-serif; color: #999999 ; ">  </span>
+        </ui:define>
+        <ui:define name="conteudo">
+
+            <h:form id="usuarios" >
+                <div id="teste" class="row" style="margin-top: 0px;">
+                    <p:scrollPanel  mode="native" style="width:100%;height:800px">
+                        <p:dataTable id="table_usuario"
+                                     widgetVar="w_table_usuario"
+                                     value="#{projetoUsuarioController.usuariosProjeto()}" 
+                                     var="p"
+                                     rowIndexVar="rowIx"
+                                     style="width: 100%; margin: 0 auto; margin-bottom: 20px" 
+                                     sortBy="#{p.usuario.usuario}"
+                                     sortOrder="descending"
+                                     emptyMessage="Nenhum registro foi encontrado.">
+
+                            <p:column headerText="Usuário" width="10%" style="text-align:center; vertical-align: middle;">
+                                <h:outputText value="#{p.usuario.usuario}" />
+                            </p:column>
+                            <p:column headerText="Nome" width="20%" style="text-align:center; vertical-align: middle;">
+                                <h:outputText value="#{p.usuario.nome_completo}" />
+                            </p:column>
+                            <p:column headerText="E-mail" width="20%" style="text-align:center; vertical-align: middle;">
+                                <h:outputText value="#{p.usuario.email}" />
+                            </p:column>
+                            <p:column headerText="Privilégio" width="20%" style="text-align:center; vertical-align: middle;">
+                                <ui:repeat value="#{p.usuario.roles}" var="r">
+                                    <h:outputText value="#{r.nome_role}" />
+                                </ui:repeat>
+                            </p:column>
+
+                            <p:column headerText="" width="4%"  >
+                                <h:commandLink id="block" disabled="false" class="btn btn-primary" onclick="PF('dlg1_confirm').show();" value="" >
+                                    <h:graphicImage value="/Imagem/icons/block.png" />
+                                    <p:ajax event="click" listener="#{projetoUsuarioController.selecionar(p)}"  update=":formConfirm" process="@this" />
+                                </h:commandLink>
+                            </p:column>
+                        </p:dataTable>
+                    </p:scrollPanel>
+                </div>
+            </h:form>
+
+            <p:dialog id="confirm" header="Confirmar remoção de acesso" widgetVar="dlg1_confirm" modal="true" minHeight="40" resizable="false" >
+                <h:form id="formConfirm" >
+                    <div style="margin-top: 10px" class="form-group"> 
+                        <h:commandButton value="Confirmar" action="#{projetoUsuarioController.excluir()}" styleClass="btn btn-primary btn-space" />
+                        <h:commandButton onclick="dlg1_confirm.hide()" value="Cancelar" class="btn btn-default btn-space" />                
+                    </div>
+                </h:form>
+            </p:dialog> 
+
+        </ui:define>      
+    </ui:composition>
+</html>

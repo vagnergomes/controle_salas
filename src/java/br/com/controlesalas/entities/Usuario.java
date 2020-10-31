@@ -18,6 +18,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.xml.bind.annotation.XmlRootElement;
+import jdk.nashorn.internal.objects.Global;
 
 /**
  *
@@ -44,7 +45,7 @@ public class Usuario implements Serializable {
     private String senha;
     
 
-    @ManyToMany(cascade = CascadeType.DETACH)
+    @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     @JoinTable(
             name = "usuarios_roles",
             joinColumns = {@JoinColumn(
@@ -53,8 +54,18 @@ public class Usuario implements Serializable {
                     name = "role_id")})
     private List<Role> roles;
     
-     @ManyToMany(mappedBy = "usuarios")
-    private List<Projeto> projetos;
+    @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "usuarios_orgs",
+            joinColumns = {@JoinColumn(
+                    name = "usuario_id")},
+            inverseJoinColumns = {@JoinColumn(
+                    name = "org_id")})
+    private List<Org> orgs;
+    
+//    @ManyToMany(mappedBy = "usuarios")
+//    private List<Projeto> projetos;
+    
 
     // GET SET
     public Long getIdUsuario() {
@@ -105,13 +116,25 @@ public class Usuario implements Serializable {
         this.senha = senha;
     }
 
-    public List<Projeto> getProjetos() {
-        return projetos;
+//    public List<Projeto> getProjetos() {
+//        return projetos;
+//    }
+//
+//    public void setProjetos(List<Projeto> projetos) {
+//        this.projetos = projetos;
+//    }
+
+    public List<Org> getOrgs() {
+        return orgs;
     }
 
-    public void setProjetos(List<Projeto> projetos) {
-        this.projetos = projetos;
+    public void setOrgs(List<Org> orgs) {
+        this.orgs = orgs;
     }
+
+   
+    
+    
 
     //HASH EQUAlS
     @Override

@@ -26,11 +26,47 @@ and open the template in the editor.
                 </div>
 
                 <p:inputText style="visibility: hidden;" disabled="true" value="" />
-                <h:panelGrid columns="5" style="margin-top: 10px; margin-bottom: 20px; " >
+                <h:panelGrid rendered="#{loginController.verificaSAdmin() or loginController.verificaAdmin() }" columns="5" style="margin-top: 10px; margin-bottom: 20px; " >
                     <!--<div class="col-md-12" style="margin-top: 20px">-->    
                         <p:dataGrid var="c" value="#{projetoController.todosAtivos()}" 
                                     columns="8"  
                                     id="grid_salas"
+                                    style="border: none !important;"
+                                    emptyMessage="Nenhum registro encontrado.">
+
+                            <p:panel  style="text-align:center; width: 100%; border-color: transparent">
+                                <h:panelGrid class="panel-projeto" columns="1" style="margin-left: 17px; width:100%">
+
+                                    <h:commandButton actionListener="#{projetoController.selecionarProjeto(c)}" image="#{request.contextPath}/../Imagem/icons/calendar.png" alt="Voltar pro Meunu" >
+                                        <center><h:outputLabel value="#{c.nome}" /></center>
+                                    </h:commandButton> 
+
+                                    <h:panelGrid rendered="#{loginController.verificaSAdmin() or loginController.verificaAdmin()}" class="panel-projeto-oculto" columns="1" style="width: 100%; margin-left: 16%; margin-top: -80px;" >
+                                        <h:panelGrid columns="2" style=""  >
+                                            <h:commandLink class="btn btn-default"   value="" >
+                                                <h:graphicImage value="/Imagem/icons/visao.png" />
+                                                <p:ajax event="click" listener="#{projetoController.selecionarProjeto(c)}"  process="@this"/>
+                                            </h:commandLink>
+                                            <h:commandLink id="Desativar" disabled="false" class="btn btn-primary" onclick="PF('dlg1_confirm').show();" value="" style="margin-left: 5px;" >
+                                                <h:graphicImage value="/Imagem/icons/block.png" />
+                                                <p:ajax event="click" listener="#{projetoController.selecionar(c)}" update=":formConfirm"  process="@this" />
+                                            </h:commandLink> 
+                                        </h:panelGrid>
+                                    </h:panelGrid>
+
+                                </h:panelGrid>
+
+                            </p:panel>
+
+                        </p:dataGrid>
+                    <!--</div>-->
+                </h:panelGrid>
+                
+                <h:panelGrid rendered="#{loginController.verificaSAdmin()? false:loginController.verificaAdmin()? false:true}" columns="5" style="margin-top: 10px; margin-bottom: 20px; " >
+                    <!--<div class="col-md-12" style="margin-top: 20px">-->    
+                        <p:dataGrid var="c" value="#{projetoController.todosAtivosUsuario()}" 
+                                    columns="8"  
+                                    id="grid_salas_usuarios"
                                     style="border: none !important;"
                                     emptyMessage="Nenhum registro encontrado.">
 
@@ -74,7 +110,7 @@ and open the template in the editor.
                     <h:form id="formConfirm" >
                         <p:outputLabel > Você não está excluindo este projeto. Ele será desativado e poderá ser ativado novamente a qualquer momento. </p:outputLabel>
                         <div style="margin-top: 10px" class="form-group"> 
-                            <h:commandButton value="Excluir" actionListener="#{projetoController.desativar()}" styleClass="btn btn-primary btn-space" />
+                            <h:commandButton value="Desativar" actionListener="#{projetoController.desativar()}" styleClass="btn btn-primary btn-space" />
                             <h:commandButton onclick="dlg1_confirm.hide()" value="Cancelar" class="btn btn-default btn-space" />                
                         </div>
                     </h:form>

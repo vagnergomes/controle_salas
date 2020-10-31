@@ -26,7 +26,7 @@
                     <h:panelGrid columns="1" >
                         <h:outputLabel value="Início" class="output-form required" />
                         <h:panelGrid columns="2" >
-                            <p:calendar id="time" disabledWeekends="true"  timeZone="GMT-3" size="12" showOn="button" title="Horário" locale="pt" label="Horário" value="#{agendamentoViewController.data_inicio}"  pattern="dd/MM/yyyy HH:mm" requiredMessage="Informe o horário inicial"  />
+                            <p:calendar id="time" disabledWeekends="#{!configController.configuracao.show_weekends}"  timeZone="GMT-3" size="12" showOn="button" title="Horário" locale="pt" label="Horário" value="#{agendamentoViewController.data_inicio}"  pattern="dd/MM/yyyy HH:mm" requiredMessage="Informe o horário inicial"  />
 
                             <h:commandButton id="te" class="btn btn-primary"  value="pesquisar" actionListener="#{agendamentoViewController.buscarAgendamentos()}" style="margin-left: 5px;"  >
                                 <f:ajax execute="time, @all" render="dashboard:table_agenda"  />
@@ -189,9 +189,9 @@
                             <h:commandButton value="Agendar" action="#{agendamentoViewController.salvar()}"  styleClass="btn btn-primary btn-space" >
                                 <f:ajax execute="@all" render="@all" />
                             </h:commandButton>
-                            <h:commandButton value="Cancelar" class="btn btn-default btn-space"  >
+<!--                            <h:commandButton value="Cancelar" class="btn btn-default btn-space"  >
                                 <f:ajax execute="@all" render="@all" />
-                            </h:commandButton>
+                            </h:commandButton>-->
                         </h:panelGrid>
                     </div>
 

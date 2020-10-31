@@ -44,4 +44,9 @@ public class RoleService implements Serializable {
         return query.getResultList();
     }  
     
+    public Role roleAdministrador(){
+        Query query = em.createQuery("select c from Role as c where c.nome_role = 'administrador'", Role.class);
+        return (Role) query.getSingleResult();
+    }
+    
 }

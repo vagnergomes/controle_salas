@@ -188,7 +188,6 @@ public class ScheduleController implements Serializable {
     }
 
     public void onEventMove(ScheduleEntryMoveEvent event) {
-        System.out.println("---EventMove:" + event);
 //        MensagemUtil.addMensagemInfo("Dia:" + event.getDayDelta() + ", Horário:" + event.getMinuteDelta());
     }
     public List<Agendamento> todos() {
