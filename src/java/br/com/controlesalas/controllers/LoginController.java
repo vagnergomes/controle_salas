@@ -16,6 +16,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,23 +34,26 @@ public class LoginController implements Serializable {
     private UsuarioService service;
   
     protected Usuario usuario;
-    
+    SecurityContext context = SecurityContextHolder.getContext();
+    Authentication authentication = context.getAuthentication();
     
     @PostConstruct
     public void init() {
         usuario = new Usuario();
         Org org = new Org();
         //Long idOrg = null;
-        SecurityContext context = SecurityContextHolder.getContext();
+        //SecurityContext context = SecurityContextHolder.getContext();
         if (context instanceof SecurityContext) {
-            Authentication authentication = context.getAuthentication();
-            if (authentication instanceof Authentication) {
-                usuario = service.consultaPorUsuario(((User) authentication.getPrincipal()).getUsername());
-                org = service.getOrg(usuario.getIdUsuario());
-                
-                getSession().setAttribute("org", org);
-                getSession().setAttribute("idUsuario", usuario.getIdUsuario());
-            }
+           // Authentication authentication = context.getAuthentication();
+      
+                if (authentication instanceof Authentication) {
+                    usuario = service.consultaPorUsuario(((User) authentication.getPrincipal()).getUsername());
+                    org = service.getOrg(usuario.getIdUsuario());
+
+                    getSession().setAttribute("org", org);
+                    getSession().setAttribute("idUsuario", usuario.getIdUsuario());
+                }
+            
         }
 
     }
@@ -57,7 +61,7 @@ public class LoginController implements Serializable {
     public void reset() {
         init();
     }
-    
+
 //    public void encrypt() throws NoSuchAlgorithmException, UnsupportedEncodingException {
 //        String senha = "admin";
 //
@@ -72,46 +76,56 @@ public class LoginController implements Serializable {
 //        messageDigest.update(password.getBytes("UTF-8"));
 //        return new BigInteger(1, messageDigest.digest()).toString(16);
 //    }
-
-    
     public boolean verificaSAdmin() {
-        boolean admin = true;
-        Role r = new Role();
-        for(Role role : usuario.getRoles()){
-            r = role;
-        }
-        if (r.getNome_role().equals("super_administrador")) {
-            return admin;
-        } else {
+        if (authentication instanceof AnonymousAuthenticationToken) {
             return false;
+        } else {
+            boolean admin = true;
+            Role r = new Role();
+            for (Role role : usuario.getRoles()) {
+                r = role;
+            }
+            if (r.getNome_role().equals("super_administrador")) {
+                return admin;
+            } else {
+                return false;
+            }
         }
     }
 
     public boolean verificaAdmin() {
-        boolean admin = true;
-         Role r = new Role();
-        for(Role role : usuario.getRoles()){
-            r = role;
-        }
-        String papel = r.getNome_role();
-        if (papel.equals("administrador")){
-            return admin;
-        } else {
+        if (authentication instanceof AnonymousAuthenticationToken) {
             return false;
+        } else {
+            boolean admin = true;
+            Role r = new Role();
+            for (Role role : usuario.getRoles()) {
+                r = role;
+            }
+            String papel = r.getNome_role();
+            if (papel.equals("administrador")) {
+                return admin;
+            } else {
+                return false;
+            }
         }
     }
 
     public boolean verificaUsuario() {
-        boolean admin = true;
-         Role r = new Role();
-        for(Role role : usuario.getRoles()){
-            r = role;
-        }
-        String papel = r.getNome_role();
-        if (papel.equals("usuario")){
-            return admin;
-        } else {
+        if (authentication instanceof AnonymousAuthenticationToken) {
             return false;
+        } else {
+            boolean admin = true;
+            Role r = new Role();
+            for (Role role : usuario.getRoles()) {
+                r = role;
+            }
+            String papel = r.getNome_role();
+            if (papel.equals("usuario")) {
+                return admin;
+            } else {
+                return false;
+            }
         }
     }
     

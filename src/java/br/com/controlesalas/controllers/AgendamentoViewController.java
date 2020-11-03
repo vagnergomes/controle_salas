@@ -190,8 +190,26 @@ public class AgendamentoViewController implements Serializable {
         rel.getAgendamentos(conexao, data_inicio, data_fim, formato, path, projeto.getIdProjeto(), false);
     }
     
-    public void relatorioAutoAgendamentos(String formato) throws SQLException, SchedulerException {
+    public void relatorioAutoAgendamentos(String formato, Long idPj) throws SQLException, SchedulerException {
+        System.out.println("----Entrou no metodo PDF!:" + idPj);
         Rel_Agendamento rel = new Rel_Agendamento();
+        
+        String path = "C:/controlesalas/imgs/logo-padrao.png";
+        
+        if (idPj != null) {
+            int id = idPj.intValue();
+            String url_logo = service_config.obterUrl(id);
+            File file = new File(url_logo);
+            if (file.exists()) {
+                int pos = file.getName().lastIndexOf(".");
+                //nome = file.getName();
+                String tipo = file.getName().substring(pos + 1);
+                String nome = file.getName().substring(0, pos) + "_rel";
+                int pos2 = url_logo.lastIndexOf("/");
+                path = url_logo.substring(0, pos2) + "/" + nome + "." + tipo;
+            }
+        }
+
         String driver = "com.mysql.jdbc.JDBC4Connection";
         String url = "jdbc:mysql://localhost:3306/controle_salas?characterEncoding=latin1&useConfigs=maxPerformance&allowPublicKeyRetrieval=true&useSSL=false";
         String usuario = "root";
@@ -203,8 +221,9 @@ public class AgendamentoViewController implements Serializable {
             conexao = DriverManager.getConnection(url, usuario, senha);
         } catch (SQLException ex) {
         }
-        rel.getAgendamentos(conexao, data_inicio, data_fim, formato, "", projeto.getIdProjeto(), true);
+        rel.getAgendamentos(conexao, data_inicio, data_fim, formato, path, idPj, false);
     }
+
 
     public Date ultimoAgendamento() {    
         data_fim = service.ultimoAgendamento();

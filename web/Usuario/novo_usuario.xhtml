@@ -48,7 +48,7 @@ and open the template in the editor.
                     <h:panelGrid style="margin-bottom:10px" cellpadding="5">
                         <p:outputLabel for="role" value="Permissão: " class="output-form required" />
                         <p:selectOneRadio id="role" value="#{usuarioController.role}" layout="grid" columns="1" converter="roleConverter" style="margin-left: 10px" >
-                            <f:selectItems  value="#{roleController.roles}" itemDisabled="#{c.nome_role == 'super_administrador'}" var="c" itemLabel="#{c.nome_role}" itemValue="#{c}"/>
+                            <f:selectItems  value="#{roleController.roles}" itemDisabled="#{c.nome_role == 'super_administrador'}" var="c" itemLabel="#{c.descricao}" itemValue="#{c}"/>
                         </p:selectOneRadio>
                     </h:panelGrid>
                  

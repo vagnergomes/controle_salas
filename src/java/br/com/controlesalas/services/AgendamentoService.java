@@ -107,6 +107,7 @@ public class AgendamentoService implements Serializable {
     }
     
     public List<Agendamento> todos_projeto_WS(int idProjeto){
+        System.out.println("------Entrou3: ");
         List<Agendamento> agendamentos = new ArrayList<>();
         try{
             TypedQuery<Agendamento> query = em.createQuery("Select c from Agendamento as c Where c.sala.projeto.idProjeto = ?1 Order By c.inicio DESC", Agendamento.class);

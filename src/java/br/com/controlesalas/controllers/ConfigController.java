@@ -139,9 +139,9 @@ public class ConfigController implements Serializable {
 
         getSession().removeAttribute("path_logo_temp");
         getSession().removeAttribute("path_logo_temp2");
-
+        configuracao = new Configuracao();
         if (erro == null) {
-            configuracao = new Configuracao();
+            configuracao = service.obter(convertToLong(idProjeto));
             MensagemUtil.addMensagemInfo("Configurações salvas.");
         } else {
             MensagemUtil.addMensagemError("Erro ao salvar. " + erro);

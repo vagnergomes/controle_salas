@@ -7,16 +7,14 @@
                 xmlns:jsf="http://xmlns.jcp.org/jsf">
 
     <ui:define name="titulo">
-        <span style="margin-left: -20px; font-size: 22px; font-family: sans-serif; color: #999999 ; "> Configurações </span>
+        <span style="margin-left: -20px; font-size: 22px; font-family: sans-serif; color: #999999 ; "> Configurações  </span>
     </ui:define>
 
     <ui:define name="conteudo">
-        <p:tabView  >
-            <p:tab title="Projeto">
         <h:form id="form_projeto" >   
             <h:panelGrid>
                 <p:messages id="messages1" showDetail="true" closable="true" />
-                <!--<h4 style="margin-top: 20px; margin-bottom: 5px;" >Projeto </h4>-->
+                <h4 style="margin-top: 20px; margin-bottom: 5px;" >Projeto </h4>
                 <h:outputLabel value="Nome:" class="output-form" />
                 <h:inputText label="titulo" value="#{projetoController.projeto.nome}" styleClass="form-control input"  />  
 
@@ -24,7 +22,7 @@
                 <p:inputTextarea rows="2" cols="40" value="#{projetoController.projeto.descricao}" counter="display" maxlength="100" counterTemplate="{0} caracteres restantes." autoResize="false" />
                 <h:outputText id="display" />
             </h:panelGrid>
-            <div style="margin-top: 10px; margin-bottom: 20px;">          
+            <div class="col-md-12 " style="margin-top: 10px; margin-bottom: 20px;">          
                 <h:panelGrid columns="2" >
                     <h:commandButton value="Salvar" action="#{projetoController.salvar()}"  styleClass="btn btn-primary btn-space" >
                         <f:ajax execute="form_projeto" render="form_projeto" />
@@ -35,15 +33,12 @@
                 </h:panelGrid>
             </div>
         </h:form>
-            </p:tab>
-            <p:tab title="Geral" >
-        
 
         <h:form id="form_config" enctype="multipart/form-data">
             
             <h:panelGrid>
                 <p:messages id="messages2" showDetail="true" closable="true"  /> 
-                <!--<h4 style="margin-top: 20px; margin-bottom: 5px;" >Geral </h4>-->
+                <h4 style="margin-top: 20px; margin-bottom: 5px;" >Geral </h4>
                 <h:inputHidden value="#{configController.configuracao.idConfig}" />
 
                 <h:outputLabel value="Título do cabeçalho:" class="output-form" />
@@ -81,7 +76,7 @@
             </h:panelGrid>
             
             
-            <div style="margin-top: 10px; margin-bottom: 20px;">          
+            <div class="col-md-12 " style="margin-top: 10px; margin-bottom: 20px;">          
                 <h:panelGrid columns="2" >
                     <h:commandButton value="Salvar" action="#{configController.salvar()}"  styleClass="btn btn-primary btn-space" >
                         <f:ajax execute="form_config" render="form_config" />
@@ -93,12 +88,11 @@
             </div>
 
         </h:form>
-        </p:tab>
-            <p:tab title="Email" >
+        
         <h:form id="form_taskmail" >   
             <h:panelGrid>
                 <p:messages id="messages3" showDetail="true" closable="true" />
-                <!--<h4 style="margin-top: 20px; margin-bottom: 5px;" >E-mail </h4>-->
+                <h4 style="margin-top: 20px; margin-bottom: 5px;" >E-mail </h4>
                 <h:outputLabel value="Relatório automático" class="output-form" />
 
                 <p:selectBooleanCheckbox value="#{taskMailControler.taskmail.ativo}" itemLabel="Permitir envio." >
@@ -112,7 +106,7 @@
                 </h:inputText>
 
             </h:panelGrid>
-            <div style="margin-top: 10px; margin-bottom: 20px;">          
+            <div class="col-md-12 " style="margin-top: 10px; margin-bottom: 20px;">          
                 <h:panelGrid columns="2" >
                     <h:commandButton value="Salvar" action="#{taskMailControler.salvar()}"  styleClass="btn btn-primary btn-space" >
                         <f:ajax execute="form_taskmail" render="form_taskmail" />
@@ -120,8 +114,6 @@
                 </h:panelGrid>
             </div>
         </h:form>
-        </p:tab>
-        </p:tabView>
 
     </ui:define>
 </ui:composition>

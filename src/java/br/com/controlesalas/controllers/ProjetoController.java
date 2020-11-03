@@ -10,13 +10,17 @@ import br.com.controlesalas.entities.Org;
 import br.com.controlesalas.entities.Projeto;
 import static br.com.controlesalas.entities.Projeto_.Salas;
 import br.com.controlesalas.entities.Sala;
+import br.com.controlesalas.entities.TaskMail;
 import br.com.controlesalas.entities.Usuario;
 import br.com.controlesalas.services.ProjetoService;
+import br.com.controlesalas.services.TaskMailService;
 import br.com.controlesalas.services.UsuarioService;
 import br.com.controlesalas.util.MensagemUtil;
 import java.io.IOException;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
@@ -42,12 +46,15 @@ public class ProjetoController implements Serializable{
     private Projeto projeto;
     private Projeto projetoEditar;
     private Configuracao config;
+    private TaskMail taskmail;
     private List<Sala> salas;
     private Object idProjeto;
     
     Long idUsuario;
     Long idOrg;
     
+    Date data = new Date(System.currentTimeMillis());
+    Timestamp dateTime = new Timestamp(data.getTime());
     
     public ProjetoController(){
         
@@ -55,6 +62,7 @@ public class ProjetoController implements Serializable{
     
     @PostConstruct
     public void init(){
+        
         idUsuario = (Long) getSession().getAttribute("idUsuario");
         Org org = (Org) getSession().getAttribute("org");
         idOrg = org.getIdOrg();
@@ -63,9 +71,11 @@ public class ProjetoController implements Serializable{
         if(idProjeto == null){
             projeto = new Projeto();
             config = new Configuracao();
+            taskmail = new TaskMail();
         }else{
             projeto = service.obter(convertToLong(idProjeto));
             config = projeto.getConfig();
+            taskmail = new TaskMail();
         }
         
 //        projeto = new Projeto();
@@ -87,12 +97,16 @@ public class ProjetoController implements Serializable{
             config.setShow_weekends(true);
             config.setView_agenda("agendaWeek");
             projeto.setAtivo(true);
+            
+            taskmail.setAtivo(false);
+            taskmail.setHora(dateTime);
         }
-
+        projeto.setTaskmail(taskmail);
         projeto.setConfig(config);
         String erro = service.salvar(projeto);
+        projeto = new Projeto();
         if (erro == null) {
-            projeto = new Projeto();
+            projeto = service.obter(convertToLong(idProjeto));
             MensagemUtil.addMensagemInfo("Projeto Salvo.");
         } else {
             MensagemUtil.addMensagemError("Erro: " + erro);
@@ -220,6 +234,40 @@ public class ProjetoController implements Serializable{
         this.config = config;
     }
 
+    public TaskMail getTaskmail() {
+        return taskmail;
+    }
+
+    public void setTaskmail(TaskMail taskmail) {
+        this.taskmail = taskmail;
+    }
+
+    public Date getData() {
+        return data;
+    }
+
+    public void setData(Date data) {
+        this.data = data;
+    }
+
+    public Timestamp getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(Timestamp dateTime) {
+        this.dateTime = dateTime;
+    }
+    
+    
+
+    public ProjetoService getService() {
+        return service;
+    }
+
+    public void setService(ProjetoService service) {
+        this.service = service;
+    }
+
     public Object getIdProjeto() {
         return idProjeto;
     }
@@ -250,9 +298,7 @@ public class ProjetoController implements Serializable{
 
     public void setIdOrg(Long idOrg) {
         this.idOrg = idOrg;
-    }
-    
-    
+    }   
     
     public HttpSession getSession() {
         return (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);

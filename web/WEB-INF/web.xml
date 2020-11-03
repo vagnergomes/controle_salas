@@ -21,56 +21,53 @@
     <welcome-file-list>
         <welcome-file>Acesso/login/login.xhtml</welcome-file>
     </welcome-file-list>
-    
     <context-param>
         <param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
         <param-value>true</param-value>
     </context-param>
-    
-    <context-param>  
-        <param-name>primefaces.THEME </param-name>  
-        <param-value> bootstrap </param-value>  
+    <context-param>
+        <param-name>primefaces.THEME </param-name>
+        <param-value> bootstrap </param-value>
     </context-param>
-    
     <context-param>
         <param-name>com.sun.faces.enableRestoreView11Compatibility</param-name>
         <param-value>true</param-value>
     </context-param>
-    
-     <!-- Definição do mecanismo de upload-->
+    <!-- Definição do mecanismo de upload-->
     <context-param>
         <param-name>primefaces.UPLOADER</param-name>
         <param-value>auto</param-value>
     </context-param>
-    
-     <context-param>
-    <param-name>contextConfigLocation</param-name>
-    <param-value>
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
     	
     	/WEB-INF/spring-security.xml
     </param-value>
-  </context-param>
-  
-   <listener>
-    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </context-param>
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+    </listener>
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <listener>
+        <listener-class> org.springframework.security.web.session.HttpSessionEventPublisher </listener-class>
+    </listener>
+    <!--<display-name>Archetype Created Web Application</display-name>-->
+    <!--  <listener>
+    <listener-class>br.com.controlesalas.controllers.ApplicationStartup</listener-class>
   </listener>
-  
-  <listener>
-    <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
-  </listener>
-  
-  <filter>
-     <filter-name>springSecurityFilterChain</filter-name>
-     <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-  </filter>
-  
-  <filter-mapping>
-     <filter-name>springSecurityFilterChain</filter-name>
-     <url-pattern>/*</url-pattern>
-  </filter-mapping>
-  
-  <listener> 
-  	<listener-class> org.springframework.security.web.session.HttpSessionEventPublisher </listener-class> 
-  </listener> 
-
+  -->
+    <listener>
+        <listener-class>br.com.controlesalas.task.TaskListener</listener-class>
+    </listener>
 </web-app>

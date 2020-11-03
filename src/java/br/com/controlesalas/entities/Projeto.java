@@ -47,6 +47,10 @@ public class Projeto implements Serializable {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Configuracao config;
     
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "idTaskmail")
+    private TaskMail taskmail;
+    
     @OneToMany(mappedBy = "Projeto", cascade = CascadeType.REMOVE)
     private List<Sala> Salas ;
      
@@ -103,6 +107,14 @@ public class Projeto implements Serializable {
 
     public void setConfig(Configuracao config) {
         this.config = config;
+    }
+
+    public TaskMail getTaskmail() {
+        return taskmail;
+    }
+
+    public void setTaskmail(TaskMail taskmail) {
+        this.taskmail = taskmail;
     }
 
     public List<Sala> getSalas() {
