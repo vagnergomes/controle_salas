@@ -75,7 +75,7 @@ public class SalaService implements Serializable {
     }
     
     public List<Agendamento> agendamentosSala(Long id){
-        Query query = em.createQuery("Select c from Agendamento as c Where c.sala.idSala = ?1", Agendamento.class);
+        Query query = em.createQuery("Select c from Agendamento as c Where c.analise.analise = False and c.analise.aprovado = True and c.sala.idSala = ?1", Agendamento.class);
         query.setParameter(1, id);
         return query.getResultList();
     }

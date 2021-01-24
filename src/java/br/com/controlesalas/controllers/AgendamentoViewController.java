@@ -6,8 +6,10 @@
 package br.com.controlesalas.controllers;
 
 import br.com.controlesalas.entities.Agendamento;
+import br.com.controlesalas.entities.Analise;
 import br.com.controlesalas.entities.Descritivo;
 import br.com.controlesalas.entities.Projeto;
+import br.com.controlesalas.entities.Role;
 import br.com.controlesalas.relatorios.Rel_Agendamento;
 import br.com.controlesalas.services.AgendamentoService;
 import br.com.controlesalas.services.ConfigService;
@@ -42,19 +44,24 @@ public class AgendamentoViewController implements Serializable {
 
     @Inject
     private AgendamentoService service;
-    
+
     @Inject
     private ConfigService service_config;
 
     private Agendamento agendamento;
     private List<Agendamento> agendamentos;
-    
+
     private Projeto projeto;
     private Object idProjeto;
 
+    private List<Role> roles;
+    private Role role;
+
+    private Long id_usuario;
+
     private ScheduleModel eventos;
     private LazyScheduleModel lazyEventModel;
-    
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date data_inicio;
 
@@ -65,10 +72,13 @@ public class AgendamentoViewController implements Serializable {
     Timestamp dateTime = new Timestamp(data.getTime());
 
     @PostConstruct
-    public void init(){
+    public void init() {
         agendamento = new Agendamento();
-        idProjeto =  getSession().getAttribute("idConfigSelecionado");
+        idProjeto = getSession().getAttribute("idConfigSelecionado");
         projeto = (Projeto) getSession().getAttribute("projetoSelecionado");
+        roles = (List<Role>) getSession().getAttribute("roles");
+        id_usuario = (Long) getSession().getAttribute("idUsuario");
+
 //        agendamentos = new ArrayList<>();
         data_inicio = dateTime;
         data_fim = ultimoAgendamento();
@@ -77,11 +87,10 @@ public class AgendamentoViewController implements Serializable {
         data_inicio.setSeconds(0);
         data_fim.setHours(23);
         data_fim.setMinutes(0);
-        data_fim.setSeconds(0);   
-        agendamentos = service.todosData(data_inicio, data_fim, projeto.getIdProjeto());
-        
+        data_fim.setSeconds(0);
+        agendamentos = service.todosData(data_inicio, data_fim, projeto.getIdProjeto(), id_usuario, roles);
     }
-    
+
     public void salvar() {
         if (agendamento.getSala() == null) {
             MensagemUtil.addMensagemError("Erro: os campos obrigatórios deve ser preenchidos.");
@@ -116,6 +125,7 @@ public class AgendamentoViewController implements Serializable {
                 MensagemUtil.addMensagemInfo("Excluído.");
                 agendamento = new Agendamento();
                 agendamento.setDescritivo(new Descritivo());
+                agendamento.setAnalise(new Analise());
 
             } else {
                 MensagemUtil.addMensagemError(erro);
@@ -154,16 +164,16 @@ public class AgendamentoViewController implements Serializable {
 
     public void buscarAgendamentos() {
 //        String idProjeto = (String) ;
-        agendamentos = service.todosData(data_inicio, data_fim, projeto.getIdProjeto());
+        agendamentos = service.todosData(data_inicio, data_fim, projeto.getIdProjeto(), id_usuario, roles);
     }
 
     public void relatorioAgendamentos(String formato) throws SQLException, SchedulerException {
         Rel_Agendamento rel = new Rel_Agendamento();
-        
+
         String path = "C:/controlesalas/imgs/logo-padrao.png";
-        
+
         if (idProjeto != null) {
-            int id = ((Long)idProjeto).intValue();
+            int id = ((Long) idProjeto).intValue();
             String url_logo = service_config.obterUrl(id);
             File file = new File(url_logo);
             if (file.exists()) {
@@ -177,7 +187,7 @@ public class AgendamentoViewController implements Serializable {
         }
 
         String driver = "com.mysql.jdbc.JDBC4Connection";
-        String url = "jdbc:mysql://localhost:3306/controle_salas?characterEncoding=latin1&useConfigs=maxPerformance&allowPublicKeyRetrieval=true&useSSL=false";
+        String url = "jdbc:mysql://localhost:3306/controle_salas_pd?characterEncoding=latin1&useConfigs=maxPerformance&allowPublicKeyRetrieval=true&useSSL=false";
         String usuario = "root";
         String senha = "admin";
         Connection conexao = null;
@@ -189,45 +199,10 @@ public class AgendamentoViewController implements Serializable {
         }
         rel.getAgendamentos(conexao, data_inicio, data_fim, formato, path, projeto.getIdProjeto(), false);
     }
-    
-    public void relatorioAutoAgendamentos(String formato, Long idPj) throws SQLException, SchedulerException {
-        System.out.println("----Entrou no metodo PDF!:" + idPj);
-        Rel_Agendamento rel = new Rel_Agendamento();
-        
-        String path = "C:/controlesalas/imgs/logo-padrao.png";
-        
-        if (idPj != null) {
-            int id = idPj.intValue();
-            String url_logo = service_config.obterUrl(id);
-            File file = new File(url_logo);
-            if (file.exists()) {
-                int pos = file.getName().lastIndexOf(".");
-                //nome = file.getName();
-                String tipo = file.getName().substring(pos + 1);
-                String nome = file.getName().substring(0, pos) + "_rel";
-                int pos2 = url_logo.lastIndexOf("/");
-                path = url_logo.substring(0, pos2) + "/" + nome + "." + tipo;
-            }
-        }
 
-        String driver = "com.mysql.jdbc.JDBC4Connection";
-        String url = "jdbc:mysql://localhost:3306/controle_salas?characterEncoding=latin1&useConfigs=maxPerformance&allowPublicKeyRetrieval=true&useSSL=false";
-        String usuario = "root";
-        String senha = "admin";
-        Connection conexao = null;
-
-        try {
-            System.setProperty("jdbc.Drivers", driver);
-            conexao = DriverManager.getConnection(url, usuario, senha);
-        } catch (SQLException ex) {
-        }
-        rel.getAgendamentos(conexao, data_inicio, data_fim, formato, path, idPj, false);
-    }
-
-
-    public Date ultimoAgendamento() {    
+    public Date ultimoAgendamento() {
         data_fim = service.ultimoAgendamento();
-        if(data_fim == null){
+        if (data_fim == null) {
             data_fim = dateTime;
         }
         return data_fim;
@@ -238,7 +213,7 @@ public class AgendamentoViewController implements Serializable {
     }
 
     public List<Agendamento> todosData() {
-        return service.todosData(data_inicio, data_fim, projeto.getIdProjeto());
+        return service.todosData(data_inicio, data_fim, projeto.getIdProjeto(), id_usuario, roles);
     }
 
 //    public void onRowSelect(SelectEvent event) {
@@ -286,9 +261,14 @@ public class AgendamentoViewController implements Serializable {
     public void setProjeto(Projeto projeto) {
         this.projeto = projeto;
     }
-    
-    
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 
     /*--------Schedule---------*/
     public ScheduleModel getEventos() {

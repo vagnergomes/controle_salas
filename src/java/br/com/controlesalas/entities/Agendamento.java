@@ -49,7 +49,10 @@ public class Agendamento implements Serializable {
     @Column(nullable = false)
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date fim;
-    
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Analise analise;
+
     @ManyToOne
     @JoinColumn(name = "idSala")
     private Sala sala;
@@ -119,6 +122,14 @@ public class Agendamento implements Serializable {
 
     public void setDescritivo(Descritivo descritivo) {
         this.descritivo = descritivo;
+    }
+
+    public Analise getAnalise() {
+        return analise;
+    }
+
+    public void setAnalise(Analise analise) {
+        this.analise = analise;
     }
 
     

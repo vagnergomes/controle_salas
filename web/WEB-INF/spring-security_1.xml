@@ -1,63 +1,68 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<beans:beans xmlns="http://www.springframework.org/schema/security"
-             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xmlns:beans="http://www.springframework.org/schema/beans"
-             xsi:schemaLocation="http://www.springframework.org/schema/beans
-	http://www.springframework.org/schema/beans/spring-beans.xsd
-	http://www.springframework.org/schema/security
-	http://www.springframework.org/schema/security/spring-security-3.1.xsd">
-	 
-    <http auto-config="true" access-denied-page="/Acesso/error/negado.xhtml">
-         
-        <intercept-url pattern="/Agendamento/Sala.xhtml" access="ROLE_SUPER_ADMIN" />
-        <intercept-url pattern="/Projeto/projetos.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_USUARIO" />
-        <intercept-url pattern="/Projeto/projetos_desat.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN" />
-        <intercept-url pattern="/Projeto/projeto.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN" />
-               
-        <form-login login-page="/Acesso/login/login.xhtml" 
-                    always-use-default-target="true"
-                    default-target-url="/index.xhtml" 
-                    authentication-failure-url="/Acesso/login/login.xhtml?login_error=1"  />
-        
-        <logout logout-success-url="/Acesso/login/login.xhtml"  />
-    </http>
-	 	
-    <beans:bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
-        <beans:property name="url" value="jdbc:mysql://localhost:3306/controle_salas?useSSL=false" />
-        <beans:property name="driverClassName" value="com.mysql.jdbc.Driver" />
-        <beans:property name="username" value="root" />
-        <beans:property name="password" value="admin" />
-    </beans:bean>
-	    
-    <beans:bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">  
-        <beans:property name="basename" value="classpath:org/springframework/security/messages"/>  
-    </beans:bean>  
+<beans xmlns="http://www.springframework.org/schema/beans"
 	
-    <authentication-manager>
-        <authentication-provider >
-            <password-encoder hash="sha-256" />
-            <jdbc-user-service data-source-ref="dataSource"
-                               users-by-username-query="SELECT usuario, senha, 'true' as ativo FROM usuario WHERE usuario = ?"
-                               authorities-by-username-query="
-                                          SELECT usuario,
-                                                CASE 
-                                                WHEN r.NOME_ROLE = 'super_administrador' THEN 'ROLE_SUPER_ADMIN'
-                                                ELSE (CASE WHEN r.NOME_ROLE = 'administrador' THEN 'ROLE_ADMIN'
-                                                ELSE (CASE WHEN r.NOME_ROLE = 'usuario' THEN 'ROLE_USUARIO'
-                                                ELSE '' END) END) END AS permissao
-                                        FROM usuario  u
-                                        inner join usuarios_roles as ur
-                                        on u.idUsuario = ur.usuario_id
-                                        
-                                        left join role r
-                                        on ur.role_id = r.idRole
-                                        
-                                        WHERE usuario = ?"
-            />
-        </authentication-provider>
-<!--        <user-service>
-            <user name="admin" password="8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918" authorities="ROLE_ADMIN" />
-        </user-service>    -->
-    </authentication-manager>
+	xmlns:sec="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
-</beans:beans>
+
+	
+	<!-- Begin Web Security -->
+	<!-- unsecured resource if needed -->
+	<sec:http pattern="/images/**" security="none"/> 
+	<sec:http>
+	    <!-- configure the roles allowed to access the app -->
+	    <sec:intercept-url pattern="/**" access="hasAnyRole('MANAGER', 'USER')"/>
+	    <!-- add more urls/patters/roles to refine security -->
+	    
+	    <sec:form-login/>
+	    <sec:logout/>
+	    <!-- if you are adding to an exiting app, 
+				you may need to disable CSRF protection until you can make application changes. -->
+	    <!-- sec:csrf disabled="true"/ -->
+	</sec:http>
+
+	<!-- add the properties below to your app's properties file 
+			or replace with hardcoded values to get working -->
+	<sec:ldap-server 
+		id="contextSource" 
+		url="ldap://${ldap.server}:${ldap.port}/"
+		manager-dn="${ldap.manager.user}"
+		manager-password="${ldap.manager.password}"/>
+		 
+	<sec:authentication-manager erase-credentials="true">
+		<sec:authentication-provider ref='ldapAuthProvider' />
+	</sec:authentication-manager>
+	 
+	 
+	<!-- using bean-based configuration here to set the DefaultLdapAuthoritiesPopulater with 
+		ignorePartialResultsException=true.  This is a known Spring/AD issue and a workaround for it -->
+	<bean id="ldapAuthProvider" class="org.springframework.security.ldap.authentication.LdapAuthenticationProvider">
+		<constructor-arg>
+			<!-- the bind authenticator will first lookup the user using the service account credentials, then 
+				 attempt to bind the user with their password once found -->
+			<bean id="bindAuthenticator" class="org.springframework.security.ldap.authentication.BindAuthenticator">
+				<constructor-arg ref="contextSource" />
+				<property name="userSearch" ref="userSearch" />
+			</bean>
+		</constructor-arg>
+		<constructor-arg>
+			<bean class="org.springframework.security.ldap.userdetails.DefaultLdapAuthoritiesPopulator">
+				<constructor-arg ref="contextSource" />
+				<constructor-arg value="OU=Usuários,OU=Patos de Minas,OU=Unidades de Negócio,DC=terrenaagro,DC=com,DC=br" /> <!-- group search base -->
+				<!-- <property name="defaultRole" value="ROLE_USER" /> 
+					You can add a default role to everyone if needed -->
+				<property name="searchSubtree" value="true" />
+				<property name="ignorePartialResultException" value="true" />
+				<property name="groupSearchFilter" value="(member={0})" />
+			</bean>
+		</constructor-arg>
+	</bean>
+	<bean id="userSearch" class="org.springframework.security.ldap.search.FilterBasedLdapUserSearch">
+		<constructor-arg index="0" value="OU=Usuários,OU=Patos de Minas,OU=Unidades de Negócio,DC=terrenaagro,DC=com,DC=br" />
+		<constructor-arg index="1" value="(sAMAccountName={0})" />
+		<constructor-arg index="2" ref="contextSource" />
+		<property name="searchSubtree" value="true" />
+	</bean>
+	<!--  end Web Security -->
+</beans>

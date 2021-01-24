@@ -26,7 +26,7 @@
     </http>
 	 	
     <beans:bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
-        <beans:property name="url" value="jdbc:mysql://localhost:3306/controle_salas?useSSL=false" />
+        <beans:property name="url" value="jdbc:mysql://localhost:3306/controle_salas_pd?useSSL=false" />
         <beans:property name="driverClassName" value="com.mysql.jdbc.Driver" />
         <beans:property name="username" value="root" />
         <beans:property name="password" value="admin" />

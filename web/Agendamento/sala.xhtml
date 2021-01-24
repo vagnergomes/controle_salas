@@ -22,7 +22,7 @@ and open the template in the editor.
                     <h:inputHidden value="#{salaController.sala.idSala}" />
                     <!--<p:inputText type="number" value="{salaController.sala.idSala}" />-->
                     <h:outputLabel value="Nome do Local/Sala" class="output-form required" />
-                    <h:inputText label="titulo" value="#{salaController.sala.nome_sala}" styleClass="form-control input" style="width: 70%;" requiredMessage="Informe o Título" required="true"/>                  
+                    <h:inputText label="titulo" maxlength="15" value="#{salaController.sala.nome_sala}" styleClass="form-control input" style="width: 70%;" requiredMessage="Informe o Título" required="true"/>                  
 
                     <h:outputLabel value="Descrição" class="output-form required" />
                     <h:inputText label="titulo" value="#{salaController.sala.descricao}" styleClass="form-control input" style="width: 70%;" requiredMessage="Informe o Título" required="true"/>                  

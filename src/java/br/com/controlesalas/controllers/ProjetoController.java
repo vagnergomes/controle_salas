@@ -8,18 +8,13 @@ package br.com.controlesalas.controllers;
 import br.com.controlesalas.entities.Configuracao;
 import br.com.controlesalas.entities.Org;
 import br.com.controlesalas.entities.Projeto;
-import static br.com.controlesalas.entities.Projeto_.Salas;
 import br.com.controlesalas.entities.Sala;
 import br.com.controlesalas.entities.TaskMail;
-import br.com.controlesalas.entities.Usuario;
 import br.com.controlesalas.services.ProjetoService;
-import br.com.controlesalas.services.TaskMailService;
-import br.com.controlesalas.services.UsuarioService;
 import br.com.controlesalas.util.MensagemUtil;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -35,59 +30,57 @@ import javax.servlet.http.HttpSession;
  */
 @Named
 @RequestScoped
-public class ProjetoController implements Serializable{
-    
+public class ProjetoController implements Serializable {
+
     @Inject
     private ProjetoService service;
-    
-    @Inject
-    private UsuarioService usuario_service;
-    
+
     private Projeto projeto;
     private Projeto projetoEditar;
     private Configuracao config;
     private TaskMail taskmail;
     private List<Sala> salas;
     private Object idProjeto;
-    
+
     Long idUsuario;
     Long idOrg;
-    
+
     Date data = new Date(System.currentTimeMillis());
     Timestamp dateTime = new Timestamp(data.getTime());
-    
-    public ProjetoController(){
-        
+
+    public ProjetoController() {
+
     }
-    
+
     @PostConstruct
-    public void init(){
-        
+    public void init() {
+
         idUsuario = (Long) getSession().getAttribute("idUsuario");
         Org org = (Org) getSession().getAttribute("org");
         idOrg = org.getIdOrg();
-        idProjeto =  getSession().getAttribute("idConfigSelecionado");
+        idProjeto = getSession().getAttribute("idConfigSelecionado");
         //Long idUsuario = (Long) getSession().getAttribute("idUsuario");
-        if(idProjeto == null){
+        if (idProjeto == null) {
             projeto = new Projeto();
             config = new Configuracao();
             taskmail = new TaskMail();
-        }else{
+        } else {
             projeto = service.obter(convertToLong(idProjeto));
             config = projeto.getConfig();
-            taskmail = new TaskMail();
+            taskmail = projeto.getTaskmail();
         }
-        
+
 //        projeto = new Projeto();
 //        projetoEditar = new Projeto();
 //        config = new Configuracao();
     }
-     
+
     public void salvar() {
-       // System.out.println("------IdSessao:" + usuario.getUsuario());
+        // System.out.println("------IdSessao:" + usuario.getUsuario());
         if (idProjeto == null) {
-            Org org =  (Org) getSession().getAttribute("org");
-            
+            Org org = (Org) getSession().getAttribute("org");
+
+            org.setOrg("");
             projeto.setOrg(org);
             config.setExports_visivel(true);
             config.setRotulos_visivel(true);
@@ -96,71 +89,82 @@ public class ProjetoController implements Serializable{
             config.setUrl_img_logo("C:/controlesalas/imgs/logo-padrao.png");
             config.setShow_weekends(true);
             config.setView_agenda("agendaWeek");
-            projeto.setAtivo(true);
-            
             taskmail.setAtivo(false);
+            taskmail.setEmail_destinatario(" ");
             taskmail.setHora(dateTime);
+            projeto.setAtivo(true);
         }
         projeto.setTaskmail(taskmail);
         projeto.setConfig(config);
         String erro = service.salvar(projeto);
         projeto = new Projeto();
         if (erro == null) {
-            projeto = service.obter(convertToLong(idProjeto));
+            if (idProjeto != null) {
+                projeto = service.obter(convertToLong(idProjeto));
+            }
             MensagemUtil.addMensagemInfo("Projeto Salvo.");
         } else {
             MensagemUtil.addMensagemError("Erro: " + erro);
         }
     }
-    
-    public void excluir(){
+
+    public void excluir() throws IOException {
         projeto = (Projeto) getSession().getAttribute("projeto_desat");
-        String erro  = service.excluir(projeto.getIdProjeto());
-        
-        if(erro == null){
-            getSession().removeAttribute("projeto_desat");
-            MensagemUtil.addMensagemInfo("Projeto excluído.");
-        } else{
-            MensagemUtil.addMensagemError("Erro ao excluir projeto.");
-        }    
+        boolean err = service.excluirUsuariosProjeto(projeto.getIdProjeto());
+
+        if (err == true) {
+            String erro = service.excluir(projeto.getIdProjeto());
+
+            if (erro == null) {
+                getSession().removeAttribute("projeto_desat");
+                getSession().removeAttribute("projetoSelecionado");
+                getSession().removeAttribute("idConfigSelecionado");
+
+                FacesContext.getCurrentInstance().getExternalContext().redirect("projetos_desat.xhtml");
+                MensagemUtil.addMensagemInfo("Projeto excluído.");
+            } else {
+                MensagemUtil.addMensagemError("Erro ao excluir projeto.");
+            }
+        } else {
+            MensagemUtil.addMensagemError("Erro ao excluir usuários do projeto. Tente excluir cada um antes.");
+        }
+
     }
-    
+
     public List<Projeto> todosAtivos() {
         return service.todosAtivos(idOrg);
     }
-    
+
     public List<Projeto> todosAtivosUsuario() {
-        System.out.println("---idOrg: " + idOrg);
-        System.out.println("---idOrg: " + idUsuario);
         return service.todosAtivosUsuario(idOrg, idUsuario);
     }
-    
+
     public List<Projeto> todosDesativados() {
         return service.todosDesativados(idOrg);
     }
-    
+
     public List<Projeto> todos() {
         return service.todos();
     }
-    
-    public void selecionarProjeto(Projeto projeto) throws IOException{
+
+    public void selecionarProjeto(Projeto projeto) throws IOException {
         //Long idProjeto = projeto.getIdProjeto();
         FacesContext.getCurrentInstance().getExternalContext().redirect("../index.xhtml");
         Long idConfig = projeto.getConfig().getIdConfig();
         getSession().setAttribute("projetoSelecionado", projeto);
         getSession().setAttribute("idConfigSelecionado", idConfig);
-        
+
 //        FacesContext.getCurrentInstance().getExternalContext().redirect("../Agendamento/schedule.xhtml");
     }
-    
-    public void editar(Projeto p){
+
+    public void editar(Projeto p) {
         projetoEditar = p;
     }
-    
-    public void selecionar(Projeto p){
+
+    public void selecionar(Projeto p) {
         getSession().setAttribute("projeto_desat", p);
     }
-    
+
 //    public void excluir(Projeto projeto) {
 //        try {
 //            agendamentos = service.agendamentosSala(sala.getIdSala());
@@ -179,31 +183,30 @@ public class ProjetoController implements Serializable{
 //            ex.getStackTrace();
 //        }
 //    }
-    
-    public void desativar(){
-        try{
+    public void desativar() {
+        try {
             projeto = (Projeto) getSession().getAttribute("projeto_desat");
             String nome_projeto = projeto.getNome();
             service.desativar(projeto);
-            MensagemUtil.addMensagemInfo("O Projeto "+nome_projeto+" foi desativado e pode ser encontrado em Configurações > Projetos desativados.");
+            MensagemUtil.addMensagemInfo("O Projeto " + nome_projeto + " foi desativado e pode ser encontrado em Configurações > Projetos desativados.");
             getSession().removeAttribute("projeto_desat");
-        }catch(Exception ex){
+        } catch (Exception ex) {
             ex.getMessage();
         }
     }
-    
-     public void ativar(){
-        try{
+
+    public void ativar() {
+        try {
             projeto = (Projeto) getSession().getAttribute("projeto_desat");
             String nome_projeto = projeto.getNome();
             service.ativar(projeto);
-            MensagemUtil.addMensagemInfo("O projeto "+nome_projeto+" foi ativado e está disponível na lista prinicipal de projetos.");
+            MensagemUtil.addMensagemInfo("O projeto " + nome_projeto + " foi ativado e está disponível na lista prinicipal de projetos.");
             getSession().removeAttribute("projeto_desat");
-        }catch(Exception ex){
+        } catch (Exception ex) {
             ex.getMessage();
         }
     }
-    
+
     public static Long convertToLong(Object o) {
         String stringToConvert = String.valueOf(o);
         Long convertedLong = Long.parseLong(stringToConvert);
@@ -257,8 +260,6 @@ public class ProjetoController implements Serializable{
     public void setDateTime(Timestamp dateTime) {
         this.dateTime = dateTime;
     }
-    
-    
 
     public ProjetoService getService() {
         return service;
@@ -298,10 +299,10 @@ public class ProjetoController implements Serializable{
 
     public void setIdOrg(Long idOrg) {
         this.idOrg = idOrg;
-    }   
-    
+    }
+
     public HttpSession getSession() {
         return (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
     }
-    
+
 }

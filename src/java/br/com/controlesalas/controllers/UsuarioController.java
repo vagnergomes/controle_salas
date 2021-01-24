@@ -6,6 +6,7 @@
 package br.com.controlesalas.controllers;
 
 import br.com.controlesalas.entities.Org;
+import br.com.controlesalas.entities.Projeto_Usuario;
 import br.com.controlesalas.entities.Role;
 import br.com.controlesalas.entities.Usuario;
 import br.com.controlesalas.services.RoleService;
@@ -20,6 +21,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
+import org.primefaces.PrimeFaces;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
@@ -82,41 +84,57 @@ public class UsuarioController implements Serializable {
             getSession().setAttribute("usuario", usuario);
             usuario = new Usuario();
             select_roles = new ArrayList<>();
-            MensagemUtil.addMensagemInfo("Usuário salvo.");
+            MensagemUtil.addMensagemInfo("Salvo.");
         } else {
-            MensagemUtil.addMensagemInfo("Falha ao salvar usuário: " + erro);
+            MensagemUtil.addMensagemInfo("Falha ao salvar: " + erro);
         }
     }
 
     public void salvar() {
         List<Org> orgs = new ArrayList<>();
         org = (Org) getSession().getAttribute("org");
-
-        if (idUsuario == null && org.getIdOrg() == null) {
-            org = new Org();
-            org.setOrg("");
-            orgs.add(org);
-            
-            role = service_role.roleAdministrador();
-            select_roles.add(role);
-  
-        } else {
-            orgs.add(org);
-            select_roles.add(role);
-        }
-        
+        orgs.add(org);
+        select_roles.add(role);
         usuario.setRoles(select_roles);
         usuario.setOrgs(orgs);
-        usuario.setSenha(bcrypt(usuario.getSenha()));
+        
+        if(usuario.getIdUsuario() == null){
+            usuario.setSenha(bcrypt(usuario.getSenha()));
+        }
+
         String erro = service.salvar(usuario);
 
         if (erro == null) {
             getSession().setAttribute("usuario", usuario);
             usuario = new Usuario();
             select_roles = new ArrayList<>();
-            MensagemUtil.addMensagemInfo("Usuário salvo.");
+            MensagemUtil.addMensagemInfo("Salvo.");
         } else {
-            MensagemUtil.addMensagemInfo("Falha ao salvar usuário: " + erro);
+            MensagemUtil.addMensagemInfo("Falha ao salvar: " + erro);
+        }
+    }
+    
+    public void alterarSenha() {
+        //String username = service.consultaPorUsuario(usuario.getUsuario()).getUsuario();
+        
+//        List<Org> orgs = new ArrayList<>();
+//        org = (Org) getSession().getAttribute("org");
+//        orgs.add(org);
+//        select_roles.add(role);
+//        usuario.setRoles(select_roles);
+//        usuario.setOrgs(orgs);
+        
+        usuario.setSenha(bcrypt(usuario.getSenha()));
+
+        String erro = service.salvar(usuario);
+
+        if (erro == null) {
+            getSession().setAttribute("usuario", usuario);
+            usuario = new Usuario();
+            select_roles = new ArrayList<>();
+            MensagemUtil.addMensagemInfo("Salvo.");
+        } else {
+            MensagemUtil.addMensagemInfo("Falha ao salvar: " + erro);
         }
     }
 
@@ -125,25 +143,65 @@ public class UsuarioController implements Serializable {
         return service.todosPorOrg(org.getIdOrg());
     }
     
-    public void excluir(){
+    public void excluir() {
         if (!usuario.getUsuario().isEmpty()) {
-            String erro = service.excluir(usuario.getIdUsuario());
-            if (erro == null) {
-                MensagemUtil.addMensagemInfo("Excluído.");
-                usuario = new Usuario();
-                usuario.setOrgs(new ArrayList<>());
-                usuario.setRoles(new ArrayList<>());
+            boolean err = service.excluirProjetosUsuario(usuario);
+
+            if (err == true) {
+                String erro = service.excluir(usuario.getIdUsuario());
+                if (erro == null) {
+                    MensagemUtil.addMensagemInfo("Excluído.");
+                    usuario = new Usuario();
+                    usuario.setOrgs(new ArrayList<>());
+                    usuario.setRoles(new ArrayList<>());
+
+                } else {
+                    MensagemUtil.addMensagemError(erro);
+                }
             } else {
-                MensagemUtil.addMensagemError(erro);
+                MensagemUtil.addMensagemError("Erro: existem agendas vínculadas à este usuário. Tente remover o acesso antes.");
             }
         } else {
-            
+            MensagemUtil.addMensagemError("Nenhum usuário selecionado.");
         }
+    }
     
+    public void editarUsuario(Usuario u){
+        System.out.println("EditarUsuario: " + u.getIdUsuario());
+        if(u != null){
+            usuario = service.obter(u.getIdUsuario());
+            PrimeFaces.current().executeScript("PF('dlg_editar_usuario').show();");
+        }else{
+            usuario = new Usuario(); 
+        }
+    }
+    
+     
+    public void editarSenha(Usuario u){
+        System.out.println("EditarSenha: " + u.getIdUsuario());
+        if(u != null){
+            usuario = service.obter(u.getIdUsuario());
+            PrimeFaces.current().executeScript("PF('dlg_editar_senha').show();");
+        }else{
+            usuario = new Usuario(); 
+        }
+    }
+    
+    public void novoUsuario(){
+        usuario = new Usuario();
+        PrimeFaces.current().executeScript("PF('dlg_novo_usuario').show();");
     }
     
     public void selecionar(Usuario u){
         usuario = u;
+    }
+    
+    public boolean validar(){
+        if(usuario != null){
+            return false;
+        }else{
+            return true;
+        }
     }
 
     public static String bcrypt(String password) {

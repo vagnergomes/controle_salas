@@ -6,13 +6,16 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
-        <title>Reuniões</title>
+        <title>Agendas</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
-        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <!--                <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>-->
+        <!--<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>-->
 
-        <!--<link type="text/css" href="#{request.contextPath}/Css/bootstrap.min.css" rel="stylesheet"/>-->
-        <!--<link type="text/css" href="#{request.contextPath}/Css/datepicker3.css" rel="stylesheet"/>-->
+        <link type="text/css" href="#{request.contextPath}/Css/bootstrap.min.css" rel="stylesheet"/>
+        <script src="#{request.contextPath}/Js/bootstrap.min.js" ></script>
+
+
+<!--<link type="text/css" href="#{request.contextPath}/Css/datepicker.css" rel="stylesheet"/>-->
         <link type="text/css" href="#{request.contextPath}/Css/style.css" rel="stylesheet"/>
 
         <meta charset="utf-8" />
@@ -20,7 +23,7 @@
 
 
         <script src="#{request.contextPath}/Js/lumino.glyphs.js"></script>
-     
+
         <script>
             PrimeFaces.locales['pt'] = {
                 closeText: 'Fechar',
@@ -66,25 +69,35 @@
                         </h:form>
                         <h:form style="margin-right: 20px; margin-top: -20px " >
                             <li class="dropdown pull-right">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><svg class="glyph stroked male-user"><use href="#stroked-male-user"/></svg> #{request.remoteUser}<span class="caret"></span></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><svg class="glyph stroked male-user"><use href="#stroked-male-user"/></svg> <span class="caret"></span></a>
+                               
                                 <ul class="dropdown-menu" role="menu">
+                                   
+                                    <li class="panel-config"  ><svg class="glyph stroked male-user panel-config"><use href="#stroked-male-user"/></svg>#{request.remoteUser} </li>
                                     <h:form rendered="#{loginController.verificaSAdmin() or loginController.verificaAdmin()}" >
                                         <li  ><a href="#{request.contextPath}/Usuario/usuarios_org.xhtml"><img src="#{request.contextPath}/Imagem/icons/users.png" /> Usuários</a></li>
                                         <li  ><a href="#{request.contextPath}/Projeto/projetos_desat.xhtml"><svg class="glyph stroked cancel"><use href="#stroked-cancel"/></svg> Desativados</a></li>
+
+
                                     </h:form>
+
                                     <li ><a href="#{request.contextPath}/j_spring_security_logout"><img src="#{request.contextPath}/Imagem/icons/sair.png" /> Sair</a></li>
                                 </ul>
                             </li>
-                        </h:form>
 
-                        <h:form rendered="#{configController.projetoSelec() and (loginController.verificaSAdmin() or loginController.verificaAdmin())}" style="margin-right: 150px; margin-top: -20px " >
+                        </h:form>
+                        
+                        <h:form rendered="#{configController.projetoSelec() and (loginController.verificaSAdmin() or loginController.verificaAdmin())}" style="margin-right: 80px; margin-top: -20px " >
                             <li class="dropdown pull-right">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><svg class="glyph stroked gear"><use href="#stroked-gear"/></svg> #{projetoController.projeto.nome}<span class="caret"></span></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><svg class="glyph stroked gear"><use href="#stroked-gear"/></svg> <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li  ><a style="#{configController.projetoSelec()? '':'pointer-events: none; color: #c3c3c3;'}"  href="#{request.contextPath}/Configuracao/config.xhtml"><svg class="glyph stroked gear"><use href="#stroked-gear"/></svg> Opções</a></li>
-                                    <li  ><a style="#{configController.projetoSelec()? '':'pointer-events: none; color: #c3c3c3;'}"  href="#{request.contextPath}/Projeto/usuarios_proj.xhtml"><img src="#{request.contextPath}/Imagem/icons/users.png" /> Usuários do projeto</a></li>
+                                    <li  ><a style="#{configController.projetoSelec()? '':'pointer-events: none; color: #c3c3c3;'}"  href="#{request.contextPath}/Projeto/usuarios_proj.xhtml"><img src="#{request.contextPath}/Imagem/icons/users.png" /> Usuários com acesso</a></li>
                                 </ul>
                             </li>
+                        </h:form>
+                        <h:form rendered="#{configController.projetoSelec() and (loginController.verificaSAdmin() or loginController.verificaAdmin())}" style="margin-right: 140px; margin-top: -20px " >
+                                <a href="#{request.contextPath}/Agendamento/analise.xhtml" ><svg class="glyph stroked flag"><use href="#stroked-flag"/></svg> </a>
                         </h:form>
                     </ul>
                 </div>
@@ -102,17 +115,19 @@
 
             <ul id="menu-top" >
                 <h:form title="Gerenciar" rendered="#{configController.projetoSelec()}"  >
-                <li class="active" ><svg  class="glyph stroked gear" style="margin-left: 12px;" ><use href="#stroked-gear" ></use></svg> Gerenciar</li>
-                <!--<a href="#{request.contextPath}/Agendamento/agendamento.xhtml"><li>Cadastro</li></a>-->
-                <a href="#{request.contextPath}/Agendamento/schedule.xhtml"><li><svg class="glyph stroked calendar"><use href="#stroked-calendar"/></svg>Schedule</li></a>
-                <a href="#{request.contextPath}/Agendamento/dashboard.xhtml"><li><svg class="glyph stroked clipboard with paper"><use href="#stroked-clipboard-with-paper"/></svg>Dashboard</li></a>
-                <a style="visibility: #{loginController.verificaUsuario()? 'hidden':'visible'}" href="#{request.contextPath}/Agendamento/sala.xhtml"><li><svg class="glyph stroked table"><use href="#stroked-table"/></svg>Sala</li></a>
+                    <li class="active" ><svg  class="glyph stroked gear" style="margin-left: 12px;" ><use href="#stroked-gear" ></use></svg> Gerenciar</li>
+                    <!--<a href="#{request.contextPath}/Agendamento/agendamento.xhtml"><li>Cadastro</li></a>-->
+                    <a href="#{request.contextPath}/Agendamento/schedule.xhtml"><li><svg class="glyph stroked calendar"><use href="#stroked-calendar"/></svg>Schedule</li></a>
+                    <a href="#{request.contextPath}/Agendamento/dashboard.xhtml"><li><svg class="glyph stroked clipboard with paper"><use href="#stroked-clipboard-with-paper"/></svg>Dashboard</li></a>
+                    <a href="#{request.contextPath}/Agendamento/timeline.xhtml"><li><svg class="glyph stroked clipboard with paper"><use href="#stroked-clipboard-with-paper"/></svg>Timeline</li></a>
+                    <a style="visibility: #{loginController.verificaUsuario()? 'hidden':'visible'}" href="#{request.contextPath}/Agendamento/sala.xhtml"><li><svg class="glyph stroked table"><use href="#stroked-table"/></svg>Sala</li></a>
                 </h:form>
+                <h:form>
                 <h:outputLink class="btn" value="#{request.contextPath}/Projeto/projetos.xhtml"  style="width: 100%; text-align: left; margin-top: 20px;"  >
-                    Projetos
+                    Agendas
                     <f:ajax event="click" listener="#{configController.limpaIdProjeto()}" />
                 </h:outputLink>
-                
+                </h:form>
             </ul>
 
         </div>
@@ -120,25 +135,26 @@
         <div  id="menu" class="col-lg-2 sidebar">
             <h:form title="Gerenciar" rendered="#{configController.projetoSelec()}"  >
                 <ul class="nav ">
-                    <li class="active" ><a  href="#"><svg  class="glyph stroked gear"><use href="#stroked-gear"></use></svg> Gerenciar</a></li>
+                    <li class="active" ><a  href="#"><svg  class="glyph stroked gear"><use href="#stroked-gear"></use></svg> #{agendamentoController.projeto.nome}</a></li>
                     <!--<li><a href="#{request.contextPath}/Agendamento/agendamento.xhtml">Cadastro</a></li>-->
                     <li><a href="#{request.contextPath}/Agendamento/schedule.xhtml"><svg class="glyph stroked calendar"><use href="#stroked-calendar"/></svg>Schedule</a></li>
                     <li><a href="#{request.contextPath}/Agendamento/dashboard.xhtml"><svg class="glyph stroked clipboard with paper"><use href="#stroked-clipboard-with-paper"/></svg>Dashboard</a></li>
+                    <li><a href="#{request.contextPath}/Agendamento/timeline.xhtml"><svg class="glyph stroked clipboard with paper"><use href="#stroked-clipboard-with-paper"/></svg>Timeline</a></li>
                     <li style="visibility: #{loginController.verificaUsuario()? 'hidden':'visible'}" ><a href="#{request.contextPath}/Agendamento/sala.xhtml"><svg class="glyph stroked table"><use href="#stroked-table"/></svg>Sala</a></li>
                 </ul>
             </h:form>
 
 
-            <h:form title="Projeto"   >
+            <h:form title="agenda"   >
                 <ul class="nav ">
                     <!--<li><a href="{request.contextPath}/Projeto/projeto.xhtml"><svg class="glyph stroked "></svg>Novo Projeto</a></li>-->
                     <h:outputLink class="btn" value="#{request.contextPath}/Projeto/projetos.xhtml"  style="width: 100%; text-align: left"  >
-                        Projetos
+                        Agendas
                         <f:ajax event="click" listener="#{configController.limpaIdProjeto()}" />
                     </h:outputLink>
                 </ul>
             </h:form>
-   
+
 
         </div><!--/.sidebar-->
 
@@ -146,8 +162,6 @@
         <div class="row panel-message" >
             <!--<p:growl id="growl" showDetail="true" sticky="false" life="3000" escape="true" />-->
             <p:messages id="messages" showDetail="false" closable="true" globalOnly="true" escape="true"  />
-
-
         </div>
 
         <div class="panel">

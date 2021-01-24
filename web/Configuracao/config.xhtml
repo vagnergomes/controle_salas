@@ -13,114 +13,114 @@
     <ui:define name="conteudo">
         <p:tabView  >
             <p:tab title="Projeto">
-        <h:form id="form_projeto" >   
-            <h:panelGrid>
-                <p:messages id="messages1" showDetail="true" closable="true" />
-                <!--<h4 style="margin-top: 20px; margin-bottom: 5px;" >Projeto </h4>-->
-                <h:outputLabel value="Nome:" class="output-form" />
-                <h:inputText label="titulo" value="#{projetoController.projeto.nome}" styleClass="form-control input"  />  
+                <h:form id="form_projeto" >   
+                    <h:panelGrid>
+                        <p:messages id="messages1" showDetail="true" closable="true" />
+                        <!--<h4 style="margin-top: 20px; margin-bottom: 5px;" >Projeto </h4>-->
+                        <h:outputLabel value="Nome:" class="output-form" />
+                        <h:inputText label="titulo" value="#{projetoController.projeto.nome}" styleClass="form-control input"  />  
 
-                <h:outputLabel  value="Descrição: " class="output-form" />
-                <p:inputTextarea rows="2" cols="40" value="#{projetoController.projeto.descricao}" counter="display" maxlength="100" counterTemplate="{0} caracteres restantes." autoResize="false" />
-                <h:outputText id="display" />
-            </h:panelGrid>
-            <div style="margin-top: 10px; margin-bottom: 20px;">          
-                <h:panelGrid columns="2" >
-                    <h:commandButton value="Salvar" action="#{projetoController.salvar()}"  styleClass="btn btn-primary btn-space" >
-                        <f:ajax execute="form_projeto" render="form_projeto" />
-                    </h:commandButton>
-<!--                    <h:commandButton value="Canelar" class="btn btn-default btn-space"  >
-                        <f:ajax execute="@all" render="@all" />
-                    </h:commandButton>-->
-                </h:panelGrid>
-            </div>
-        </h:form>
+                        <h:outputLabel  value="Descrição: " class="output-form" />
+                        <p:inputTextarea rows="2" cols="40" styleClass="form-control input"  value="#{projetoController.projeto.descricao}" counter="display" maxlength="100" counterTemplate="{0} caracteres restantes." autoResize="false" />
+                        <h:outputText id="display" />
+                    </h:panelGrid>
+                    <div style="margin-top: 10px; margin-bottom: 20px;">          
+                        <h:panelGrid columns="2" >
+                            <h:commandButton value="Salvar" action="#{projetoController.salvar()}"  styleClass="btn btn-primary btn-space" >
+                                <f:ajax execute="form_projeto" render="form_projeto" />
+                            </h:commandButton>
+                            <!--                    <h:commandButton value="Canelar" class="btn btn-default btn-space"  >
+                                                    <f:ajax execute="@all" render="@all" />
+                                                </h:commandButton>-->
+                        </h:panelGrid>
+                    </div>
+                </h:form>
             </p:tab>
             <p:tab title="Geral" >
-        
 
-        <h:form id="form_config" enctype="multipart/form-data">
-            
-            <h:panelGrid>
-                <p:messages id="messages2" showDetail="true" closable="true"  /> 
-                <!--<h4 style="margin-top: 20px; margin-bottom: 5px;" >Geral </h4>-->
-                <h:inputHidden value="#{configController.configuracao.idConfig}" />
 
-                <h:outputLabel value="Título do cabeçalho:" class="output-form" />
-                <h:inputText label="Título:" value="#{configController.configuracao.titulo_cabecalho}" styleClass="form-control input"  />  
+                <h:form id="form_config" enctype="multipart/form-data">
 
-                <h:outputLabel value="Logotipo:" class="output-form" />
-                <p:fileUpload  mode="advanced" multiple="false" auto="true" fileUploadListener="#{configController.upload}"   /> 
-            </h:panelGrid>
+                    <h:panelGrid>
+                        <p:messages id="messages2" showDetail="true" closable="true"  /> 
+                        <!--<h4 style="margin-top: 20px; margin-bottom: 5px;" >Geral </h4>-->
+                        <h:inputHidden value="#{configController.configuracao.idConfig}" />
 
-            <h:panelGrid>
-                <h:outputLabel value="Visualização e Relatório:" class="output-form" />
-                <p:selectBooleanCheckbox value="#{configController.configuracao.exports_visivel}" itemLabel="Permitir exportar."/>
-                <p:selectBooleanCheckbox value="#{configController.configuracao.rotulos_visivel}" itemLabel="Rotulação de Sala/Local"/>
-                <p:selectBooleanCheckbox value="#{configController.configuracao.terminados_opaco}" itemLabel="Eventos terminados opaco."/>   
-                <p:selectBooleanCheckbox value="#{configController.configuracao.show_weekends}" itemLabel="Fim de semana."/> 
-                
-                <h:outputLabel value="Visualização do calendário:" class="output-form" />
-                <p:selectOneMenu 
-                        id="idperfil"
-                        value="#{configController.configuracao.view_agenda}"
-                        class="input"
-                        style="width: 25%; min-width: 250px; float: left; font-weight:bold;">
+                        <h:outputLabel value="Título do cabeçalho:" class="output-form" />
+                        <h:inputText label="Título:" value="#{configController.configuracao.titulo_cabecalho}" styleClass="form-control input"  />  
 
-                        <f:selectItem
-                            itemLabel="Selecione"
-                            itemValue="" />
+                        <h:outputLabel value="Logotipo:" class="output-form" />
+                        <p:fileUpload  mode="advanced" multiple="false" auto="true" value="#{configController.upload}"   /> 
+                    </h:panelGrid>
 
-                        <f:selectItem itemLabel="Dia" itemValue="agendaDay" />
-                        <f:selectItem itemLabel="Semana" itemValue="agendaWeek" />
-                        <f:selectItem itemLabel="Mês" itemValue="month" />
-                    </p:selectOneMenu>
-                
-                <h:outputLabel value="Logotipo do relatório:" class="output-form" />
-                <p:fileUpload  mode="advanced" multiple="false" auto="true" fileUploadListener="#{configController.upload2}"  />
-            </h:panelGrid>
-            
-            
-            <div style="margin-top: 10px; margin-bottom: 20px;">          
-                <h:panelGrid columns="2" >
-                    <h:commandButton value="Salvar" action="#{configController.salvar()}"  styleClass="btn btn-primary btn-space" >
-                        <f:ajax execute="form_config" render="form_config" />
-                    </h:commandButton>
-<!--                    <h:commandButton value="Canelar" class="btn btn-default btn-space"  >
-                        <f:ajax execute="@all" render="@all" />
-                    </h:commandButton>-->
-                </h:panelGrid>
-            </div>
+                    <h:panelGrid>
+                        <h:outputLabel value="Visualização e Relatório:" class="output-form" />
+                        <p:selectBooleanCheckbox value="#{configController.configuracao.exports_visivel}" itemLabel="Permitir exportar."/>
+                        <p:selectBooleanCheckbox value="#{configController.configuracao.rotulos_visivel}" itemLabel="Rotulação de Sala/Local"/>
+                        <p:selectBooleanCheckbox value="#{configController.configuracao.terminados_opaco}" itemLabel="Eventos terminados opaco."/>   
+                        <p:selectBooleanCheckbox value="#{configController.configuracao.show_weekends}" itemLabel="Fim de semana."/> 
 
-        </h:form>
-        </p:tab>
+                        <h:outputLabel value="Visualização do calendário:" class="output-form" />
+                        <p:selectOneMenu 
+                            id="idperfil"
+                            value="#{configController.configuracao.view_agenda}"
+                            class="input"
+                            style="width: 25%; min-width: 250px; float: left; font-weight:bold;">
+
+                            <f:selectItem
+                                itemLabel="Selecione"
+                                itemValue="" />
+
+                            <f:selectItem itemLabel="Dia" itemValue="agendaDay" />
+                            <f:selectItem itemLabel="Semana" itemValue="agendaWeek" />
+                            <f:selectItem itemLabel="Mês" itemValue="month" />
+                        </p:selectOneMenu>
+
+                        <h:outputLabel value="Logotipo do relatório:" class="output-form" />
+                        <p:fileUpload  mode="advanced" multiple="false" auto="true" value="#{configController.upload2}"  />
+                    </h:panelGrid>
+
+
+                    <div style="margin-top: 10px; margin-bottom: 20px;">          
+                        <h:panelGrid columns="2" >
+                            <h:commandButton value="Salvar" action="#{configController.salvar()}"  styleClass="btn btn-primary btn-space" >
+                                <f:ajax execute="form_config" render="form_config" />
+                            </h:commandButton>
+                            <!--                    <h:commandButton value="Canelar" class="btn btn-default btn-space"  >
+                                                    <f:ajax execute="@all" render="@all" />
+                                                </h:commandButton>-->
+                        </h:panelGrid>
+                    </div>
+
+                </h:form>
+            </p:tab>
             <p:tab title="Email" >
-        <h:form id="form_taskmail" >   
-            <h:panelGrid>
-                <p:messages id="messages3" showDetail="true" closable="true" />
-                <!--<h4 style="margin-top: 20px; margin-bottom: 5px;" >E-mail </h4>-->
-                <h:outputLabel value="Relatório automático" class="output-form" />
+                <h:form id="form_taskmail" >   
+                    <h:panelGrid>
+                        <p:messages id="messages3" showDetail="true" closable="true" />
+                        <!--<h4 style="margin-top: 20px; margin-bottom: 5px;" >E-mail </h4>-->
+                        <h:outputLabel value="Relatório automático" class="output-form" />
 
-                <p:selectBooleanCheckbox value="#{taskMailControler.taskmail.ativo}" itemLabel="Permitir envio." >
-                    <f:ajax event="change" render="@form"/>
-                </p:selectBooleanCheckbox>
-                <h6 style="border-radius: 3px; background-color: #DCDDDF; margin-top: 0px;" >(Enviado diáriamente às 18:00 horas.)</h6>
-                
-                <h:outputLabel value="E-mail" rendered="#{taskMailControler.taskmail.ativo}" class="output-form" />
-                <h:inputText id="email" label="email" value="#{taskMailControler.taskmail.email_destinatario}" rendered="#{taskMailControler.taskmail.ativo}" styleClass="form-control input"  >        
-                    <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
-                </h:inputText>
+                        <p:selectBooleanCheckbox value="#{taskMailControler.taskmail.ativo}" itemLabel="Permitir envio." >
+                            <f:ajax event="change" render="@form"/>
+                        </p:selectBooleanCheckbox>
+                        <h6 style="border-radius: 3px; background-color: #DCDDDF; margin-top: 0px;" >(Enviado diáriamente às 18:00 horas.)</h6>
 
-            </h:panelGrid>
-            <div style="margin-top: 10px; margin-bottom: 20px;">          
-                <h:panelGrid columns="2" >
-                    <h:commandButton value="Salvar" action="#{taskMailControler.salvar()}"  styleClass="btn btn-primary btn-space" >
-                        <f:ajax execute="form_taskmail" render="form_taskmail" />
-                    </h:commandButton>
-                </h:panelGrid>
-            </div>
-        </h:form>
-        </p:tab>
+                        <h:outputLabel value="E-mail" rendered="#{taskMailControler.taskmail.ativo}" class="output-form" />
+                        <h:inputText id="email" label="email" value="#{taskMailControler.taskmail.email_destinatario}" rendered="#{taskMailControler.taskmail.ativo}" styleClass="form-control input"  >        
+                            <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+                        </h:inputText>
+
+                    </h:panelGrid>
+                    <div style="margin-top: 10px; margin-bottom: 20px;">          
+                        <h:panelGrid columns="2" >
+                            <h:commandButton value="Salvar" action="#{taskMailControler.salvar()}"  styleClass="btn btn-primary btn-space" >
+                                <f:ajax execute="form_taskmail" render="form_taskmail" />
+                            </h:commandButton>
+                        </h:panelGrid>
+                    </div>
+                </h:form>
+            </p:tab>
         </p:tabView>
 
     </ui:define>

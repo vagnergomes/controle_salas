@@ -332,6 +332,30 @@ a.bg-danger:hover {
     background-color: transparent;
 }
 
+.panel-heading {
+    background-color: #FFF;
+    border-bottom: 1px solid #eee;
+    color: #5f6468;
+}
+
+.panel-config {
+    font-size: 16px;
+    font-weight: 300;
+    letter-spacing: 0.025em;
+    height: 40px;
+    line-height: 30px;
+    background-color: transparent; 
+    border-bottom: 1px solid #eee;
+    color: #5f6468;
+    margin: 8px;
+}
+
+.teste23 .ui-widget-content
+{
+    border: none !important;
+}
+
+
 .panel-default {
     border: 0;
     width: 95%; 
@@ -340,11 +364,8 @@ a.bg-danger:hover {
     background-color: transparent;
 }
 
-.panel-heading {
-    background-color: #FFF;
-    border-bottom: 1px solid #eee;
-    color: #5f6468;
-}
+
+
 
 .panel-footer {
     background: #fff;
@@ -957,16 +978,56 @@ h1.page-header {
     
      .panel {
         border: 0;
-        width: 80%; 
+        width: 95%; 
         margin: 0 auto;
-        margin-left: 70px;
-        margin-top: 10px;
+        /*margin-left: 70px;*/
+        margin-top: 50px;
     }
     
     .panel-message {
     width: 80%; 
     margin-left: 70px;
     }
+    
+    .fc-dayGridMonth-button {
+        visibility: hidden;
+    }
+    .fc-timeGridWeek-button{
+        visibility: visible;
+    }
+    .fc-timeGridDay-button{
+        visibility: visible;
+    }
+    
+/*    .fc-left{
+        width: 220%;;
+    }*/
+    
+    .fc-prev-button{
+        visibility: visible;
+    }
+    
+    .fc-next-button{
+        visibility: visible;
+    }
+    
+    /*Botão Hoje não aparece*/
+    .fc-today-button{
+        visibility: hidden;
+        float: left;
+        margin-top: -70px;
+    }   
+    
+    .fc-center{
+        font-size: 8px;
+        margin-left: 5%;
+        width: 60%;
+    }
+
+    .label_rotulos{
+        font-size: 10px;
+    }
+    
 }
 
 
@@ -1091,94 +1152,94 @@ h1.page-header {
 
 .evento_azul {
     background: blue;
-    color: white;
-    font-size: 10px;
+    color: white !important;
+    font-size: 11px !important;
     line-height: 1.1;
 }
 .evento_azul_venc {
     background: blue;
-    color: white;
+    color: white !important;
     opacity: 0.2;
-    font-size: 10px;
+    font-size: 11px !important;
     line-height: 1.1;
 }
 .evento_verde {
    background: green;
-   color: white;
-   font-size: 10px;
+   color: white !important;
+   font-size: 11px !important;
    line-height: 1.1;
  }
 .evento_verde_venc {
    background: green;
-   color: white;
+   color: white !important;
    opacity: 0.2;
-   font-size: 10px;
+   font-size: 11px !important;
    line-height: 1.1;
  }
 .evento_amarelo {
     background: orange;
-    color: white;
-    font-size: 10px;
+    color: white !important;
+    font-size: 11px !important;
     line-height: 1.1;
 }
 .evento_amarelo_venc {
     background: orange;
-    color: white;
-    font-size: 10px;
+    color: white !important;
+    font-size: 11px !important;
     line-height: 1.1;
     opacity: 0.2;
 }
 .evento_vermelho {
    background: red;
-   color: white;
-   font-size: 10px;
+   color: white !important;
+   font-size: 11px !important;
    line-height: 1.1;
  }
 .evento_vermelho_venc {
    background: red;
-   color: white;
+   color: white !important;
    opacity: 0.2;
-   font-size: 10px;
+   font-size: 11px !important;
    line-height: 1.1;
  }
 .evento_cinza  {
-    background: red  ; 
-    color: #eee;
-    font-size: 10px;
+    background: gray  ; 
+    color: #eee !important;
+    font-size: 11px !important;
     line-height: 1.1;
 }
 .evento_cinza_venc  {
-    background: red  ; 
-    color: #eee;
+    background: gray  ; 
+    color: #eee !important;
     opacity: 0.2;
-    font-size: 10px;
+    font-size: 11px !important;
     line-height: 1.1;
 }
 /*.fc-event-inner*/
 .evento_marrom {
     background-color: maroon;
-    color: white;
-    font-size: 10px;
+    color: white !important;
+    font-size: 11px !important;
     line-height: 1.1;
 }
 .evento_marrom_venc {
     background-color: maroon;
-    color: white;
+    color: white !important;
     opacity: 0.2;
-    font-size: 10px;
+    font-size: 11px !important;
     line-height: 1.1;
 }
 .evento_branco {
     background: white;
-    color: black;
-    font-size: 10px;
+    color: black !important;
+    font-size: 11px !important;
     line-height: 1.1;
 }
 .evento_branco_venc {
     background: white;
-    color: black;
+    color: black !important;
     opacity: 0.2;
-    font-size: 10px;
+    font-size: 11px !important;
     line-height: 1.1;
 }
 
@@ -1201,4 +1262,16 @@ h1.page-header {
 
 .panel-projeto:hover .panel-projeto-oculto{
     display: block;
+}
+
+.btn_rotulos{
+    width: 15px; height: 8px; border-radius: 3px; border: 0; margin-left: 10px;
+}
+
+.label_rotulos{
+    font-weight: 500; margin-left: 2px;
+}
+
+.ui-datagrid-content{
+    border-color: transparent;
 }

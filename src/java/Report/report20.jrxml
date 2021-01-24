@@ -92,9 +92,6 @@
 			<parameterDescription><![CDATA[]]></parameterDescription>
 		</parameter>
 		<parameter name="fim" class="java.sql.Timestamp"/>
-		<parameter name="idProjeto" class="java.lang.Long">
-			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
-		</parameter>
 		<queryString>
 			<![CDATA[select ag.*,
        s.*,
@@ -106,7 +103,7 @@ on s.idSala = ag.idSala
 inner join Descritivo as d
 on d.idDescritivo = ag.descritivo_idDescritivo
 
-where s.idProjeto = $P{idProjeto} and ag.inicio >= $P{inicio} and ag.fim <= $P{fim}
+where ag.inicio >= $P{inicio} and ag.fim <= $P{fim}
 order by ag.inicio desc]]>
 		</queryString>
 		<field name="IDAGENDAMENTO" class="java.lang.Long">
@@ -142,9 +139,6 @@ order by ag.inicio desc]]>
 		<field name="VISIVEL" class="java.lang.Boolean">
 			<fieldDescription><![CDATA[]]></fieldDescription>
 		</field>
-		<field name="idProjeto" class="java.lang.Long">
-			<fieldDescription><![CDATA[]]></fieldDescription>
-		</field>
 		<field name="IDDESCRITIVO" class="java.lang.Long">
 			<fieldDescription><![CDATA[]]></fieldDescription>
 		</field>
@@ -173,21 +167,13 @@ order by ag.inicio desc]]>
 	<parameter name="inicio" class="java.sql.Timestamp"/>
 	<parameter name="fim" class="java.sql.Timestamp"/>
 	<parameter name="logo_img" class="java.lang.String"/>
-	<parameter name="idProjeto" class="java.lang.Long">
-		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
-	</parameter>
 	<queryString>
-		<![CDATA[select inicio, fim, sala.idProjeto from agendamento
-inner join sala
-on agendamento.idSala = sala.idSala]]>
+		<![CDATA[select inicio, fim from agendamento]]>
 	</queryString>
 	<field name="inicio" class="java.sql.Timestamp">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="fim" class="java.sql.Timestamp">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="idProjeto" class="java.lang.Long">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<background>
@@ -243,15 +229,12 @@ on agendamento.idSala = sala.idSala]]>
 			<componentElement>
 				<reportElement key="table 1" style="Title" mode="Opaque" x="0" y="0" width="802" height="291" backcolor="#CCCCCC" uuid="8fd8253c-f40c-4868-bab2-561b8ae86746"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="Dataset_agendamento" uuid="cbcfbb1f-53f5-47cd-9f26-487883025fa8">
+					<datasetRun subDataset="Dataset_agendamento" uuid="243e0574-6a60-4b42-b305-44b76d31243c">
 						<datasetParameter name="inicio">
 							<datasetParameterExpression><![CDATA[$P{inicio}]]></datasetParameterExpression>
 						</datasetParameter>
 						<datasetParameter name="fim">
 							<datasetParameterExpression><![CDATA[$P{fim}]]></datasetParameterExpression>
-						</datasetParameter>
-						<datasetParameter name="idProjeto">
-							<datasetParameterExpression><![CDATA[$P{idProjeto}]]></datasetParameterExpression>
 						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>

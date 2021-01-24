@@ -41,7 +41,7 @@ public class Usuario implements Serializable {
     @Column(length = 50)
     private String email;
     
-    @Column(length = 64, nullable = false)
+    @Column(length = 64)
     private String senha;
     
 

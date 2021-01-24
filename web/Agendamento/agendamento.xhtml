@@ -36,7 +36,7 @@ and open the template in the editor.
 
 
         <h:outputLabel value="Título" class="output-form required" />
-        <h:inputText label="titulo" value="#{agendamentoController.agendamento.titulo}" styleClass="form-control input"  />                  
+        <h:inputText label="titulo" maxlength="15" value="#{agendamentoController.agendamento.titulo}" styleClass="form-control input"  />                  
 
         <h:panelGrid columns="1">
             <h:outputLabel  value="Quantidade pessoas: " class="output-form" />

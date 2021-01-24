@@ -6,17 +6,18 @@
 package br.com.controlesalas.controllers;
 
 import br.com.controlesalas.entities.Agendamento;
+import br.com.controlesalas.entities.Analise;
 import br.com.controlesalas.entities.Descritivo;
 import br.com.controlesalas.entities.Projeto;
-import br.com.controlesalas.relatorios.Rel_Agendamento;
+import br.com.controlesalas.entities.Role;
 import br.com.controlesalas.services.AgendamentoService;
 import br.com.controlesalas.util.MensagemUtil;
-import java.io.IOException;
 import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -27,10 +28,8 @@ import javax.inject.Named;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.servlet.http.HttpSession;
-import org.primefaces.event.SelectEvent;
 import org.primefaces.model.LazyScheduleModel;
 import org.primefaces.model.ScheduleModel;
-import org.quartz.SchedulerException;
 
 /**
  *
@@ -44,8 +43,15 @@ public class AgendamentoController implements Serializable {
     private AgendamentoService service;
 
     private Agendamento agendamento;
-    
+
     private Projeto projeto;
+
+    private Analise analise;
+
+    private List<Role> roles;
+    private Role role;
+
+    private String usuario_logado;
 
     private ScheduleModel eventos;
     private LazyScheduleModel lazyEventModel;
@@ -65,7 +71,13 @@ public class AgendamentoController implements Serializable {
     @PostConstruct
     public void init() {
         agendamento = new Agendamento();
+        analise = new Analise();
         projeto = (Projeto) getSession().getAttribute("projetoSelecionado");
+        usuario_logado = (String) getSession().getAttribute("usuario_logado");
+        roles = (List<Role>) getSession().getAttribute("roles");
+        for (Role r : roles) {
+            role = r;
+        }
         iniciaObjeto();
     }
 
@@ -79,14 +91,35 @@ public class AgendamentoController implements Serializable {
                 if (agendamento.getFim().before(agendamento.getInicio())) {
                     MensagemUtil.addMensagemError("Erro: a data final deve ser maior que a data inicial.");
                 } else {
-//                agendamento.setTerminado(false);
+
+                    Long id_usuario = (Long) getSession().getAttribute("idUsuario");
+                    if (role.getNome_role().equals("super_administrador") || role.getNome_role().equals("administrador") || role.getNome_role().equals("supervisor")) {
+                        analise.setResponsavel(usuario_logado);
+                        analise.setId_solicitante(id_usuario);
+                        analise.setAnalise(false);
+                        analise.setAprovado(true);
+                        analise.setReprovado(false);
+                        analise.setData_abertura(dateTime);
+                        analise.setData_analise(dateTime);
+                    } else {
+                        analise.setSolicitante(usuario_logado);
+                        analise.setId_solicitante(id_usuario);
+                        analise.setResponsavel("");
+                        analise.setAnalise(true);
+                        analise.setAprovado(false);
+                        analise.setReprovado(false);
+                        analise.setData_abertura(dateTime);
+                        analise.setData_analise(dateTime);
+                    }
+                    if (agendamento.getIdAgendamento() == null) {
+                        analise.setAgendamento(agendamento);
+                        agendamento.setAnalise(analise);
+                    }
                     String erro = service.salvar(agendamento);
                     if (erro == null) {
                         agendamento = new Agendamento();
                         agendamento.setDescritivo(new Descritivo());
 
-                        //RequestContext context = RequestContext.getCurrentInstance();
-//            context.execute("PF('dialogNovoEvento').hide();");
                         MensagemUtil.addMensagemInfo("Evento salvo.");
                     } else {
                         MensagemUtil.addMensagemError(erro);
@@ -103,6 +136,7 @@ public class AgendamentoController implements Serializable {
                 MensagemUtil.addMensagemInfo("Excluído.");
                 agendamento = new Agendamento();
                 agendamento.setDescritivo(new Descritivo());
+                agendamento.setAnalise(new Analise());
 
             } else {
                 MensagemUtil.addMensagemError(erro);
@@ -125,17 +159,24 @@ public class AgendamentoController implements Serializable {
 
     public void iniciaObjeto() {
         //aqui comeca a recuperar objeto da sessao 
-        Object idEvent = getSession().getAttribute("idEventSelect");
+        Object idEvent = getSession().getAttribute("idEventoSelect");
         Object dateSelect = getSession().getAttribute("dateSelect");
+
+        SimpleDateFormat formatDate;
+        formatDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss ZZZ");
+
         if (idEvent == null && dateSelect != null) {
             agendamento = new Agendamento();
             agendamento.setDescritivo(new Descritivo());
-
-            Date dataSelecionada = (Date) dateSelect;
-            Timestamp dateTime = new Timestamp(dataSelecionada.getTime());
+            agendamento.setAnalise(new Analise());
+            LocalDateTime ldt = (LocalDateTime) dateSelect;
+            ZonedDateTime zdt = ldt.atZone(ZoneId.systemDefault());
+            Date dataSelecionada = Date.from(zdt.toInstant());
+            //Date dataSelecionada = (Date) dateSelect;
+            Timestamp dt = new Timestamp(dataSelecionada.getTime());
             Timestamp dateTimeFim = new Timestamp(dataSelecionada.getTime());
-            dateTimeFim.setHours(dateTime.getHours() + 1);
-            agendamento.setInicio(dateTime);
+            dateTimeFim.setHours(dt.getHours() + 1);
+            agendamento.setInicio(dt);
             agendamento.setFim(dateTimeFim);
 
         } else if (dateSelect == null && idEvent != null) {
@@ -144,31 +185,9 @@ public class AgendamentoController implements Serializable {
         } else {
             agendamento = new Agendamento();
             agendamento.setDescritivo(new Descritivo());
+            agendamento.setAnalise(new Analise());
         }
     }
-    
-//    public void onRowSelect(SelectEvent event) {
-//        Object ob = event.getObject();
-//        System.out.println("-----OB:"+ ob );
-//        Agendamento a = (Agendamento) ob;
-//        System.out.println("-----AG:"+ a.getTitulo() );
-//    }
-    
-//    public void relatorioAgendamentos(String formato) throws SQLException, SchedulerException {
-//        Rel_Agendamento rel = new Rel_Agendamento();
-//        String driver = "com.mysql.jdbc.JDBC4Connection";
-//        String url = "jdbc:mysql://localhost:3306/controle_salas?characterEncoding=latin1&useConfigs=maxPerformance&allowPublicKeyRetrieval=true&useSSL=false";
-//        String usuario = "root";
-//        String senha = "admin";
-//        Connection conexao = null;
-//
-//        try {
-//            System.setProperty("jdbc.Drivers", driver);
-//            conexao = DriverManager.getConnection(url, usuario, senha);
-//        } catch (SQLException ex) {
-//        }
-//        rel.getAgendamentos(conexao, data_inicio, data_fim, formato);
-//    }
 
     public Agendamento getAgendamento() {
         return agendamento;
@@ -211,13 +230,37 @@ public class AgendamentoController implements Serializable {
     public void setProjeto(Projeto projeto) {
         this.projeto = projeto;
     }
-    
+
     public LazyScheduleModel getLazyEventModel() {
         return lazyEventModel;
     }
 
     public void setLazyEventModel(LazyScheduleModel lazyEventModel) {
         this.lazyEventModel = lazyEventModel;
+    }
+
+    public Analise getAnalise() {
+        return analise;
+    }
+
+    public void setAnalise(Analise analise) {
+        this.analise = analise;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public HttpSession getSession() {

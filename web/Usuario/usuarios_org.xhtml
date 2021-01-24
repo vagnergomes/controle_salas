@@ -10,7 +10,7 @@
 
     <ui:composition template="../template.xhtml">
         <ui:define name="titulo"  >
-            <span style="margin-left: 10px; font-size: 22px; font-family: sans-serif; color: #999999 ; ">  </span>
+            <span style="margin-left: 10px; font-size: 22px; font-family: sans-serif; color: #999999 ; "> Usuários </span>
         </ui:define>
         <ui:define name="conteudo">
 
@@ -20,11 +20,12 @@
                     <!--<p:tabView id="usuarios_origens" orientation="left" >-->
                     <!--<p:tab title="Local">-->
                     <h:form id="usuarios" >
-                        <div class="col-md-12" style="margin-top: 5px">          
+                        <div class="col-md-12" style="margin-top: 5px; margin-left: -29px;">          
                             <div class="form-group"> 
                                 <h:commandButton rendered="#{loginController.verificaSAdmin() or loginController.verificaAdmin()}" styleClass="btn btn-primary" value="Adicionar" >
-                                    <p:ajax oncomplete="PF('dlg_novo_usuario').show()" rendered=":usuario:panel_novo_usuario" /> 
-                                </h:commandButton>
+                                    <!--<p:ajax  oncomplete="PF('dlg_novo_usuario').show()" rendered=":usuario:panel_novo_usuario" />--> 
+                                    <p:ajax event="click" listener="#{usuarioController.novoUsuario()}"  update="usuarios_grupos:usuarios" />
+                                    </h:commandButton>
                             </div>
                         </div>
 
@@ -40,33 +41,39 @@
                                              sortOrder="descending"
                                              emptyMessage="Nenhum registro foi encontrado.">
 
-                                    <p:column headerText="Usuário" width="10%" style="text-align:center; vertical-align: middle;">
+                                    <p:column headerText="Usuário" width="10%" priority="8" style="text-align:center; vertical-align: middle;">
                                         <h:outputText value="#{u.usuario}" />
                                     </p:column>
-                                    <p:column headerText="Nome" width="20%" style="text-align:center; vertical-align: middle;">
+                                    <p:column headerText="Nome" width="20%" priority="5" style="text-align:center; vertical-align: middle;">
                                         <h:outputText value="#{u.nome_completo}" />
                                     </p:column>
-                                    <p:column headerText="E-mail" width="20%" style="text-align:center; vertical-align: middle;">
+                                    <p:column headerText="E-mail" width="20%" priority="6" style="text-align:center; vertical-align: middle;">
                                         <h:outputText value="#{u.email}" />
                                     </p:column>
-                                    <p:column headerText="Permissão" width="15%" style="text-align:center; vertical-align: middle;">
+                                    <p:column headerText="Permissão" width="13%" priority="7" style="text-align:center; vertical-align: middle;">
                                         <ui:repeat value="#{u.roles}" var="r">
                                             <h:outputText value="#{r.nome_role}" />
                                         </ui:repeat>
                                     </p:column>
-                                    <p:column width="4%" >
-                                        <h:commandLink class="btn btn-default"  onclick="PF('dlg_editar_usuario').show();" value="" >
+                                    <p:column width="6%" priority="4" >
+                                        <h:commandLink class="btn btn-default" disabled="false"  value="" >
                                             <h:graphicImage value="/Imagem/icons/editar.png" />
-                                            <p:ajax event="click" listener="#{usuarioController.selecionar(u)}" update=":form_editar_usuario" process="@this"/>
+                                            <p:ajax event="click" listener="#{usuarioController.editarUsuario(u)}" update=":form_editar_usuario"  />
                                         </h:commandLink>
                                     </p:column>
-                                    <p:column width="4%" >
+                                    <p:column width="6%" priority="3" >
+                                        <h:commandLink class="btn btn-default" disabled="false"  value="" >
+                                            <h:graphicImage value="/Imagem/icons/chave.png" />
+                                            <p:ajax event="click" listener="#{usuarioController.editarSenha(u)}" update="usuarios_grupos:usuarios" />
+                                        </h:commandLink>
+                                    </p:column>
+                                    <p:column width="6%" priority="1" >
                                         <h:commandLink class="btn btn-default"  onclick="PF('dlg_acesso_usuario').show();" value="" >
                                             <h:graphicImage value="/Imagem/icons/external-link.png" />
                                             <p:ajax event="click" listener="#{projetoUsuarioController.selecionarUsuario(u)}" update=":form_acesso_usuario" process="@this"/>
                                         </h:commandLink>
                                     </p:column>
-                                    <p:column headerText="" width="4%"  >
+                                    <p:column headerText="" width="6%" priority="2"  >
                                         <h:commandLink id="excluir" disabled="false" class="btn btn-primary" onclick="PF('dlg1_confirm').show();" value="" >
                                             <h:graphicImage value="/Imagem/icons/excluir.png" />
                                             <p:ajax event="click" listener="#{usuarioController.selecionar(u)}"  update=":formConfirm" process="@this" />
@@ -76,12 +83,7 @@
                             </p:scrollPanel>
                         </div>
 
-                        <p:dialog widgetVar="dlg_novo_usuario"  maximizable="false" header="Usuário" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true" >
-                            <h:panelGrid id="panel_novo_usuario" columns="1" style="width: 320px;" >
-                                <ui:include src="novo_usuario.xhtml" />
-                            </h:panelGrid>
-                        </p:dialog>
-
+                      
                     </h:form>
 
                 </p:tab>
@@ -101,7 +103,7 @@
                 </p:tab>
             </p:tabView>
             
-            <p:dialog id="confirm" header="Confirmar exclusão" widgetVar="dlg1_confirm" modal="true" minHeight="40" resizable="false" >
+            <p:dialog id="confirm" header="Confirmar exclusão" closeOnEscape="true" widgetVar="dlg1_confirm" modal="true" minHeight="40" resizable="false" >
                 <h:form id="formConfirm" >
                     <div style="margin-top: 10px" class="form-group"> 
                         <h:commandButton value="Excluir" action="#{usuarioController.excluir()}" styleClass="btn btn-primary btn-space" />
@@ -111,14 +113,13 @@
             </p:dialog> 
 
             <!-- a tag Dynamic="true" no p:dialog faz com que o dados sejam carregados apenas quando chamo o modal, caso contrário reporta erro null -->
-            <p:dialog  widgetVar="dlg_acesso_usuario" dynamic="true" width="30%" maximizable="false" header="Acessos do usuário" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true"   >
+            <p:dialog  widgetVar="dlg_acesso_usuario" dynamic="true" closeOnEscape="true" width="30%" maximizable="false" header="Agendas do usuário" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true"   >
                 <h:form id="form_acesso_usuario">
                     <h:panelGrid id="panel_acesso_usuario">
                         <p:dataTable id="table_projetos"
                                      widgetVar="w_table_projetos"
                                      value="#{projetoController.todosAtivos()}"
                                      var="p"
-                                     
                                      >
 
                             <p:column headerText="Projeto">
@@ -147,9 +148,9 @@
                 </h:form>
             </p:dialog>
 
-            <p:dialog  widgetVar="dlg_editar_usuario"  maximizable="false" header="Editar Usuário" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true"   >
-                <h:form id="form_editar_usuario">
-                    <h:panelGrid id="panel_editar_usuario">
+            <p:dialog  widgetVar="dlg_novo_usuario" dynamic="true" closeOnEscape="true" maximizable="false" header="Editar Usuário" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true"   >
+                <h:form id="form_novo_usuario">
+                    <h:panelGrid id="panel_novo_usuario">
                         <p:messages id="messages" />
                         <p:outputLabel for="usuario" value="Usuário: " class="output-form required" />
                         <p:inputText id="usuario" value="#{usuarioController.usuario.usuario}" styleClass="form-control input" />
@@ -162,29 +163,88 @@
                             <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
                         </h:inputText>
 
-                        <h:panelGrid columns="1" id="matchGrid" >
-                            <h:panelGrid columns="1">
+                        <h:panelGrid  columns="1" id="matchGrid" >
+                            <h:panelGrid  columns="1">
                                 <h:outputLabel for="pwd1" value="Senha: " class="output-form required" />
-                                <p:password id="pwd1" value="#{usuarioController.usuario.senha}" styleClass="form-control input" match="pwd2" label="Password 1" />
+                                <p:password id="pwd1" value="#{usuarioController.usuario.senha}"  promptLabel="Entre com a senha" weakLabel="Fraca" goodLabel="Boa" strongLabel="Forte" placeholder="********" styleClass="form-control input" match="pwd2" label="Password 1" />
                             </h:panelGrid>
                             <h:panelGrid columns="1">
                                 <h:outputLabel for="pwd2" value="Confirmar: " class="output-form required" />
-                                <p:password id="pwd2" value="#{usuarioController.usuario.senha}" styleClass="form-control input" label="Password 2"  />
+                                <p:password id="pwd2" value="#{usuarioController.usuario.senha}" promptLabel="Entre com a senha" weakLabel="Fraca" goodLabel="Boa" strongLabel="Forte" placeholder="********" styleClass="form-control input" label="Password 2"  />
                             </h:panelGrid>
                         </h:panelGrid>
 
-                        <h:panelGrid style="margin-bottom:10px" cellpadding="5">
-                            <p:outputLabel for="role" value="Permissão: " class="output-form required" />
-                            <p:selectOneRadio id="role" value="#{usuarioController.role}" layout="grid" columns="1" converter="roleConverter" style="margin-left: 10px" >
-                                <f:selectItems  value="#{roleController.roles}" itemDisabled="#{c.nome_role == 'super_administrador'}" var="c" itemLabel="#{c.nome_role}" itemValue="#{c}"/>
-                            </p:selectOneRadio>
-                        </h:panelGrid>
+                         <h:panelGrid style="margin-bottom:10px" cellpadding="5">
+                        <p:outputLabel for="role" value="Permissão: " class="output-form required" />
+                        <p:selectOneRadio id="role" value="#{usuarioController.role}" layout="responsive" converter="roleConverter" columns="1" style="margin-left: 10px" >
+                            <f:selectItems  value="#{roleController.todos()}" itemDisabled="#{r.nome_role == 'super_administrador' or r.nome_role == null}" var="r" itemLabel="#{r.descricao}" itemValue="#{r}"/>
+                        </p:selectOneRadio>
+                    </h:panelGrid>
 
-
-                        <div class="col-md-12 " style="margin-top: 10px">          
+                        <div class="col-md-12 " style="margin-top: 10px">
                             <h:panelGrid columns="2" >
                                 <h:commandButton value="Salvar" action="#{usuarioController.salvar()}"  styleClass="btn btn-primary btn-space" >
-                                    <f:ajax execute="@all" render="@all" />
+                                    <!--<f:ajax execute="@all" render="@all" />-->
+                                </h:commandButton>
+                            </h:panelGrid>
+                        </div>
+                    </h:panelGrid>
+                </h:form>
+            </p:dialog>
+            
+            <p:dialog  widgetVar="dlg_editar_usuario" dynamic="true" closeOnEscape="true" maximizable="false" header="Alterar" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true"   >
+                <h:form id="form_editar_usuario">
+                    <h:panelGrid id="panel_editar_usuario">
+                        <p:messages id="messages2" />
+                        <p:outputLabel for="usuario2" value="Usuário: " class="output-form required" />
+                        <p:inputText id="usuario2" disabled="true" value="#{usuarioController.usuario.usuario}" styleClass="form-control input" />
+
+                        <p:outputLabel for="nome2" value="Nome: " class="output-form required" />
+                        <p:inputText id="nome2" value="#{usuarioController.usuario.nome_completo}" styleClass="form-control input" />
+
+                        <h:outputLabel value="E-mail: " class="output-form required" />
+                        <h:inputText id="email2" value="#{usuarioController.usuario.email}" styleClass="form-control input"  >        
+                            <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+                        </h:inputText>
+
+                         <h:panelGrid style="margin-bottom:10px" cellpadding="5">
+                        <p:outputLabel for="role2" value="Permissão: " class="output-form required" />
+                        <p:selectOneRadio id="role2" value="#{usuarioController.role}" layout="responsive" converter="roleConverter" required="true" columns="1" style="margin-left: 10px" >
+                            <f:selectItems  value="#{roleController.todos()}" itemDisabled="#{r.nome_role == 'super_administrador' or r.nome_role == null}" var="r" itemLabel="#{r.descricao}" itemValue="#{r}"/>
+                        </p:selectOneRadio>
+                    </h:panelGrid>
+
+                        <div class="col-md-12 " style="margin-top: 10px">  
+                            <h:panelGrid columns="2" >
+                                <h:commandButton value="Salvar" action="#{usuarioController.salvar()}"  styleClass="btn btn-primary btn-space" >
+                                    <!--<f:ajax execute="@all" render="@all" />-->
+                                </h:commandButton>
+                            </h:panelGrid>
+                        </div>
+                    </h:panelGrid>
+                </h:form>
+            </p:dialog>
+            
+            <p:dialog  widgetVar="dlg_editar_senha" dynamic="true" closeOnEscape="true" maximizable="false" header="Alterar senha" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true"   >
+                <h:form id="form_editar_senha">
+                    <h:panelGrid id="panel_editar_senha">
+                        <p:messages id="messages" />
+                        
+                        <h:panelGrid  columns="1" id="matchGrid" >
+                            <h:panelGrid  columns="1">
+                                <h:outputLabel for="pwd1" value="Senha: " class="output-form required" />
+                                <p:password id="pwd1" value="#{usuarioController.usuario.senha}" required="true" placeholder="********" styleClass="form-control input" match="pwd2" label="Password 1" />
+                            </h:panelGrid>
+                            <h:panelGrid columns="1">
+                                <h:outputLabel for="pwd2" value="Confirmar: " class="output-form required" />
+                                <p:password id="pwd2" value="#{usuarioController.usuario.senha}" required="true" promptLabel="Entre com a senha" weakLabel="Fraca" goodLabel="Boa" strongLabel="Forte" placeholder="********" styleClass="form-control input" label="Password 2"  />
+                            </h:panelGrid>
+                        </h:panelGrid>
+
+                        <div class="col-md-12 " style="margin-top: 10px">
+                            <h:panelGrid columns="2" >
+                                <h:commandButton value="Salvar" action="#{usuarioController.alterarSenha()}"  styleClass="btn btn-primary btn-space" >
+                                    <!--<f:ajax execute="@all" render="@all" />-->
                                 </h:commandButton>
                             </h:panelGrid>
                         </div>

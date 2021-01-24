@@ -6,8 +6,7 @@
 package br.com.controlesalas.services;
 
 import br.com.controlesalas.entities.Agendamento;
-import br.com.controlesalas.entities.Descritivo;
-import br.com.controlesalas.entities.Sala;
+import br.com.controlesalas.entities.Role;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,7 +15,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.Temporal;
 import javax.persistence.TypedQuery;
 
 /**
@@ -82,16 +80,39 @@ public class AgendamentoService implements Serializable {
     }
     
     public List<Agendamento> todosProjeto(Long id){
-        TypedQuery<Agendamento> query = em.createQuery("Select c from Agendamento as c Where c.sala.projeto.idProjeto = ?1 Order By c.inicio DESC", Agendamento.class);
+        TypedQuery<Agendamento> query = em.createQuery("Select c from Agendamento as c Where c.sala.projeto.idProjeto = ?1 and c.analise.analise = False and c.analise.aprovado = True Order By c.inicio DESC", Agendamento.class);
         query.setParameter(1, id);
         return query.getResultList();
     }
     
-    public List<Agendamento> todosData(Date inicio, Date fim, Long id){
-        TypedQuery<Agendamento> query = em.createQuery("Select c from Agendamento as c Where c.sala.projeto.idProjeto = ?1 and c.inicio >= ?2 and c.fim <= ?3", Agendamento.class);
+     public List<Agendamento> todosSala(Long id){
+        TypedQuery<Agendamento> query = em.createQuery("Select c from Agendamento as c Where c.sala.idSala = ?1 and c.analise.analise = False and c.analise.aprovado = True Order By c.inicio DESC", Agendamento.class);
         query.setParameter(1, id);
-        query.setParameter(2, inicio);
-        query.setParameter(3, fim);
+        return query.getResultList();
+    }
+    
+    public List<Agendamento> todosData(Date inicio, Date fim, Long id, Long id_usuario, List<Role> roles) {
+        TypedQuery<Agendamento> query;
+        String role = "";
+        for (Role r : roles) {
+            role = r.getNome_role();
+        }
+
+        if ("usuario".equals(role)) {
+            //A lógica da tela Dashboard para usuário comum é diferente. Ele consegue ver apenas as solicitações feitas por ele, independente do Status dela
+            query = em.createQuery("Select c from Agendamento as c Where c.analise.id_solicitante = ?1 and c.sala.projeto.idProjeto = ?2 and c.inicio >= ?3 and c.fim <= ?4", Agendamento.class);
+            query.setParameter(1, id_usuario);
+            query.setParameter(2, id);
+            query.setParameter(3, inicio);
+            query.setParameter(4, fim);
+        } else {
+            //O usuário com mais níveis vê apenas as que estão com análise OK e aprovados. Existe a tela de Analise para ver os agendamentos pendentes.
+            query = em.createQuery("Select c from Agendamento as c Where c.analise.analise = False and c.analise.aprovado = True and c.sala.projeto.idProjeto = ?1 and c.inicio >= ?2 and c.fim <= ?3", Agendamento.class);
+            query.setParameter(1, id);
+            query.setParameter(2, inicio);
+            query.setParameter(3, fim);
+        }
+
         return query.getResultList();
     }
     

@@ -45,7 +45,7 @@
                 <h:inputText label="Título:" value="#{configController.configuracao.titulo_cabecalho}" styleClass="form-control input"  />  
 
                 <h:outputLabel value="Logotipo:" class="output-form" />
-                <p:fileUpload  mode="advanced" multiple="false" auto="true" fileUploadListener="#{configController.upload}"   /> 
+                <p:fileUpload  mode="advanced" multiple="false" auto="true" value="#{configController.upload}"   /> 
             </h:panelGrid>
 
             <h:panelGrid>
@@ -72,7 +72,7 @@
                     </p:selectOneMenu>
                 
                 <h:outputLabel value="Logotipo do relatório:" class="output-form" />
-                <p:fileUpload  mode="advanced" multiple="false" auto="true" fileUploadListener="#{configController.upload2}"  />
+                <p:fileUpload  mode="advanced" multiple="false" auto="true" value="#{configController.upload2}"  />
             </h:panelGrid>
             
             

@@ -4,7 +4,6 @@
  */
 package br.com.controlesalas.controllers;
 
-
 import br.com.controlesalas.entities.Org;
 import br.com.controlesalas.entities.Role;
 import br.com.controlesalas.entities.Usuario;
@@ -29,14 +28,14 @@ import org.springframework.security.core.userdetails.User;
 @Named
 @SessionScoped
 public class LoginController implements Serializable {
-    
+
     @Inject
     private UsuarioService service;
-  
+
     protected Usuario usuario;
     SecurityContext context = SecurityContextHolder.getContext();
     Authentication authentication = context.getAuthentication();
-    
+
     @PostConstruct
     public void init() {
         usuario = new Usuario();
@@ -44,16 +43,18 @@ public class LoginController implements Serializable {
         //Long idOrg = null;
         //SecurityContext context = SecurityContextHolder.getContext();
         if (context instanceof SecurityContext) {
-           // Authentication authentication = context.getAuthentication();
-      
-                if (authentication instanceof Authentication) {
-                    usuario = service.consultaPorUsuario(((User) authentication.getPrincipal()).getUsername());
-                    org = service.getOrg(usuario.getIdUsuario());
+            // Authentication authentication = context.getAuthentication();
 
-                    getSession().setAttribute("org", org);
-                    getSession().setAttribute("idUsuario", usuario.getIdUsuario());
-                }
-            
+            if (authentication instanceof Authentication) {
+                usuario = service.consultaPorUsuario(((User) authentication.getPrincipal()).getUsername());
+                org = service.getOrg(usuario.getIdUsuario());
+
+                getSession().setAttribute("org", org);
+                getSession().setAttribute("idUsuario", usuario.getIdUsuario());
+                getSession().setAttribute("roles", usuario.getRoles());
+                getSession().setAttribute("usuario_logado", usuario.getUsuario());
+            }
+
         }
 
     }
@@ -128,7 +129,7 @@ public class LoginController implements Serializable {
             }
         }
     }
-    
+
     public Usuario getUsuario() {
         return usuario;
     }
@@ -140,8 +141,5 @@ public class LoginController implements Serializable {
     public HttpSession getSession() {
         return (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
     }
-  
 
-    }
-
-
+}

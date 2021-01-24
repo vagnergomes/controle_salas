@@ -92,10 +92,14 @@
 			<parameterDescription><![CDATA[]]></parameterDescription>
 		</parameter>
 		<parameter name="fim" class="java.sql.Timestamp"/>
+		<parameter name="idProjeto" class="java.lang.Long">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
 		<queryString>
 			<![CDATA[select ag.*,
        s.*,
-       d.*
+       d.*,
+       p.*
 from Agendamento as ag
 inner join Sala as s
 on s.idSala = ag.idSala
@@ -103,7 +107,10 @@ on s.idSala = ag.idSala
 inner join Descritivo as d
 on d.idDescritivo = ag.descritivo_idDescritivo
 
-where ag.inicio >= $P{inicio} and ag.fim <= $P{fim}
+inner join Projeto as p
+on p.idProjeto = s.idProjeto
+
+where p.idProjeto = $P{idProjeto} and ag.inicio >= $P{inicio} and ag.fim <= $P{fim}
 order by ag.inicio desc]]>
 		</queryString>
 		<field name="IDAGENDAMENTO" class="java.lang.Long">
@@ -139,6 +146,9 @@ order by ag.inicio desc]]>
 		<field name="VISIVEL" class="java.lang.Boolean">
 			<fieldDescription><![CDATA[]]></fieldDescription>
 		</field>
+		<field name="idProjeto" class="java.lang.Long">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
 		<field name="IDDESCRITIVO" class="java.lang.Long">
 			<fieldDescription><![CDATA[]]></fieldDescription>
 		</field>
@@ -160,6 +170,12 @@ order by ag.inicio desc]]>
 		<field name="QTD_PESSOAS" class="java.lang.Integer">
 			<fieldDescription><![CDATA[]]></fieldDescription>
 		</field>
+		<field name="NOME" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="CONFIG_IDCONFIG" class="java.lang.Long">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
 	</subDataset>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["C:\\Users\\vagner.gomes\\Documents\\iReports\\"]]></defaultValueExpression>
@@ -167,13 +183,29 @@ order by ag.inicio desc]]>
 	<parameter name="inicio" class="java.sql.Timestamp"/>
 	<parameter name="fim" class="java.sql.Timestamp"/>
 	<parameter name="logo_img" class="java.lang.String"/>
+	<parameter name="idProjeto" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[select inicio, fim from agendamento]]>
+		<![CDATA[select inicio, fim, sala.idProjeto, projeto.nome from agendamento
+inner join sala
+on agendamento.idSala = sala.idSala
+
+inner join projeto
+on projeto.idProjeto = sala.idProjeto
+
+where projeto.idProjeto = $P{idProjeto}]]>
 	</queryString>
 	<field name="inicio" class="java.sql.Timestamp">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="fim" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="idProjeto" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nome" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<background>
@@ -216,6 +248,13 @@ order by ag.inicio desc]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{fim}]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement x="347" y="39" width="100" height="20" forecolor="#666666" uuid="b652eb46-2d3a-4d8e-8b0d-1e617a38cc93"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<columnFooter>
@@ -229,12 +268,15 @@ order by ag.inicio desc]]>
 			<componentElement>
 				<reportElement key="table 1" style="Title" mode="Opaque" x="0" y="0" width="802" height="291" backcolor="#CCCCCC" uuid="8fd8253c-f40c-4868-bab2-561b8ae86746"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="Dataset_agendamento" uuid="243e0574-6a60-4b42-b305-44b76d31243c">
+					<datasetRun subDataset="Dataset_agendamento" uuid="cbcfbb1f-53f5-47cd-9f26-487883025fa8">
 						<datasetParameter name="inicio">
 							<datasetParameterExpression><![CDATA[$P{inicio}]]></datasetParameterExpression>
 						</datasetParameter>
 						<datasetParameter name="fim">
 							<datasetParameterExpression><![CDATA[$P{fim}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="idProjeto">
+							<datasetParameterExpression><![CDATA[$P{idProjeto}]]></datasetParameterExpression>
 						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>

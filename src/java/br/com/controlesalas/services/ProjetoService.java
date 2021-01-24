@@ -52,23 +52,23 @@ public class ProjetoService implements Serializable{
             return "Erro: " + ex.getMessage();
         }
     }
-     
-      public List<Projeto> todos(){
+
+    public boolean excluirUsuariosProjeto(Long id) {
+        Query query = em.createQuery("delete from Projeto_Usuario as pu where pu.projeto.idProjeto = "+id);
+//        query.setParameter(1, id);
+        int deletedCount = query.executeUpdate();
+
+        if (deletedCount >= 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public List<Projeto> todos() {
         TypedQuery<Projeto> query = em.createQuery("Select c from Projeto as c", Projeto.class);
         return query.getResultList();
     }
-    
-//    public List<Projeto> todosAtivos(Long idUsuario){
-//        TypedQuery<Projeto> query = em.createQuery("Select p from Projeto as p LEFT JOIN p.usuarios as u WHERE u.IdUsuario = ?1 and p.ativo = 1 ", Projeto.class);
-//        query.setParameter(1, idUsuario);
-//        return query.getResultList();
-//    }
-      
-//      public List<Projeto> todosDesativados(Long idUsuario){
-//        TypedQuery<Projeto> query = em.createQuery("Select p from Projeto as p LEFT JOIN p.usuarios as u WHERE u.IdUsuario = ?1 and p.ativo = 0 ", Projeto.class);
-//        query.setParameter(1, idUsuario);
-//        return query.getResultList();
-//    }
     
     public List<Projeto> todosAtivos(Long idOrg){
         TypedQuery<Projeto> query = em.createQuery("Select p from Projeto as p Where p.org.idOrg = ?1 and p.ativo = 1 ", Projeto.class);
@@ -99,6 +99,5 @@ public class ProjetoService implements Serializable{
 //        query.setParameter(1, projeto.getIdProjeto());
         query.executeUpdate();
     }
-            
     
 }

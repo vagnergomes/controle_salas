@@ -21,14 +21,13 @@ import java.nio.file.StandardCopyOption;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.el.EvaluationException;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.model.file.UploadedFile;
 
 /**
  *
@@ -50,6 +49,8 @@ public class ConfigController implements Serializable {
     private String path_logo_temp;
     private String path_logo_temp2;
     private Object idProjeto;
+    
+    private String hora_inicio = "5:00";
 
     @PostConstruct
     public void init() {
@@ -147,12 +148,13 @@ public class ConfigController implements Serializable {
             MensagemUtil.addMensagemError("Erro ao salvar. " + erro);
         }
     }
+    
 
     public void upload(FileUploadEvent event) {
         try {
             UploadedFile arquivoUpload = event.getFile();
             Path arquivoTemp = Files.createTempFile(null, null);
-            Files.copy(arquivoUpload.getInputstream(), arquivoTemp, StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(arquivoUpload.getInputStream(), arquivoTemp, StandardCopyOption.REPLACE_EXISTING);
             path_logo_temp = arquivoTemp.toString();
             getSession().setAttribute("path_logo_temp", path_logo_temp + "/" + arquivoUpload.getFileName());
         } catch (IOException erro) {
@@ -166,7 +168,7 @@ public class ConfigController implements Serializable {
             UploadedFile arquivoUpload = event.getFile();
 
             Path arquivoTemp = Files.createTempFile(null, null);
-            Files.copy(arquivoUpload.getInputstream(), arquivoTemp, StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(arquivoUpload.getInputStream(), arquivoTemp, StandardCopyOption.REPLACE_EXISTING);
             path_logo_temp2 = arquivoTemp.toString();
             getSession().setAttribute("path_logo_temp2", path_logo_temp2 + "/" + arquivoUpload.getFileName());
         } catch (IOException erro) {
@@ -282,6 +284,15 @@ public class ConfigController implements Serializable {
     public void setIdProjeto(Object idProjeto) {
         this.idProjeto = idProjeto;
     }
+
+    public String getHora_inicio() {
+        return hora_inicio;
+    }
+
+    public void setHora_inicio(String hora_inicio) {
+        this.hora_inicio = hora_inicio;
+    }
+    
     
 
     public HttpSession getSession() {

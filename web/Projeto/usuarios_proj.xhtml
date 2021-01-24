@@ -16,33 +16,33 @@
 
             <h:form id="usuarios" >
                 <div id="teste" class="row" style="margin-top: 0px;">
-                    <p:scrollPanel  mode="native" style="width:100%;height:800px">
+                    <p:scrollPanel  mode="native" style="width:96%; margin-left: 5px; border-color: transparent">
                         <p:dataTable id="table_usuario"
                                      widgetVar="w_table_usuario"
                                      value="#{projetoUsuarioController.usuariosProjeto()}" 
                                      var="p"
                                      rowIndexVar="rowIx"
-                                     style="width: 100%; margin: 0 auto; margin-bottom: 20px" 
+                                     style="width: 98%; margin: 0 auto; margin-bottom: 20px" 
                                      sortBy="#{p.usuario.usuario}"
                                      sortOrder="descending"
                                      emptyMessage="Nenhum registro foi encontrado.">
 
-                            <p:column headerText="Usuário" width="10%" style="text-align:center; vertical-align: middle;">
+                            <p:column headerText="Usuário" width="12%" style="text-align:center; vertical-align: middle;">
                                 <h:outputText value="#{p.usuario.usuario}" />
                             </p:column>
-                            <p:column headerText="Nome" width="20%" style="text-align:center; vertical-align: middle;">
+                            <p:column headerText="Nome" width="20%" priority="5" style="text-align:center; vertical-align: middle;">
                                 <h:outputText value="#{p.usuario.nome_completo}" />
                             </p:column>
-                            <p:column headerText="E-mail" width="20%" style="text-align:center; vertical-align: middle;">
+                            <p:column headerText="E-mail" width="20%" priority="4" style="text-align:center; vertical-align: middle;">
                                 <h:outputText value="#{p.usuario.email}" />
                             </p:column>
-                            <p:column headerText="Privilégio" width="20%" style="text-align:center; vertical-align: middle;">
+                            <p:column headerText="Privilégio" width="13%"  style="text-align:center; vertical-align: middle;">
                                 <ui:repeat value="#{p.usuario.roles}" var="r">
                                     <h:outputText value="#{r.nome_role}" />
                                 </ui:repeat>
                             </p:column>
 
-                            <p:column headerText="" width="4%"  >
+                            <p:column headerText="" width="6%" priority="1" >
                                 <h:commandLink id="block" disabled="false" class="btn btn-primary" onclick="PF('dlg1_confirm').show();" value="" >
                                     <h:graphicImage value="/Imagem/icons/block.png" />
                                     <p:ajax event="click" listener="#{projetoUsuarioController.selecionar(p)}"  update=":formConfirm" process="@this" />

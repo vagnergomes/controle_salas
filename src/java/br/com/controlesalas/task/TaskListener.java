@@ -9,18 +9,13 @@ package br.com.controlesalas.task;
  *
  * @author vagner.gomes
  */
-import br.com.controlesalas.entities.TaskMail;
-import br.com.controlesalas.services.TaskMailService;
 import java.awt.Toolkit;
 import java.util.Calendar;
 import java.util.Date;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.util.Timer;
-
-import java.util.List;
 import javax.faces.context.FacesContext;
-import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
 public class TaskListener implements ServletContextListener {
@@ -39,15 +34,13 @@ public class TaskListener implements ServletContextListener {
 //            ex.getMessage();
 //        }
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 11);
-        calendar.set(Calendar.MINUTE, 38);
+        calendar.set(Calendar.HOUR_OF_DAY, 10);
+        calendar.set(Calendar.MINUTE, 55);
         calendar.set(Calendar.SECOND, 0);
         Date time = calendar.getTime();
         toolkit = Toolkit.getDefaultToolkit();
         timer = new Timer();
         timer.schedule(new Task(), time);  //delay, intervalo
-        
-
     }
 
 //    public void teste() throws SchedulerException{

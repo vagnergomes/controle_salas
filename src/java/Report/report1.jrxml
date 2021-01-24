@@ -110,7 +110,10 @@ on d.idDescritivo = ag.descritivo_idDescritivo
 inner join Projeto as p
 on p.idProjeto = s.idProjeto
 
-where p.idProjeto = $P{idProjeto} and ag.inicio >= $P{inicio} and ag.fim <= $P{fim}
+inner join Analise an
+on ag.analise_idAnalise = an.idAnalise
+
+where p.idProjeto = $P{idProjeto} and an.aprovado = true and ag.inicio >= $P{inicio} and ag.fim <= $P{fim}
 order by ag.inicio desc]]>
 		</queryString>
 		<field name="IDAGENDAMENTO" class="java.lang.Long">
@@ -126,6 +129,9 @@ order by ag.inicio desc]]>
 			<fieldDescription><![CDATA[]]></fieldDescription>
 		</field>
 		<field name="idSala" class="java.lang.Long">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="ANALISE_IDANALISE" class="java.lang.Long">
 			<fieldDescription><![CDATA[]]></fieldDescription>
 		</field>
 		<field name="DESCRITIVO_IDDESCRITIVO" class="java.lang.Long">
@@ -170,10 +176,19 @@ order by ag.inicio desc]]>
 		<field name="QTD_PESSOAS" class="java.lang.Integer">
 			<fieldDescription><![CDATA[]]></fieldDescription>
 		</field>
+		<field name="ATIVO" class="java.lang.Boolean">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
 		<field name="NOME" class="java.lang.String">
 			<fieldDescription><![CDATA[]]></fieldDescription>
 		</field>
+		<field name="idOrg" class="java.lang.Long">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
 		<field name="CONFIG_IDCONFIG" class="java.lang.Long">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="idTaskmail" class="java.lang.Long">
 			<fieldDescription><![CDATA[]]></fieldDescription>
 		</field>
 	</subDataset>
@@ -268,7 +283,7 @@ where projeto.idProjeto = $P{idProjeto}]]>
 			<componentElement>
 				<reportElement key="table 1" style="Title" mode="Opaque" x="0" y="0" width="802" height="291" backcolor="#CCCCCC" uuid="8fd8253c-f40c-4868-bab2-561b8ae86746"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="Dataset_agendamento" uuid="cbcfbb1f-53f5-47cd-9f26-487883025fa8">
+					<datasetRun subDataset="Dataset_agendamento" uuid="dd56ef29-786c-4df0-b75e-9d431e5a4a5d">
 						<datasetParameter name="inicio">
 							<datasetParameterExpression><![CDATA[$P{inicio}]]></datasetParameterExpression>
 						</datasetParameter>

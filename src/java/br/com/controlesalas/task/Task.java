@@ -195,9 +195,9 @@ public class Task extends TimerTask {
 
     public Connection conexao() {
         String driver = "com.mysql.jdbc.JDBC4Connection";
-        String url = "jdbc:mysql://localhost:3306/controle_salas?characterEncoding=latin1&useConfigs=maxPerformance&allowPublicKeyRetrieval=true&useSSL=false";
+        String url = "jdbc:mysql://localhost:3306/controle_salas_pd?characterEncoding=latin1&useConfigs=maxPerformance&allowPublicKeyRetrieval=true&useSSL=false";
         String usuario = "root";
-        String senha = "admin";
+        String senha = "T3rr3n@2021";
         Connection conexao = null;
 
         try {
@@ -275,7 +275,7 @@ public class Task extends TimerTask {
 
         email.setHostName("smtp.gmail.com"); // o servidor SMTP para envio do e-mail
         email.addTo(projeto.getTaskmail().getEmail_destinatario(), "Destinatário"); //destinatário
-        email.setFrom("vagnergomes27@gmail.com", "Agendamentos"); // remetente
+        email.setFrom("controlesalaspd@gmail.com", "Agendamentos"); // remetente
         email.setSubject("Agendamentos - Relatório " + projeto.getNome() + "."); // assunto do e-mail
         email.setMsg("Relatório de agendamentos. \n -Gerado DATA"); //conteudo do e-mail
 
@@ -334,7 +334,7 @@ public class Task extends TimerTask {
 
         email.setHtmlMsg(sb1.toString());
 
-        email.setAuthentication("vagnergomes27", "simf136wr");
+        email.setAuthentication("controlesalaspd", "C0ntr0l3");
         email.setSmtpPort(587);
         email.setSSL(true);
         email.setTLS(true);

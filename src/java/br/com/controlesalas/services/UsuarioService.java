@@ -72,6 +72,18 @@ public class UsuarioService implements Serializable {
         }
     }
     
+    public boolean excluirProjetosUsuario(Usuario u) {
+        Query query = em.createQuery("delete from Projeto_Usuario as pu where pu.usuario.IdUsuario = "+u.getIdUsuario());
+//        query.setParameter(1, id);
+        int deletedCount = query.executeUpdate();
+
+        if (deletedCount >= 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
     public Usuario consultaPorUsuario(String username){
           Query query = em.createQuery("Select u from Usuario u where u.usuario = ?1 ", Usuario.class);
           query.setParameter(1, username);
