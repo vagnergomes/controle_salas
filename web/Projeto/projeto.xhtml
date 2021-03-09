@@ -11,14 +11,14 @@ and open the template in the editor.
     <h:form>
         <h:panelGrid>
             <h:inputHidden value="#{projetoController.projeto.idProjeto}" />
-        <p:messages id="messages" showDetail="true" closable="true" /> 
-        
-        <h:outputLabel value="Título" class="output-form required" />
-        <h:inputText label="titulo" value="#{projetoController.projeto.nome}" styleClass="form-control input"  />                  
 
-        <h:outputLabel  value="Descrição: " class="output-form" />
-        <p:inputTextarea rows="2" cols="40" value="#{projetoController.projeto.descricao}" counter="display" maxlength="100" counterTemplate="{0} caracteres restantes." autoResize="false" />
-        <h:outputText id="display" />
+
+            <h:outputLabel value="Título" class="output-form required" />
+            <h:inputText label="titulo" value="#{projetoController.projeto.nome}" styleClass="form-control input"  />                  
+
+            <h:outputLabel  value="Descrição: " class="output-form" />
+            <p:inputTextarea rows="2" cols="40" value="#{projetoController.projeto.descricao}" styleClass="form-control input" counter="display" maxlength="100" counterTemplate="{0} caracteres restantes." autoResize="false" />
+            <h:outputText id="display" />
 
         </h:panelGrid>
         <div class="col-md-12 " style="margin-top: 10px">          
@@ -31,6 +31,5 @@ and open the template in the editor.
                 </h:commandButton>
             </h:panelGrid>
         </div>
-        
     </h:form>
 </html>

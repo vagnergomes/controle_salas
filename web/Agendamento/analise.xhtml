@@ -13,10 +13,7 @@
         </ui:define>
         <ui:define name="conteudo">
             <h:form id="analise" >
-
-
                 <div id="teste" class="row" style="margin-top: 20px;">
-
                     <h:panelGrid columns="1" style="margin-bottom: 10px; margin-left: 15px;" >
                         <h:outputLabel value="Por" class="output-form required" />
                         <h:panelGrid columns="2" >
@@ -51,10 +48,10 @@
                     <h:panelGrid columns="4"  style="margin-bottom: 0px; margin-left: 10px;">
                         <h:commandButton class="btn_rotulos" disabled="true" style="background-color: orange;" > <h:outputLabel class="label_rotulos" value="Em análise." /> </h:commandButton>
                         <h:commandButton class="btn_rotulos" disabled="true" style="background-color: green;" > <h:outputLabel class="label_rotulos" value="Aprovado." /> </h:commandButton>
-                        <h:commandButton class="btn_rotulos" disabled="true" style="background-color: gray;" > <h:outputLabel class="label_rotulos" value="Cancelado." /> </h:commandButton>
+                        <h:commandButton class="btn_rotulos" disabled="true" style="background-color: red;" > <h:outputLabel class="label_rotulos" value="Cancelado." /> </h:commandButton>
                         <h:commandButton class="btn_rotulos" disabled="true" style="background-color: blue;" > <h:outputLabel class="label_rotulos" value="Outro." /> </h:commandButton>
                     </h:panelGrid>
-                    
+
                     <p:scrollPanel  mode="native" style="width:96%; margin-left: 5px; border-color: transparent; margin-bottom: 800px;">
                         <p:dataTable id="table_analise"
                                      widgetVar="w_table_agenda"
@@ -68,7 +65,7 @@
 
                             <!--<p:column style="width: 5%;">{s.idAgendamento} </p:column>-->
                             <p:column styleClass="#{analiseController.cor_analise(s.analise, s.aprovado, s.reprovado)}" width="1%" />
-                            <p:column headerText="Data Solic." style="text-align:center; vertical-align: middle;" width="13%">
+                            <p:column headerText="Data Solic." sortBy="#{s.data_abertura}" style="text-align:center; vertical-align: middle;" width="13%">
                                 <h:outputText value="#{s.data_abertura}" >
                                     <f:convertDateTime timeZone="GMT-3" pattern="dd/MM/yyyy HH:mm" />
                                 </h:outputText>
@@ -76,19 +73,18 @@
                             <p:column headerText="Solicitante" style="text-align:center; vertical-align: middle;" width="10%">
                                 <h:outputText value="#{s.solicitante}" />
                             </p:column>
-                            <!--<p:column styleClass="{agendamentoViewController.cor_evento(s.agendamento.sala.cor)}" width="1%" />-->
-                            <p:column headerText="Sala/Local" priority="9" style="text-align:center; vertical-align: middle;" width="10%">
+                            <p:column headerText="Sala/Local" sortBy="#{s.agendamento.sala.nome_sala}" priority="9" style="text-align:center; vertical-align: middle;" width="10%">
                                 <h:outputText value="#{s.agendamento.sala.nome_sala}" />
                             </p:column>
                             <p:column headerText="Título" style="text-align:center; vertical-align: middle;" width="10%">
                                 <h:outputText value="#{s.agendamento.titulo}" />
                             </p:column>
-                            <p:column headerText="Início" style="text-align:center; vertical-align: middle;" width="15%">
+                            <p:column headerText="Início" sortBy="#{s.agendamento.inicio}" style="text-align:center; vertical-align: middle;" width="15%">
                                 <h:outputText value="#{s.agendamento.inicio}" >
                                     <f:convertDateTime timeZone="GMT-3" pattern="dd/MM/yyyy HH:mm" />
                                 </h:outputText>
                             </p:column>
-                            <p:column headerText="Fim" priority="7" style="text-align:center; vertical-align: middle;" width="15%">
+                            <p:column headerText="Fim" sortBy="#{s.agendamento.fim}" priority="7" style="text-align:center; vertical-align: middle;" width="15%">
                                 <h:outputText value="#{s.agendamento.fim}">
                                     <f:convertDateTime timeZone="GMT-3" pattern="dd/MM/yyyy HH:mm" />
                                 </h:outputText>
@@ -102,7 +98,7 @@
                             <p:column headerText="Adicionais" priority="10" style="text-align:center; vertical-align: middle;" width="15%">
                                 <h:outputText value="#{s.agendamento.descritivo.agua? 'Água':''} #{s.agendamento.descritivo.cafe? 'Café':''} #{s.agendamento.descritivo.frutas? 'Frutas':''} #{s.agendamento.descritivo.lanche? 'Lanche':''}" />
                             </p:column>
-                            
+
                             <p:column width="6%" priority="6" rendered="#{loginController.verificaSAdmin() or loginController.verificaAdmin()}" >
                                 <h:commandLink class="btn btn-default"  onclick="PF('dlg_novo_evento').show();" value="" >
                                     <h:graphicImage value="/Imagem/icons/editar.png" />
@@ -115,52 +111,32 @@
                                     <p:ajax event="click" listener="#{agendamentoViewController.selecionar(s.agendamento)}"  update=":formConfirm" process="@this" />
                                 </h:commandLink>
                             </p:column>
-                            
+
                             <p:column headerText="Aprovar/Cancelar" width="10%" transient="true" >
-                                <h:commandLink id="check_hab" disabled="#{!s.analise? 'true':'false'}" class="btn #{s.aprovado and s.analise or !s.analise? 'btn-default':'btn-success'} btn-space"  value="" title="Aprovar." >
+                                <h:commandLink id="check_hab" disabled="#{!s.analise? 'true':'false'}"  class="btn #{s.aprovado and s.analise or !s.analise? 'btn-sm':'btn-success'} btn-space"  value="" title="Aprovar." >
                                     <h:graphicImage value="/Imagem/icons/check.png" />
-                                    <p:ajax event="click" listener="#{analiseController.aprovar(s)}" update=":analise" process="@this" />
+                                    <f:ajax event="click" listener="#{analiseController.aprovar(s)}" render=":analise:table_analise" execute="@this" />
                                 </h:commandLink>
-                                <h:commandLink  id="check_desab" disabled="#{!s.analise? 'true':'false'}" class="btn #{s.reprovado and s.analise or !s.analise? 'btn-default':'btn-primary'}"  value="" title="Cancelar." >
+                                <h:commandLink  id="check_desab" disabled="#{!s.analise? 'true':'false'}" class="btn #{s.reprovado and s.analise or !s.analise? 'btn-sm':'btn-primary'}"  value="" title="Cancelar." >
                                     <h:graphicImage value="/Imagem/icons/block.png" />
-                                    <p:ajax event="click" listener="#{analiseController.reprovar(s)}"  update=":analise" process="@this"  />
+                                    <f:ajax event="click" listener="#{analiseController.reprovar(s)}"  render=":analise:table_analise" execute="@this"  />
                                 </h:commandLink>
                             </p:column>
                             <p:column headerText="Status" width="5%" transient="true"  >
                                 <h:commandLink id="analise_hab" rendered="#{!s.analise}" class="btn btn-success btn-space"  value="" title="Alterar para Em análise." >
                                     <h:graphicImage value="/Imagem/icons/check.png" />
-                                    <p:ajax event="click" listener="#{analiseController.analise(s)}"  update=":analise" process="@this"  />
+                                    <f:ajax event="click" listener="#{analiseController.analise(s)}"  render=":analise:table_analise" execute="@this"  />
                                 </h:commandLink>
                                 <h:commandLink id="analise_desab" rendered="#{s.analise}" disabled="true" class="btn btn-warning"  value="" title="Está em análise." >
                                     <h:graphicImage value="/Imagem/icons/ampulheta.png" />
                                 </h:commandLink>
                             </p:column>
-<!--                            <p:column width="6%" priority="6" rendered="{loginController.verificaSAdmin() or loginController.verificaAdmin()}" >
-                                <h:commandLink class="btn btn-default"  onclick="PF('dlg_novo_evento').show();" value="" >
-                                    <h:graphicImage value="/Imagem/icons/editar.png" />
-                                    <p:ajax event="click" listener="{agendamentoViewController.selecionar(s)}" update=":formNovoEvento" process="@this"/>
-                                </h:commandLink>
-                            </p:column>
-                            <p:column headerText="" width="6%" priority="5" rendered="{loginController.verificaSAdmin() or loginController.verificaAdmin()}" >
-                                <h:commandLink id="excluir" disabled="false" class="btn btn-primary" onclick="PF('dlg1_confirm').show();" value="" >
-                                    <h:graphicImage value="/Imagem/icons/excluir.png" />
-                                    <p:ajax event="click" listener="{agendamentoViewController.selecionar(s)}"  update=":formConfirm" process="@this" />
-                                </h:commandLink>
-                            </p:column>
-                            <p:column width="6%" >
-                                <h:commandLink id="submit" disabled="false" class="btn btn-primary"  onclick="PF('dlg_detalhes_evento').show();" value="" >
-                                    <h:graphicImage value="/Imagem/icons/lupa.png" />
-                                    <p:ajax event="click" listener="{agendamentoViewController.selecionar(s)}" update=":formDetalheEvento" process="@this" />
-                                </h:commandLink>
-                            </p:column>-->
-
                         </p:dataTable>
                     </p:scrollPanel>
-
                 </div>
             </h:form>
 
-            <p:dialog id="confirm" header="Confirmar exclusão" widgetVar="dlg1_confirm" modal="true" minHeight="40" resizable="false" >
+            <p:dialog id="confirm" header="Confirmar exclusão" widgetVar="dlg1_confirm" closeOnEscape="true" modal="true" showEffect="clip" hideEffect="clip" minHeight="40" resizable="false" >
                 <h:form id="formConfirm" >
                     <div style="margin-top: 10px" class="form-group"> 
                         <h:commandButton value="Excluir" action="#{agendamentoViewController.excluir()}" styleClass="btn btn-primary btn-space" />
@@ -169,7 +145,7 @@
                 </h:form>
             </p:dialog>  
 
-            <p:dialog  widgetVar="dlg_novo_evento"  maximizable="false" header="Evento" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true"   >
+            <p:dialog  widgetVar="dlg_novo_evento"  maximizable="false" header="Evento" closeOnEscape="true" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true"   >
                 <h:form id="formNovoEvento">
                     <h:panelGrid id="panelNovoEvento">
                         <h:inputHidden value="#{agendamentoViewController.agendamento.idAgendamento}" />
@@ -232,16 +208,13 @@
                             <h:commandButton value="Agendar" action="#{agendamentoViewController.salvar()}"  styleClass="btn btn-primary btn-space" >
                                 <f:ajax execute="@all" render="@all" />
                             </h:commandButton>
-<!--                            <h:commandButton value="Cancelar" class="btn btn-default btn-space"  >
-                                <f:ajax execute="@all" render="@all" />
-                            </h:commandButton>-->
                         </h:panelGrid>
                     </div>
 
                 </h:form>
             </p:dialog>
 
-            <p:dialog id="detalheEvento" widgetVar="dlg_detalhes_evento"  maximizable="false" header="Detalhes" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true"   >
+            <p:dialog id="detalheEvento" widgetVar="dlg_detalhes_evento" closeOnEscape="true"  maximizable="false" header="Detalhes" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true"   >
                 <h:form id="formDetalheEvento" >
                     <h:panelGrid id="panelDetalhesEvento" columns="2" style="width: 300px;"  >
                         <h:outputLabel value="Título: " />

@@ -6,13 +6,11 @@
 package br.com.controlesalas.entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,29 +27,29 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @XmlRootElement
 public class Sala implements Serializable {
-    
+
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idSala;
-    
-    @Column(nullable=false)
+
+    @Column(nullable = false)
     private String nome_sala;
-    
+
     @Column
     private String descricao;
-    
+
     @Column
     private int capacidade;
-    
+
     @Column
     private String cor;
-    
+
     @Column
     private boolean visivel;
-    
+
     @OneToMany(mappedBy = "Sala", cascade = CascadeType.REMOVE)
-    private List<Agendamento> agendamentos ;
-    
+    private List<Agendamento> agendamentos;
+
     @ManyToOne
     @JoinColumn(name = "idProjeto")
     private Projeto projeto;
@@ -120,9 +118,6 @@ public class Sala implements Serializable {
     public void setVisivel(boolean visivel) {
         this.visivel = visivel;
     }
-    
-    
-    
 
     @Override
     public int hashCode() {
@@ -148,8 +143,5 @@ public class Sala implements Serializable {
         }
         return true;
     }
-    
-    
-    
-    
+
 }

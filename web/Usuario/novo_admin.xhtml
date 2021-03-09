@@ -17,7 +17,6 @@ and open the template in the editor.
 
     <body>
         <div class="pen-title">
-
             <h1></h1>
         </div>
         <div style="width: 100%; background-color:  #B14420;" />
@@ -33,46 +32,32 @@ and open the template in the editor.
                     <p:messages id="messages" closable="true" />
                     <p:outputLabel for="usuario" value="Usuário: " class="output-form required" />
                     <p:inputText id="usuario" value="#{usuarioController.usuario.usuario}" styleClass="form-control input" required="true" requiredMessage="Crie um usuário." />
-
                     <h:outputLabel for="pwd1" value="E-mail: *" class="output-form required" />
                     <h:inputText id="email" value="#{usuarioController.usuario.email}" styleClass="form-control input" required="true" requiredMessage="Insira um e-mail." >        
                         <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
                     </h:inputText>
-
-                    <h:panelGrid columns="1" id="matchGrid" >
-                        <h:panelGrid columns="1">
-                            <h:outputLabel for="pwd1" value="Senha: *" class="output-form required" />
-                            <p:password id="pwd1" value="#{usuarioController.usuario.senha}" styleClass="form-control input" match="pwd2" 
-                                        feedback="true" inline="true"
-                                        promptLabel="Insire uma senha." weakLabel="Fraca."
-                                        goodLabel="Boa." strongLabel="Forte."
-                                        label="Senha 1" required="true" requiredMessage="Insira uma senha." />
+                     <h:panelGrid  columns="1" id="matchGrid" >
+                            <h:panelGrid  columns="1">
+                                <h:outputLabel for="pwd1" value="Senha: " class="output-form required" />
+                                <p:password id="pwd1" value="#{usuarioController.usuario.senha}" required="true"  placeholder="********" feedback="true" inline="true" promptLabel="Entre com a senha" weakLabel="Fraca"  goodLabel="Média" strongLabel="Forte" validatorMessage="Erro de validação."   styleClass="form-control input" match="pwd2" label="Password 1" >
+                                    <f:validateLength minimum="8" maximum="50" />
+                                </p:password>
+                            </h:panelGrid>
+                            <h:panelGrid columns="1">
+                                <h:outputLabel for="pwd2" value="Confirme a senha: " class="output-form required" />
+                                <p:password id="pwd2" value="#{usuarioController.usuario.senha}" required="true" size="8"  placeholder="********" feedback="true" inline="true" promptLabel="Confirme a senha" weakLabel="Fraca"  goodLabel="Média" strongLabel="Forte" styleClass="form-control input" label="Password 2"  />
+                            </h:panelGrid>
                         </h:panelGrid>
-                        <h:panelGrid columns="1">
-                            <h:outputLabel for="pwd2" value="Confirmar: *" class="output-form required" />
-                            <p:password id="pwd2" value="#{usuarioController.usuario.senha}" styleClass="form-control input"  
-                                        feedback="true" inline="true"
-                                        promptLabel="Insire uma senha." weakLabel="Fraca."
-                                        goodLabel="Boa." strongLabel="Forte."
-                                        label="Senha 2" required="true" requiredMessage="Confirme a senha."   />
-                        </h:panelGrid>
-                    </h:panelGrid>
-
-
                     <p:commandButton  value="Cadastrar" styleClass="btn btn-primary"
                                       actionListener="#{usuarioController.salvarAdmin()}"  update="messages">
                     </p:commandButton> 
-
                     <h:panelGrid width="100%"  style="margin-top: 15px;">
                         <center >
                             <a style="margin-top: 20px;" href="#{request.contextPath}/Acesso/login/login.xhtml">Entrar</a>
                         </center>
                     </h:panelGrid>
-                    
                 </h:form>
             </div>
-            <!--            <div class="cta">@Copyright Vagner Gomes</div>-->
         </div>
-
     </body>
 </html>

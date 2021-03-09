@@ -36,6 +36,8 @@ public class AnaliseController implements Serializable {
 
     private String usuario_logado;
 
+    private Long idUsuario;
+
     private Projeto projeto;
 
     private String opcao;
@@ -46,6 +48,7 @@ public class AnaliseController implements Serializable {
         analise = new Analise();
         projeto = (Projeto) getSession().getAttribute("projetoSelecionado");
         usuario_logado = (String) getSession().getAttribute("usuario_logado");
+        idUsuario = (Long) getSession().getAttribute("idUsuario");
         opcao = "1";
         analises = service.todos(projeto.getIdProjeto(), opcao);
     }
@@ -58,6 +61,7 @@ public class AnaliseController implements Serializable {
         an.setAnalise(true);
         an.setAprovado(false);
         an.setReprovado(false);
+        an.setNotificacao(false);
         an.setResponsavel(usuario_logado);
         an.setData_analise(DateUtil.data_Timestamp());
         salvar(an);
@@ -102,15 +106,48 @@ public class AnaliseController implements Serializable {
         } else if (!an && apr && !rep) {
             return "evento_verde";
         } else if (!an && !apr && rep) {
-            return "evento_cinza";
+            return "evento_vermelho";
         } else {
             return "evento_azul";
         }
     }
 
-//    public List<Analise> todos() {
-//        return service.todos(projeto.getIdProjeto());
-//    }
+    public String countAnalises() {
+        try {
+            String r = ".";
+            int n = service.countAnalises(projeto.getIdProjeto());
+            if (n >= 0 && n <= 999) {
+                r = Integer.toString(n);
+            }
+            return r;
+        } catch (Exception ex) {
+            return "Erro: " + ex.getMessage();
+        }
+    }
+
+    public String countAnalisesUsuario() {
+        try {
+            String r = ".";
+            int n = service.countAnalisesUsuario(projeto.getIdProjeto(), idUsuario);
+            if (n >= 0 && n <= 999) {
+                r = Integer.toString(n);
+            }
+            return r;
+        } catch (Exception ex) {
+            return "Erro: " + ex.getMessage();
+        }
+    }
+
+    public void limparNotificacao() {
+        List<Analise> noticacoes;
+        noticacoes = service.limparNotificacao(projeto.getIdProjeto(), idUsuario);
+
+        for (Analise an : noticacoes) {
+            an.setNotificacao(true);
+            salvar(an);
+        }
+    }
+
     public Analise getAnalise() {
         return analise;
     }

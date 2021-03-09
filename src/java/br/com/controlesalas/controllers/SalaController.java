@@ -41,12 +41,12 @@ public class SalaController implements Serializable {
     @PostConstruct
     public void init() {
         sala = new Sala();
-        agendamentos =  new ArrayList<>();
-        projeto =  (Projeto) getSession().getAttribute("projetoSelecionado");
+        agendamentos = new ArrayList<>();
+        projeto = (Projeto) getSession().getAttribute("projetoSelecionado");
         salas = service.todos(projeto.getIdProjeto());
     }
 
-    public void salvar(){
+    public void salvar() {
         Projeto proj = (Projeto) getSession().getAttribute("projetoSelecionado");
         sala.setProjeto(proj);
         String erro = service.salvar(sala);
@@ -56,11 +56,11 @@ public class SalaController implements Serializable {
             MensagemUtil.addMensagemError("Erro ao salvar: " + erro);
         }
     }
-    
-    public void editar(Sala sala){
+
+    public void editar(Sala sala) {
         this.sala = sala;
     }
-  
+
     public void excluir(Sala sala) {
         try {
             agendamentos = service.agendamentosSala(sala.getIdSala());
@@ -80,19 +80,17 @@ public class SalaController implements Serializable {
         }
     }
 
-    public void agendamentosSala(Sala sala){
+    public void agendamentosSala(Sala sala) {
         agendamentos = service.agendamentosSala(sala.getIdSala());
         this.sala = sala;
-//        RequestContext context = RequestContext.getCurrentInstance();
-//        context.execute("PF('dialogAgendamentosSala').show();");
     }
- 
+
     public void onRowEdit(RowEditEvent event) {
         sala = ((Sala) event.getObject());
         String erro = service.salvar(sala);
         if (erro == null) {
             MensagemUtil.addMensagemInfo("Salvo.");
-            
+
         } else {
             MensagemUtil.addMensagemError("Erro ao salvar: " + erro);
         }
@@ -142,12 +140,9 @@ public class SalaController implements Serializable {
     public void setProjeto(Projeto projeto) {
         this.projeto = projeto;
     }
-    
-    
-    
+
     public HttpSession getSession() {
         return (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
     }
-    
-    
+
 }

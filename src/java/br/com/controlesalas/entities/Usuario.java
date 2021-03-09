@@ -5,7 +5,6 @@
 package br.com.controlesalas.entities;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -18,7 +17,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.xml.bind.annotation.XmlRootElement;
-import jdk.nashorn.internal.objects.Global;
 
 /**
  *
@@ -31,43 +29,41 @@ public class Usuario implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long IdUsuario;
-    
+
     @Column(length = 45, nullable = false)
     private String usuario;
-    
+
     @Column(length = 100)
     private String nome_completo;
-    
+
     @Column(length = 50)
     private String email;
-    
+
     @Column(length = 64)
     private String senha;
-    
 
     @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     @JoinTable(
             name = "usuarios_roles",
-            joinColumns = {@JoinColumn(
-                    name = "usuario_id")},
-            inverseJoinColumns = {@JoinColumn(
-                    name = "role_id")})
+            joinColumns = {
+                @JoinColumn(
+                        name = "usuario_id")},
+            inverseJoinColumns = {
+                @JoinColumn(
+                        name = "role_id")})
     private List<Role> roles;
-    
+
     @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     @JoinTable(
             name = "usuarios_orgs",
-            joinColumns = {@JoinColumn(
-                    name = "usuario_id")},
-            inverseJoinColumns = {@JoinColumn(
-                    name = "org_id")})
+            joinColumns = {
+                @JoinColumn(
+                        name = "usuario_id")},
+            inverseJoinColumns = {
+                @JoinColumn(
+                        name = "org_id")})
     private List<Org> orgs;
-    
-//    @ManyToMany(mappedBy = "usuarios")
-//    private List<Projeto> projetos;
-    
 
-    // GET SET
     public Long getIdUsuario() {
         return IdUsuario;
     }
@@ -99,7 +95,7 @@ public class Usuario implements Serializable {
     public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
-    
+
     public String getEmail() {
         return email;
     }
@@ -116,14 +112,6 @@ public class Usuario implements Serializable {
         this.senha = senha;
     }
 
-//    public List<Projeto> getProjetos() {
-//        return projetos;
-//    }
-//
-//    public void setProjetos(List<Projeto> projetos) {
-//        this.projetos = projetos;
-//    }
-
     public List<Org> getOrgs() {
         return orgs;
     }
@@ -131,10 +119,6 @@ public class Usuario implements Serializable {
     public void setOrgs(List<Org> orgs) {
         this.orgs = orgs;
     }
-
-   
-    
-    
 
     //HASH EQUAlS
     @Override

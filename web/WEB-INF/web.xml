@@ -68,6 +68,6 @@
   </listener>
   -->
     <listener>
-        <listener-class>br.com.controlesalas.task.TaskListener</listener-class>
+        <listener-class>br.com.controlesalas.task.AgendadorEmailListener</listener-class>
     </listener>
 </web-app>

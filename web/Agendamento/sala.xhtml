@@ -15,10 +15,10 @@ and open the template in the editor.
             <span style="font-size: 22px; font-family: sans-serif; color: #999999 ; "> Salas</span>
         </ui:define>    
         <ui:define name="conteudo">
-            <!--<p:growl /> -->
-            
+
             <h:form id="cadastro" >
                 <h:panelGrid columns="1" width="30%" style="margin-top: 10px; margin-bottom: 100px; float: left;" >
+
                     <h:inputHidden value="#{salaController.sala.idSala}" />
                     <!--<p:inputText type="number" value="{salaController.sala.idSala}" />-->
                     <h:outputLabel value="Nome do Local/Sala" class="output-form required" />
@@ -57,7 +57,7 @@ and open the template in the editor.
 
                     <div  style="margin-top: 20px">          
                         <div class="form-group"> 
-                            <p:commandLink value="Salvar" action="#{salaController.salvar()}" ajax="false" update="grid"   styleClass="btn btn-primary btn-space" />
+                            <p:commandLink value="Salvar" action="#{salaController.salvar()}"  ajax="false" update="cadastro"   styleClass="btn btn-primary btn-space" />
                         </div>
                     </div>
                 </h:panelGrid>
@@ -71,10 +71,10 @@ and open the template in the editor.
                                  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
                                  rows="10"
                                  >
-<!--                        <f:facet name="header">
-                            Salas/Locais
-                        </f:facet>-->
-                        
+                        <!--                        <f:facet name="header">
+                                                    Salas/Locais
+                                                </f:facet>-->
+
                         <p:ajax event="rowEdit" listener="#{salaController.onRowEdit}" process=":cadastro:table_sala" update=":cadastro:table_sala" />
                         <p:ajax event="rowEditCancel" listener="#{salaController.onRowCancel}" process=":cadastro:table_sala" update=":cadastro:table_sala" />
 <!--                        <p:column >#{c.idSala}</p:column>-->
@@ -100,7 +100,7 @@ and open the template in the editor.
 
                         <p:column headerText="Rótulo" width="8%">
                             <center >            
-                                    <p:selectBooleanCheckbox value="#{c.visivel}" disabled="true" itemLabel=""/>                        
+                                <p:selectBooleanCheckbox value="#{c.visivel}" disabled="true" itemLabel=""/>                        
                             </center>
                         </p:column>
 
@@ -129,31 +129,31 @@ and open the template in the editor.
                 </h:panelGrid>
             </h:form>
 
-            <p:dialog id="table_agendamentos" widgetVar="dlg_gendamentos" width="30%" maximizable="false" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true"   >
+            <p:dialog id="table_agendamentos" widgetVar="dlg_gendamentos" closeOnEscape="true" width="30%" maximizable="false" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true"   >
                 <h:form id="form_agendamentos" >
                     <h:outputLabel value="#{salaController.sala.nome_sala}" style="font-size: 16px" />
-                        <p:scrollPanel mode="native" style="width:100%;height:300px">
-                            <p:dataTable id="table_agendamentos"
-                                         widgetVar="w_table_sala"
-                                         value="#{salaController.agendamentos}"
-                                         var="a"
-                                         editable="true" 
-                                         style="margin-bottom:20px" >
+                    <p:scrollPanel mode="native" style="width:100%;height:300px">
+                        <p:dataTable id="table_agendamentos"
+                                     widgetVar="w_table_sala"
+                                     value="#{salaController.agendamentos}"
+                                     var="a"
+                                     editable="true" 
+                                     style="margin-bottom:20px" >
 
-                                <p:column headerText="Título" >#{a.titulo}</p:column>
-                                <p:column headerText="Início" style="text-align:center; vertical-align: middle;">
-                                    <h:outputText value="#{a.inicio}" >
-                                        <f:convertDateTime timeZone="GMT-3" pattern="dd/MM/yyyy HH:mm" />
-                                    </h:outputText>
-                                </p:column>
-                                <p:column headerText="fim" style="text-align:center; vertical-align: middle;">
-                                    <h:outputText value="#{a.fim}" >
-                                        <f:convertDateTime timeZone="GMT-3" pattern="dd/MM/yyyy HH:mm" />
-                                    </h:outputText>
-                                </p:column>
-                            </p:dataTable>
-                        </p:scrollPanel>
-                        <h:outputLabel style="font-weight: 100" value="#{salaController.agendamentos.size()} agentamento#{salaController.agendamentos.size() > 1? 's':''}" />
+                            <p:column headerText="Título" >#{a.titulo}</p:column>
+                            <p:column headerText="Início" style="text-align:center; vertical-align: middle;">
+                                <h:outputText value="#{a.inicio}" >
+                                    <f:convertDateTime timeZone="GMT-3" pattern="dd/MM/yyyy HH:mm" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="fim" style="text-align:center; vertical-align: middle;">
+                                <h:outputText value="#{a.fim}" >
+                                    <f:convertDateTime timeZone="GMT-3" pattern="dd/MM/yyyy HH:mm" />
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                    </p:scrollPanel>
+                    <h:outputLabel style="font-weight: 100" value="#{salaController.agendamentos.size()} agentamento#{salaController.agendamentos.size() > 1? 's':''}" />
 
                 </h:form>
             </p:dialog>
@@ -164,8 +164,8 @@ and open the template in the editor.
         .ui-row-editor .ui-row-editor-pencil {
             margin-left:8px;
         }
-        
-         #esquerda {
+
+        #esquerda {
             float: left;
             padding: 10px;
             height: 100px;

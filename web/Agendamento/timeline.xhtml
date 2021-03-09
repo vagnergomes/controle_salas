@@ -11,8 +11,6 @@
         </ui:define>
         <ui:define name="conteudo">
             <h:form id="timeline" >
-
-
                 <p:poll id="poll" interval="60"  process="form_timeline:panel_timeline" update="form_timeline:panel_timeline"  />
                 <h:panelGrid  columns="5" style="margin-top: 10px; margin-bottom: 20px; border-color: transparent !important" >
                     <!--<div class="col-md-12" style="margin-top: 20px">-->    
@@ -141,23 +139,23 @@
             <script type="text/javascript">
                 function toggleFullScreen() {
                    if ((document.fullScreenElement &amp;&amp; document.fullScreenElement !== null) ||    
-   (!document.mozFullScreen &amp;&amp; !document.webkitIsFullScreen)) {
-    if (document.documentElement.requestFullScreen) {  
-      document.documentElement.requestFullScreen();  
-    } else if (document.documentElement.mozRequestFullScreen) {  
-      document.documentElement.mozRequestFullScreen();  
-    } else if (document.documentElement.webkitRequestFullScreen) {  
-      document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);  
-    }  
-  } else {  
-    if (document.cancelFullScreen) {  
-      document.cancelFullScreen();  
-    } else if (document.mozCancelFullScreen) {  
-      document.mozCancelFullScreen();  
-    } else if (document.webkitCancelFullScreen) {  
-      document.webkitCancelFullScreen();  
-    }  
-  } 
+                        (!document.mozFullScreen &amp;&amp; !document.webkitIsFullScreen)) {
+                         if (document.documentElement.requestFullScreen) {  
+                           document.documentElement.requestFullScreen();  
+                         } else if (document.documentElement.mozRequestFullScreen) {  
+                           document.documentElement.mozRequestFullScreen();  
+                         } else if (document.documentElement.webkitRequestFullScreen) {  
+                           document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);  
+                         }  
+                       } else {  
+                         if (document.cancelFullScreen) {  
+                           document.cancelFullScreen();  
+                         } else if (document.mozCancelFullScreen) {  
+                           document.mozCancelFullScreen();  
+                         } else if (document.webkitCancelFullScreen) {  
+                           document.webkitCancelFullScreen();  
+                         }  
+                       } 
                     } 
             </script>
         </ui:define>      

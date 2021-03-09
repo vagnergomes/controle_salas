@@ -46,7 +46,7 @@
                             </h:form>
                         </div>    
                     </div>
-
+                    
                     <p:scrollPanel  mode="native" style="width:96%; margin-left: 5px; border-color: transparent; margin-bottom: 800px;">
                         <p:dataTable id="table_agenda"
                                      widgetVar="w_table_agenda"
@@ -112,7 +112,7 @@
                 </div>
             </h:form>
 
-            <p:dialog id="confirm" header="Confirmar exclusão" widgetVar="dlg1_confirm" closeOnEscape="true" modal="true" showEffect="clip" hideEffect="clip" minHeight="40" resizable="false" >
+            <p:dialog id="confirm" header="Confirmar exclusão" widgetVar="dlg1_confirm" closeOnEscape="true" showEffect="clip" hideEffect="clip" modal="true" minHeight="40" resizable="false" >
                 <h:form id="formConfirm" >
                     <div style="margin-top: 10px" class="form-group"> 
                         <h:commandButton value="Excluir" action="#{agendamentoViewController.excluir()}" styleClass="btn btn-primary btn-space" />

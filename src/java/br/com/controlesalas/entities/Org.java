@@ -21,15 +21,15 @@ import javax.persistence.OneToMany;
  */
 @Entity
 public class Org implements Serializable {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idOrg;
-    
+
     private String org;
-    
+
     @OneToMany(mappedBy = "Org", cascade = CascadeType.REMOVE)
-    private List<Projeto> projetos ;
+    private List<Projeto> projetos;
 
     @ManyToMany(mappedBy = "orgs")
     private List<Usuario> usuarios;
@@ -65,7 +65,5 @@ public class Org implements Serializable {
     public void setOrg(String org) {
         this.org = org;
     }
-    
-    
-    
+
 }

@@ -6,10 +6,11 @@
 package br.com.controlesalas.controllers;
 
 import br.com.controlesalas.entities.Agendamento;
-import br.com.controlesalas.entities.Configuracao;
 import br.com.controlesalas.entities.Projeto;
+import br.com.controlesalas.entities.Role;
 import br.com.controlesalas.services.AgendamentoService;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -21,9 +22,10 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.servlet.http.HttpSession;
 import org.primefaces.PrimeFaces;
-//import org.primefaces.context.RequestContext; ----voltar
 import org.primefaces.event.ScheduleEntryMoveEvent;
 import org.primefaces.event.ScheduleEntryResizeEvent;
 import org.primefaces.event.SelectEvent;
@@ -49,12 +51,20 @@ public class ScheduleController implements Serializable {
 
     private Projeto projeto;
 
+    private List<Role> roles;
+    private Role role;
+    private Long id_usuario;
+
     private ScheduleModel eventos;
     private LazyScheduleModel lazyEventModel;
 
     private ScheduleEvent event = new DefaultScheduleEvent();
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date data_inicio;
+
     Date date = new Date();
+    Timestamp dateTime = new Timestamp(date.getTime());
 
     public ScheduleController() {
         agendamento = new Agendamento();
@@ -63,22 +73,29 @@ public class ScheduleController implements Serializable {
     @PostConstruct
     public void init() {
         projeto = (Projeto) getSession().getAttribute("projetoSelecionado");
-        agendamentos = service.todosProjeto(projeto.getIdProjeto());
+
+        if (projeto.getConfig().isTerminados_opaco()) {
+            agendamentos = service.todosProjeto(projeto.getIdProjeto());
+        } else {
+            data_inicio = dateTime;
+            data_inicio.setHours(0);
+            data_inicio.setMinutes(0);
+            data_inicio.setSeconds(0);;
+            agendamentos = service.todosApartirHoje(projeto.getIdProjeto(), data_inicio);
+        }
+
         eventos = new DefaultScheduleModel();
-        
+
+        id_usuario = (Long) getSession().getAttribute("idUsuario");
+        roles = (List<Role>) getSession().getAttribute("roles");
+        for (Role r : roles) {
+            role = r;
+        }
+
         for (final Agendamento e : agendamentos) {
-            String hora = String.valueOf(e.getFim().getHours());
-            String minuto = String.valueOf(e.getFim().getMinutes());
             String cor_sala = e.getSala().getCor();
             String desc = "";
             boolean venc = false;
-
-            if (e.getFim().getHours() <= 9) {
-                hora = "0" + e.getFim().getHours();
-            }
-            if (e.getFim().getMinutes() <= 9) {
-                minuto = "0" + e.getFim().getMinutes();
-            }
 
             //valida se evento venceu
             if (e.getFim().before(date)) {
@@ -100,11 +117,24 @@ public class ScheduleController implements Serializable {
 
             //Passo um metodo para definir o estilo da caixa do evento
             DefaultScheduleEvent ev = new DefaultScheduleEvent();
-            ev.setTitle(e.getTitulo() + "-" + e.getDescritivo().getQtd_pessoas() + "P " + desc);
+
+            if ("usuario".equals(role.getNome_role())) {
+                if (id_usuario.equals(e.getAnalise().getId_solicitante())) {
+                    ev.setTitle(e.getTitulo() + "-" + e.getDescritivo().getQtd_pessoas() + "P " + desc);
+                } else {
+                    ev.setTitle("");
+                }
+            } else {
+                ev.setTitle(e.getTitulo() + "-" + e.getDescritivo().getQtd_pessoas() + "P " + desc);
+            }
             ev.setStartDate(converteDateToDateTime(e.getInicio())); //normal sem o metodo
             ev.setEndDate(converteDateToDateTime(e.getFim())); //normal sem o metodo
-            ev.setStyleClass(cor_evento(cor_sala, venc));
 
+            if (e.getAnalise().isAnalise()) {
+                ev.setStyleClass("analise");
+            } else {
+                ev.setStyleClass(cor_evento(cor_sala, venc));
+            }
             //Passo o id do agendamento pelo getDescrition()
             ev.setDescription(String.valueOf(e.getIdAgendamento()));
             eventos.addEvent(ev);
@@ -187,25 +217,12 @@ public class ScheduleController implements Serializable {
         //pega o id do agendamento que foi lancado no getDescription
         getSession().removeAttribute("dateSelect");
         getSession().setAttribute("idEventoSelect", event.getDescription());
-//        RequestContext context = RequestContext.getCurrentInstance(); ---voltar
-//        context.execute("PF('dialogNovoEvento').show();");  ----voltar
         PrimeFaces.current().executeScript("PF('dialogNovoEvento').show();");
-//        if(event.getEndDate().after(date)){
-//            context.execute("PF('dialogNovoEvento').show();");
-//        }else{
-//            context.execute("PF('dialogDetalhesEvento').show();");
-//        }
     }
 
     public void onEventResize(ScheduleEntryResizeEvent e) {
-        //ScheduleEntryResizeEvent eventResize = (ScheduleEntryResizeEvent) e.getScheduleEvent();
-//          System.out.println("---EventResize:" + e.getScheduleEvent().getEndDate());
-//          System.out.println("---Evento: " + e.getScheduleEvent().getDescription());
-
         getSession().setAttribute("idResizeSelect", e.getScheduleEvent().getDescription());
         getSession().setAttribute("dateResize", e.getScheduleEvent().getEndDate());
-//          System.out.println("---dateResize: " + e.getScheduleEvent().getEndDate());
-//        MensagemUtil.addMensagemInfo("Dia:" + event.getDayDelta() + ", Horário:" + event.getMinuteDelta());
     }
 
     public void onEventMove(ScheduleEntryMoveEvent event) {
@@ -233,7 +250,6 @@ public class ScheduleController implements Serializable {
     }
 
     /*--------Schedule---------*/
-//    @Schedule(second="*/1", minute="*", hour="*", persistent=false)
     public ScheduleModel getEventos() {
         return eventos;
     }

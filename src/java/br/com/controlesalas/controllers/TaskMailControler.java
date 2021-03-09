@@ -10,7 +10,6 @@ import br.com.controlesalas.services.TaskMailService;
 import br.com.controlesalas.util.MensagemUtil;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Timer;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -25,47 +24,48 @@ import javax.servlet.http.HttpSession;
 @Named
 @RequestScoped
 public class TaskMailControler implements Serializable {
-    
+
     @Inject
     private TaskMailService service;
-    
+
     private List<TaskMail> taskmails;
     private TaskMail taskmail;
     private Object idTaskmail;
-    
-    public TaskMailControler(){
+
+    public TaskMailControler() {
     }
-    
+
     @PostConstruct
-    public void init(){
-       
-       idTaskmail = getSession().getAttribute("idConfigSelecionado");
-        if(idTaskmail == null){
+    public void init() {
+
+        idTaskmail = getSession().getAttribute("idConfigSelecionado");
+        if (idTaskmail == null) {
             taskmail = new TaskMail();
-        }else{
+        } else {
             taskmail = service.obter(convertToLong(idTaskmail));
         }
     }
 
-    public void salvar(){
+    public void salvar() {
+        String mail = taskmail.getEmail_destinatario().trim();
+        taskmail.setEmail_destinatario(mail);
         String erro = service.salvar(taskmail);
         taskmail = new TaskMail();
-        
-        if(erro == null){
+
+        if (erro == null) {
             taskmail = service.obter(convertToLong(idTaskmail));
             MensagemUtil.addMensagemInfo("Salvo.");
-        }else{
+        } else {
             MensagemUtil.addMensagemError("Erro ao salvar.");
         }
     }
-    
-     public static Long convertToLong(Object o) {
+
+    public static Long convertToLong(Object o) {
         String stringToConvert = String.valueOf(o);
         Long convertedLong = Long.parseLong(stringToConvert);
         return convertedLong;
     }
 
-    
     public List<TaskMail> getTaskmails() {
         return taskmails;
     }

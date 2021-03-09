@@ -23,39 +23,43 @@ import javax.persistence.Temporal;
  */
 @Entity
 public class Analise implements Serializable {
-    
+
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Long idAnalise; 
-    
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idAnalise;
+
     @Column
     private boolean analise;
-    
+
     @Column
     private boolean aprovado;
-    
-    @Column boolean reprovado;
-    
+
+    @Column
+    boolean reprovado;
+
     @Column
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date data_abertura;
-    
+
     @Column
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date data_analise;
-    
+
     @Column
     private String solicitante;
-    
-    @Column 
+
+    @Column
     private Long id_solicitante;
-    
-    @Column 
+
+    @Column
     private String responsavel;
-    
+
+    @Column
+    private boolean notificacao;
+
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Agendamento agendamento;
-       
+
     public Long getIdAnalise() {
         return idAnalise;
     }
@@ -135,8 +139,13 @@ public class Analise implements Serializable {
     public void setAgendamento(Agendamento agendamento) {
         this.agendamento = agendamento;
     }
-    
-    
-    
-    
+
+    public boolean isNotificacao() {
+        return notificacao;
+    }
+
+    public void setNotificacao(boolean notificacao) {
+        this.notificacao = notificacao;
+    }
+
 }

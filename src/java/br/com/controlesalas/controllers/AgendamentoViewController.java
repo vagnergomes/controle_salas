@@ -163,7 +163,6 @@ public class AgendamentoViewController implements Serializable {
     }
 
     public void buscarAgendamentos() {
-//        String idProjeto = (String) ;
         agendamentos = service.todosData(data_inicio, data_fim, projeto.getIdProjeto(), id_usuario, roles);
     }
 
@@ -216,12 +215,6 @@ public class AgendamentoViewController implements Serializable {
         return service.todosData(data_inicio, data_fim, projeto.getIdProjeto(), id_usuario, roles);
     }
 
-//    public void onRowSelect(SelectEvent event) {
-//        Object ob = event.getObject();
-//        System.out.println("-----OB:"+ ob );
-//        Agendamento a = (Agendamento) ob;
-//        System.out.println("-----AG:"+ a.getTitulo() );
-//    }
     public Agendamento getAgendamento() {
         return agendamento;
     }

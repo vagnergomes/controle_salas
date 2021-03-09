@@ -6,7 +6,6 @@
 package br.com.controlesalas.entities;
 
 import java.io.Serializable;
-import java.sql.Time;
 import java.util.Date;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -22,18 +21,18 @@ import javax.persistence.TemporalType;
  * @author vagner.gomes
  */
 @Entity
-public class TaskMail implements Serializable{
-    
+public class TaskMail implements Serializable {
+
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idTaskMail;
-    
+
     @Column
     private boolean ativo;
-    
+
     @Column
     private String email_destinatario;
-    
+
     @Column
     @Temporal(TemporalType.TIMESTAMP)
     private Date hora;
@@ -94,7 +93,5 @@ public class TaskMail implements Serializable{
         }
         return true;
     }
-    
-    
-    
+
 }

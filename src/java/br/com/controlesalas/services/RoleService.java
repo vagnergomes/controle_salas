@@ -42,7 +42,12 @@ public class RoleService implements Serializable {
     public List<Role> todos(){
         Query query = em.createQuery("select c from Role as c", Role.class);
         return query.getResultList();
-    }  
+    }
+    
+    public List<Role> todosCadastro(){
+        Query query = em.createQuery("select c from Role as c where c.nome_role <> 'super_administrador'", Role.class);
+        return query.getResultList();
+    } 
     
     public Role roleAdministrador(){
         Query query = em.createQuery("select c from Role as c where c.nome_role = 'administrador'", Role.class);

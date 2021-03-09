@@ -10,6 +10,7 @@ import br.com.controlesalas.entities.Org;
 import br.com.controlesalas.entities.Projeto;
 import br.com.controlesalas.entities.Sala;
 import br.com.controlesalas.entities.TaskMail;
+import br.com.controlesalas.services.AnaliseService;
 import br.com.controlesalas.services.ProjetoService;
 import br.com.controlesalas.util.MensagemUtil;
 import java.io.IOException;
@@ -35,6 +36,9 @@ public class ProjetoController implements Serializable {
     @Inject
     private ProjetoService service;
 
+    @Inject
+    private AnaliseService service_analise;
+
     private Projeto projeto;
     private Projeto projetoEditar;
     private Configuracao config;
@@ -59,7 +63,6 @@ public class ProjetoController implements Serializable {
         Org org = (Org) getSession().getAttribute("org");
         idOrg = org.getIdOrg();
         idProjeto = getSession().getAttribute("idConfigSelecionado");
-        //Long idUsuario = (Long) getSession().getAttribute("idUsuario");
         if (idProjeto == null) {
             projeto = new Projeto();
             config = new Configuracao();
@@ -69,14 +72,9 @@ public class ProjetoController implements Serializable {
             config = projeto.getConfig();
             taskmail = projeto.getTaskmail();
         }
-
-//        projeto = new Projeto();
-//        projetoEditar = new Projeto();
-//        config = new Configuracao();
     }
 
     public void salvar() {
-        // System.out.println("------IdSessao:" + usuario.getUsuario());
         if (idProjeto == null) {
             Org org = (Org) getSession().getAttribute("org");
 
@@ -84,7 +82,7 @@ public class ProjetoController implements Serializable {
             projeto.setOrg(org);
             config.setExports_visivel(true);
             config.setRotulos_visivel(true);
-            config.setTerminados_opaco(true);
+            config.setTerminados_opaco(false);
             config.setTitulo_cabecalho("");
             config.setUrl_img_logo("C:/controlesalas/imgs/logo-padrao.png");
             config.setShow_weekends(true);
@@ -102,7 +100,7 @@ public class ProjetoController implements Serializable {
             if (idProjeto != null) {
                 projeto = service.obter(convertToLong(idProjeto));
             }
-            MensagemUtil.addMensagemInfo("Projeto Salvo.");
+            MensagemUtil.addMensagemInfo("Configuração salva.");
         } else {
             MensagemUtil.addMensagemError("Erro: " + erro);
         }
@@ -148,12 +146,10 @@ public class ProjetoController implements Serializable {
     }
 
     public void selecionarProjeto(Projeto projeto) throws IOException {
-        //Long idProjeto = projeto.getIdProjeto();
         FacesContext.getCurrentInstance().getExternalContext().redirect("../index.xhtml");
         Long idConfig = projeto.getConfig().getIdConfig();
         getSession().setAttribute("projetoSelecionado", projeto);
         getSession().setAttribute("idConfigSelecionado", idConfig);
-
 //        FacesContext.getCurrentInstance().getExternalContext().redirect("../Agendamento/schedule.xhtml");
     }
 
@@ -165,24 +161,6 @@ public class ProjetoController implements Serializable {
         getSession().setAttribute("projeto_desat", p);
     }
 
-//    public void excluir(Projeto projeto) {
-//        try {
-//            agendamentos = service.agendamentosSala(sala.getIdSala());
-//            if (agendamentos.size() > 0) {
-//                MensagemUtil.addMensagemError("Erro: existem Agendamentos vinculados à esse Local/Sala.");
-//            } else {
-//                String erro = service.excluir(sala.getIdSala());
-//                if (erro == null) {
-//                    MensagemUtil.addMensagemInfo("Excluído.");
-//                    agendamentos = new ArrayList<>();
-//                } else {
-//                    MensagemUtil.addMensagemError("Erro ao excluir: " + erro);
-//                }
-//            }
-//        } catch (Exception ex) {
-//            ex.getStackTrace();
-//        }
-//    }
     public void desativar() {
         try {
             projeto = (Projeto) getSession().getAttribute("projeto_desat");
@@ -204,6 +182,32 @@ public class ProjetoController implements Serializable {
             getSession().removeAttribute("projeto_desat");
         } catch (Exception ex) {
             ex.getMessage();
+        }
+    }
+
+    public String countAnalises(Long id) {
+        try {
+            String r = ".";
+            int n = service_analise.countAnalises(id);
+            if (n >= 0 && n <= 999) {
+                r = Integer.toString(n);
+            }
+            return r;
+        } catch (Exception ex) {
+            return "Erro: " + ex.getMessage();
+        }
+    }
+
+    public String countAnalisesUsuario(Long id) {
+        try {
+            String r = ".";
+            int n = service_analise.countAnalisesUsuario(id, idUsuario);
+            if (n >= 0 && n <= 999) {
+                r = Integer.toString(n);
+            }
+            return r;
+        } catch (Exception ex) {
+            return "Erro: " + ex.getMessage();
         }
     }
 

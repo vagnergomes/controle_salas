@@ -6,7 +6,6 @@
 package br.com.controlesalas.controllers;
 
 import br.com.controlesalas.entities.Org;
-import br.com.controlesalas.entities.Projeto_Usuario;
 import br.com.controlesalas.entities.Role;
 import br.com.controlesalas.entities.Usuario;
 import br.com.controlesalas.services.RoleService;
@@ -34,14 +33,14 @@ public class UsuarioController implements Serializable {
 
     @Inject
     private UsuarioService service;
-    
+
     @Inject
     private RoleService service_role;
 
     private Usuario usuario;
 
     private List<Role> select_roles;
-    
+
     private Role role;
 
     private List<Usuario> usuarios;
@@ -64,7 +63,7 @@ public class UsuarioController implements Serializable {
         idUsuario = (Long) getSession().getAttribute("idUsuario");
 
     }
-    
+
     public void salvarAdmin() {
         List<Org> orgs = new ArrayList<>();
 
@@ -97,8 +96,8 @@ public class UsuarioController implements Serializable {
         select_roles.add(role);
         usuario.setRoles(select_roles);
         usuario.setOrgs(orgs);
-        
-        if(usuario.getIdUsuario() == null){
+
+        if (usuario.getIdUsuario() == null) {
             usuario.setSenha(bcrypt(usuario.getSenha()));
         }
 
@@ -113,17 +112,8 @@ public class UsuarioController implements Serializable {
             MensagemUtil.addMensagemInfo("Falha ao salvar: " + erro);
         }
     }
-    
+
     public void alterarSenha() {
-        //String username = service.consultaPorUsuario(usuario.getUsuario()).getUsuario();
-        
-//        List<Org> orgs = new ArrayList<>();
-//        org = (Org) getSession().getAttribute("org");
-//        orgs.add(org);
-//        select_roles.add(role);
-//        usuario.setRoles(select_roles);
-//        usuario.setOrgs(orgs);
-        
         usuario.setSenha(bcrypt(usuario.getSenha()));
 
         String erro = service.salvar(usuario);
@@ -132,7 +122,7 @@ public class UsuarioController implements Serializable {
             getSession().setAttribute("usuario", usuario);
             usuario = new Usuario();
             select_roles = new ArrayList<>();
-            MensagemUtil.addMensagemInfo("Salvo.");
+            MensagemUtil.addMensagemInfo("Senha alterada.");
         } else {
             MensagemUtil.addMensagemInfo("Falha ao salvar: " + erro);
         }
@@ -142,7 +132,7 @@ public class UsuarioController implements Serializable {
         org = (Org) getSession().getAttribute("org");
         return service.todosPorOrg(org.getIdOrg());
     }
-    
+
     public void excluir() {
         if (!usuario.getUsuario().isEmpty()) {
             boolean err = service.excluirProjetosUsuario(usuario);
@@ -165,41 +155,40 @@ public class UsuarioController implements Serializable {
             MensagemUtil.addMensagemError("Nenhum usuário selecionado.");
         }
     }
-    
-    public void editarUsuario(Usuario u){
+
+    public void editarUsuario(Usuario u) {
         System.out.println("EditarUsuario: " + u.getIdUsuario());
-        if(u != null){
+        if (u != null) {
             usuario = service.obter(u.getIdUsuario());
             PrimeFaces.current().executeScript("PF('dlg_editar_usuario').show();");
-        }else{
-            usuario = new Usuario(); 
+        } else {
+            usuario = new Usuario();
         }
     }
-    
-     
-    public void editarSenha(Usuario u){
+
+    public void editarSenha(Usuario u) {
         System.out.println("EditarSenha: " + u.getIdUsuario());
-        if(u != null){
+        if (u != null) {
             usuario = service.obter(u.getIdUsuario());
             PrimeFaces.current().executeScript("PF('dlg_editar_senha').show();");
-        }else{
-            usuario = new Usuario(); 
+        } else {
+            usuario = new Usuario();
         }
     }
-    
-    public void novoUsuario(){
+
+    public void novoUsuario() {
         usuario = new Usuario();
         PrimeFaces.current().executeScript("PF('dlg_novo_usuario').show();");
     }
-    
-    public void selecionar(Usuario u){
+
+    public void selecionar(Usuario u) {
         usuario = u;
     }
-    
-    public boolean validar(){
-        if(usuario != null){
+
+    public boolean validar() {
+        if (usuario != null) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }

@@ -8,9 +8,7 @@ package br.com.controlesalas.entities;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,15 +20,15 @@ import javax.persistence.ManyToMany;
  */
 @Entity
 public class Role implements Serializable {
-    
+
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idRole;
-    
+
     private String nome_role;
-    
+
     private String descricao;
-    
+
     @ManyToMany(mappedBy = "roles")
     private List<Usuario> usuarios;
 
@@ -57,8 +55,6 @@ public class Role implements Serializable {
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
-    
-    
 
     public List<Usuario> getUsuarios() {
         return usuarios;
@@ -91,6 +87,6 @@ public class Role implements Serializable {
             return false;
         }
         return true;
-    }   
-    
+    }
+
 }

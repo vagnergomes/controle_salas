@@ -20,32 +20,32 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @XmlRootElement
 public class Configuracao implements Serializable {
-    
+
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idConfig;
-    
+
     @Column
     private boolean terminados_opaco;
-    
+
     @Column
     private boolean rotulos_visivel;
-    
+
     @Column
     private boolean exports_visivel;
-    
+
     @Column
     private String url_img_logo;
-    
-     @Column
+
+    @Column
     private String url_img_logo_rel;
-    
-    @Column 
+
+    @Column
     private String titulo_cabecalho;
-    
+
     @Column
     private String view_agenda;
-    
+
     @Column
     private boolean show_weekends;
 
@@ -96,7 +96,7 @@ public class Configuracao implements Serializable {
     public void setUrl_img_logo_rel(String url_img_logo_rel) {
         this.url_img_logo_rel = url_img_logo_rel;
     }
- 
+
     public String getTitulo_cabecalho() {
         return titulo_cabecalho;
     }
@@ -120,8 +120,5 @@ public class Configuracao implements Serializable {
     public void setShow_weekends(boolean show_weekends) {
         this.show_weekends = show_weekends;
     }
-    
-    
 
-    
 }

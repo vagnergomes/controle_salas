@@ -19,17 +19,17 @@ import javax.persistence.ManyToOne;
  * @author vagner.gomes
  */
 @Entity
-public class Projeto_Usuario implements Serializable{
-    
+public class Projeto_Usuario implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idPU;
-    
+
     //Mapeamento
     @ManyToOne
     @JoinColumn(name = "idProjeto")
     private Projeto projeto;
-    
+
     @ManyToOne
     @JoinColumn(name = "idUsuario")
     private Usuario usuario;
@@ -82,7 +82,5 @@ public class Projeto_Usuario implements Serializable{
         }
         return true;
     }
-    
-    
-    
+
 }

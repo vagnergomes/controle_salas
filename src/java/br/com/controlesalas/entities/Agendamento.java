@@ -27,25 +27,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @XmlRootElement
 public class Agendamento implements Serializable {
-    
+
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idAgendamento;
-    
-    @Column(nullable=false)
+
+    @Column(nullable = false)
     private String titulo;
-    
-//    @Column(nullable=false)
-//    private String sala;
-    
-//    @Column(nullable = false)
-//    @Temporal(javax.persistence.TemporalType.DATE)
-//    private Date dia;
-    
+
     @Column(nullable = false)
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date inicio;
-    
+
     @Column(nullable = false)
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date fim;
@@ -56,10 +49,10 @@ public class Agendamento implements Serializable {
     @ManyToOne
     @JoinColumn(name = "idSala")
     private Sala sala;
-    
+
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Descritivo descritivo;
-    
+
     public Long getIdAgendamento() {
         return idAgendamento;
     }
@@ -75,22 +68,6 @@ public class Agendamento implements Serializable {
     public void setTitulo(String titulo) {
         this.titulo = titulo;
     }
-
-//    public String getSala() {;
-//        return sala;
-//    }
-//
-//    public void setSala(String sala) {
-//        this.sala = sala;
-//    }
-
-//    public Date getDia() {
-//        return dia;
-//    }
-//
-//    public void setDia(Date dia) {
-//        this.dia = dia;
-//    }
 
     public Date getInicio() {
         return inicio;
@@ -108,7 +85,7 @@ public class Agendamento implements Serializable {
         this.fim = fim;
     }
 
-    public Sala getSala(){
+    public Sala getSala() {
         return sala;
     }
 
@@ -132,18 +109,14 @@ public class Agendamento implements Serializable {
         this.analise = analise;
     }
 
-    
-
-    
     //Equals e HashCode
     @Override
     public int hashCode() {
-         int hash = 7;
+        int hash = 7;
         hash = 67 * hash + (this.idAgendamento != null ? this.idAgendamento.hashCode() : 0);
         return hash;
     }
 
-    
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -158,5 +131,5 @@ public class Agendamento implements Serializable {
         }
         return true;
     }
-    
+
 }

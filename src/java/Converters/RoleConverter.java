@@ -39,15 +39,6 @@ public class RoleConverter implements Converter{
         }
     }
 
-//    @Override
-//    public String getAsString(FacesContext context, UIComponent component, Object value) {
-//        System.out.println("--:" + value);
-//        if (value == null || value.equals("")) {
-//            return null;
-//        }
-//        return ((Role) value).getIdRole().toString();
-//    }
-
     @Override
 public String getAsString(FacesContext context, UIComponent component, Object value) {
     if (value == null) {

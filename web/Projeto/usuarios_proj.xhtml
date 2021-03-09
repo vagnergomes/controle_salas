@@ -53,7 +53,7 @@
                 </div>
             </h:form>
 
-            <p:dialog id="confirm" header="Confirmar remoção de acesso" widgetVar="dlg1_confirm" modal="true" minHeight="40" resizable="false" >
+            <p:dialog id="confirm" header="Confirmar remoção de acesso" widgetVar="dlg1_confirm" closeOnEscape="true" showEffect="clip" hideEffect="clip" modal="true" minHeight="40" resizable="false" >
                 <h:form id="formConfirm" >
                     <div style="margin-top: 10px" class="form-group"> 
                         <h:commandButton value="Confirmar" action="#{projetoUsuarioController.excluir()}" styleClass="btn btn-primary btn-space" />

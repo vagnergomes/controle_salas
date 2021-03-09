@@ -16,10 +16,8 @@ and open the template in the editor.
         </ui:define>    
         <ui:define name="conteudo">
             <h:form id="cadastro">
-
                 <p:inputText style="visibility: hidden;" disabled="true" value="" />
                 <h:panelGrid columns="5" style="margin-top: 10px; margin-bottom: 20px; border-color: transparent" >
-
                     <div class="col-md-12" style="margin-top: 20px">    
                         <p:dataGrid var="c" 
                                     value="#{projetoController.todosDesativados()}" 
@@ -30,7 +28,6 @@ and open the template in the editor.
 
                             <p:panel  style="text-align:center; width: 100%; border-color: transparent">
                                 <h:panelGrid class="panel-projeto" columns="1" style="margin-left: 17px; width:100%">
-
                                     <h:commandButton actionListener="#{projetoController.selecionarProjeto(c)}" image="#{request.contextPath}/../Imagem/icons/calendar.png" alt="Voltar pro Meunu" >
                                         <center><h:outputLabel value="#{c.nome}" /></center>
                                     </h:commandButton> 
@@ -38,7 +35,6 @@ and open the template in the editor.
                                     <h:panelGrid rendered="#{loginController.verificaSAdmin() or loginController.verificaAdmin()}" class="panel-projeto-oculto" columns="1" style="width: 100%; margin-left: 12%; margin-top: -82px; " >
                                         <h:panelGrid columns="2"  >
                                             <h:commandLink class="btn btn-success"  onclick="PF('dlg1_confirm_ativar').show();" value="Ativar" >
-<!--                                                <h:graphicImage value="/Imagem/icons/visao.png" />-->
                                                 <p:ajax event="click" listener="#{projetoController.selecionar(c)}"  process="@this"/>
                                             </h:commandLink>
                                             <h:commandLink id="excluir" disabled="false" class="btn btn-primary" onclick="PF('dlg1_confirm').show();" value="" style="margin-left: 5px;" >
@@ -47,36 +43,32 @@ and open the template in the editor.
                                             </h:commandLink> 
                                         </h:panelGrid>
                                     </h:panelGrid>
-
                                 </h:panelGrid>
-
                             </p:panel>
-
                         </p:dataGrid>
                     </div>
                 </h:panelGrid>
-
-
             </h:form>
-             <p:dialog id="confirm" header="Confirmar" widgetVar="dlg1_confirm" modal="true" minHeight="40" resizable="false" >
-                    <h:form id="formConfirm" >
-                        <p:outputLabel > O projeto será excluído permanentemente.</p:outputLabel>
-                        <div style="margin-top: 10px" class="form-group"> 
-                            <h:commandButton value="Excluir" actionListener="#{projetoController.excluir()}" styleClass="btn btn-primary btn-space" />
-                            <h:commandButton onclick="dlg1_confirm.hide()" value="Cancelar" class="btn btn-default btn-space" />                
-                        </div>
-                    </h:form>
-                </p:dialog>  
             
-            <p:dialog id="confirm_ativar" header="Confirmar" widgetVar="dlg1_confirm_ativar" modal="true" minHeight="40" resizable="false" >
-                    <h:form id="formConfirmAtivar" >
-                        <p:outputLabel > O projeto será ativado.</p:outputLabel>
-                        <div style="margin-top: 10px" class="form-group"> 
-                            <h:commandButton value="Ativar" actionListener="#{projetoController.ativar()}" styleClass="btn btn-primary btn-space" />
-                            <h:commandButton onclick="dlg1_confirm_ativar.hide()" value="Cancelar" class="btn btn-default btn-space" />                
-                        </div>
-                    </h:form>
-                </p:dialog> 
+            <p:dialog id="confirm" header="Confirmar" widgetVar="dlg1_confirm" closeOnEscape="true" showEffect="clip" hideEffect="clip" modal="true" minHeight="40" resizable="false" >
+                <h:form id="formConfirm" >
+                    <p:outputLabel > O projeto será excluído permanentemente.</p:outputLabel>
+                    <div style="margin-top: 10px" class="form-group"> 
+                        <h:commandButton value="Excluir" actionListener="#{projetoController.excluir()}" styleClass="btn btn-primary btn-space" />
+                        <h:commandButton onclick="dlg1_confirm.hide()" value="Cancelar" class="btn btn-default btn-space" />                
+                    </div>
+                </h:form>
+            </p:dialog>  
+
+            <p:dialog id="confirm_ativar" header="Confirmar" widgetVar="dlg1_confirm_ativar" closeOnEscape="true" showEffect="clip" hideEffect="clip" modal="true" minHeight="40" resizable="false" >
+                <h:form id="formConfirmAtivar" >
+                    <p:outputLabel > O projeto será ativado.</p:outputLabel>
+                    <div style="margin-top: 10px" class="form-group"> 
+                        <h:commandButton value="Ativar" actionListener="#{projetoController.ativar()}" styleClass="btn btn-primary btn-space" />
+                        <h:commandButton onclick="dlg1_confirm_ativar.hide()" value="Cancelar" class="btn btn-default btn-space" />                
+                    </div>
+                </h:form>
+            </p:dialog> 
         </ui:define>
     </ui:composition>
 </html>

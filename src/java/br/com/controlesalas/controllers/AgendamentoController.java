@@ -101,6 +101,7 @@ public class AgendamentoController implements Serializable {
                         analise.setReprovado(false);
                         analise.setData_abertura(dateTime);
                         analise.setData_analise(dateTime);
+                        analise.setNotificacao(true);
                     } else {
                         analise.setSolicitante(usuario_logado);
                         analise.setId_solicitante(id_usuario);
@@ -110,6 +111,7 @@ public class AgendamentoController implements Serializable {
                         analise.setReprovado(false);
                         analise.setData_abertura(dateTime);
                         analise.setData_analise(dateTime);
+                        analise.setNotificacao(false);
                     }
                     if (agendamento.getIdAgendamento() == null) {
                         analise.setAgendamento(agendamento);
@@ -161,9 +163,6 @@ public class AgendamentoController implements Serializable {
         //aqui comeca a recuperar objeto da sessao 
         Object idEvent = getSession().getAttribute("idEventoSelect");
         Object dateSelect = getSession().getAttribute("dateSelect");
-
-        SimpleDateFormat formatDate;
-        formatDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss ZZZ");
 
         if (idEvent == null && dateSelect != null) {
             agendamento = new Agendamento();

@@ -1203,7 +1203,7 @@ h1.page-header {
    line-height: 1.1;
  }
 .evento_cinza  {
-    background: gray  ; 
+    background: #cccccc  ; 
     color: #eee !important;
     font-size: 11px !important;
     line-height: 1.1;
@@ -1243,6 +1243,23 @@ h1.page-header {
     line-height: 1.1;
 }
 
+.analise {
+    background: #f7f7f7;
+    color: #777 !important;
+    font-size: 11px !important;
+    line-height: 1.1;
+    border: 1px solid #f7ca77;
+}
+
+/*.fc-title{
+    visibility: hidden;
+}*/
+
+/*.fc-event-inner{
+    visibility: hidden;
+    background-color: white;
+}*/
+
 .ui-dialog.dialog-teste
 {
 	width: 100% !important;
@@ -1274,4 +1291,37 @@ h1.page-header {
 
 .ui-datagrid-content{
     border-color: transparent;
+}
+
+ .size-x {
+    height: 20px;
+    width: 20px;
+    margin-left: 10px;
+    margin-top: -13px;
+}
+
+.size-x2 {
+    height: 30px;
+    width: 30px;
+    margin-left: 15px;
+    margin-top: -13px;
+}
+
+.circle {
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: bold;
+    
+    display: -webkit-flex;
+     display: -ms-flexbox;
+            display: flex;
+
+    -webkit-align-items: center;
+      -webkit-box-align: center;
+	 -ms-flex-align: center;
+	    align-items: center;
+    
+  justify-content: center;
 }

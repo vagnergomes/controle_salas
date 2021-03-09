@@ -28,40 +28,30 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @XmlRootElement
 public class Projeto implements Serializable {
+
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idProjeto;
-    
+
     @Column
     private String nome;
-    
+
     @Column
     private String descricao;
-    
+
     @Column
     private boolean ativo;
-    
+
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Configuracao config;
-    
+
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "idTaskmail")
     private TaskMail taskmail;
-    
+
     @OneToMany(mappedBy = "Projeto", cascade = CascadeType.REMOVE)
-    private List<Sala> Salas ;
-     
-//    @ManyToMany(cascade = CascadeType.DETACH)
-//    @JoinTable(
-//            name = "projetos_usuarios",
-//            joinColumns = {@JoinColumn(
-//                    name = "projeto_id")},
-//            inverseJoinColumns = {@JoinColumn(
-//                    name = "usuario_id")})
-//    private List<Usuario> usuarios;
-     
-     
-    
+    private List<Sala> Salas;
+
     @ManyToOne
     @JoinColumn(name = "idOrg")
     private Org org;
@@ -97,7 +87,7 @@ public class Projeto implements Serializable {
     public void setAtivo(boolean ativo) {
         this.ativo = ativo;
     }
-   
+
     public Configuracao getConfig() {
         return config;
     }
@@ -122,14 +112,6 @@ public class Projeto implements Serializable {
         this.Salas = Salas;
     }
 
-//    public List<Usuario> getUsuarios() {
-//        return usuarios;
-//    }
-//
-//    public void setUsuarios(List<Usuario> usuarios) {
-//        this.usuarios = usuarios;
-//    }
-
     public Org getOrg() {
         return org;
     }
@@ -137,7 +119,6 @@ public class Projeto implements Serializable {
     public void setOrg(Org org) {
         this.org = org;
     }
-
 
     @Override
     public int hashCode() {
@@ -163,5 +144,5 @@ public class Projeto implements Serializable {
         }
         return true;
     }
-     
+
 }

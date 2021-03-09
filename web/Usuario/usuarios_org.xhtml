@@ -16,16 +16,12 @@
 
             <p:tabView id="usuarios_grupos" orientation="top" >
                 <p:tab title="Usuários">
-
-                    <!--<p:tabView id="usuarios_origens" orientation="left" >-->
-                    <!--<p:tab title="Local">-->
                     <h:form id="usuarios" >
                         <div class="col-md-12" style="margin-top: 5px; margin-left: -29px;">          
                             <div class="form-group"> 
                                 <h:commandButton rendered="#{loginController.verificaSAdmin() or loginController.verificaAdmin()}" styleClass="btn btn-primary" value="Adicionar" >
-                                    <!--<p:ajax  oncomplete="PF('dlg_novo_usuario').show()" rendered=":usuario:panel_novo_usuario" />--> 
                                     <p:ajax event="click" listener="#{usuarioController.novoUsuario()}"  update="usuarios_grupos:usuarios" />
-                                    </h:commandButton>
+                                </h:commandButton>
                             </div>
                         </div>
 
@@ -82,27 +78,27 @@
                                 </p:dataTable>
                             </p:scrollPanel>
                         </div>
-
-                      
                     </h:form>
-
                 </p:tab>
 
                 <p:tab title="Grupos" >
                     <h:form id="grupos">
                         <p:dataTable id="table_grupos"
                                      widgetVar="w_data_grupos"
-                                     value="#{roleController.todos()}"
+                                     value="#{roleController.todosCadastro()}"
                                      var="r"
                                      emptyMessage="Nenhum registro encontrado.">
                             <p:column headerText="Papel" >
                                 <h:outputText value="#{r.nome_role}" />
                             </p:column>
+                            <p:column headerText="Descrição" >
+                                <h:outputText value="#{r.descricao}" />
+                            </p:column>
                         </p:dataTable>
                     </h:form>
                 </p:tab>
             </p:tabView>
-            
+
             <p:dialog id="confirm" header="Confirmar exclusão" closeOnEscape="true" widgetVar="dlg1_confirm" modal="true" minHeight="40" resizable="false" >
                 <h:form id="formConfirm" >
                     <div style="margin-top: 10px" class="form-group"> 
@@ -112,8 +108,7 @@
                 </h:form>
             </p:dialog> 
 
-            <!-- a tag Dynamic="true" no p:dialog faz com que o dados sejam carregados apenas quando chamo o modal, caso contrário reporta erro null -->
-            <p:dialog  widgetVar="dlg_acesso_usuario" dynamic="true" closeOnEscape="true" width="30%" maximizable="false" header="Agendas do usuário" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true"   >
+            <p:dialog  widgetVar="dlg_acesso_usuario" dynamic="true" closeOnEscape="true" width="50%" maximizable="false" header="Agendas do usuário" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true"   >
                 <h:form id="form_acesso_usuario">
                     <h:panelGrid id="panel_acesso_usuario">
                         <p:dataTable id="table_projetos"
@@ -121,7 +116,6 @@
                                      value="#{projetoController.todosAtivos()}"
                                      var="p"
                                      >
-
                             <p:column headerText="Projeto">
                                 <h:outputText value="#{p.nome}" />
                             </p:column>
@@ -162,22 +156,24 @@
                         <h:inputText id="email" value="#{usuarioController.usuario.email}" styleClass="form-control input"  >        
                             <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
                         </h:inputText>
-
-                        <h:panelGrid  columns="1" id="matchGrid" >
+                        
+                         <h:panelGrid  columns="1" id="matchGrid" >
                             <h:panelGrid  columns="1">
                                 <h:outputLabel for="pwd1" value="Senha: " class="output-form required" />
-                                <p:password id="pwd1" value="#{usuarioController.usuario.senha}"  promptLabel="Entre com a senha" weakLabel="Fraca" goodLabel="Boa" strongLabel="Forte" placeholder="********" styleClass="form-control input" match="pwd2" label="Password 1" />
+                                <p:password id="pwd1" value="#{usuarioController.usuario.senha}" required="true"  placeholder="********" feedback="true" inline="true" promptLabel="Entre com a senha" weakLabel="Fraca"  goodLabel="Média" strongLabel="Forte" validatorMessage="Erro de validação."   styleClass="form-control input" match="pwd2" label="Password 1" >
+                                    <f:validateLength minimum="8" maximum="50" />
+                                </p:password>
                             </h:panelGrid>
                             <h:panelGrid columns="1">
-                                <h:outputLabel for="pwd2" value="Confirmar: " class="output-form required" />
-                                <p:password id="pwd2" value="#{usuarioController.usuario.senha}" promptLabel="Entre com a senha" weakLabel="Fraca" goodLabel="Boa" strongLabel="Forte" placeholder="********" styleClass="form-control input" label="Password 2"  />
+                                <h:outputLabel for="pwd2" value="Confirme a senha: " class="output-form required" />
+                                <p:password id="pwd2" value="#{usuarioController.usuario.senha}" required="true" size="8"  placeholder="********" feedback="true" inline="true" promptLabel="Confirme a senha" weakLabel="Fraca"  goodLabel="Média" strongLabel="Forte" styleClass="form-control input" label="Password 2"  />
                             </h:panelGrid>
                         </h:panelGrid>
 
                          <h:panelGrid style="margin-bottom:10px" cellpadding="5">
                         <p:outputLabel for="role" value="Permissão: " class="output-form required" />
                         <p:selectOneRadio id="role" value="#{usuarioController.role}" layout="responsive" converter="roleConverter" columns="1" style="margin-left: 10px" >
-                            <f:selectItems  value="#{roleController.todos()}" itemDisabled="#{r.nome_role == 'super_administrador' or r.nome_role == null}" var="r" itemLabel="#{r.descricao}" itemValue="#{r}"/>
+                            <f:selectItems  value="#{roleController.todosCadastro()}" itemDisabled="#{r.nome_role == 'super_administrador' or r.nome_role == null}" var="r" itemLabel="#{r.descricao}" itemValue="#{r}"/>
                         </p:selectOneRadio>
                     </h:panelGrid>
 
@@ -207,12 +203,12 @@
                             <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
                         </h:inputText>
 
-                         <h:panelGrid style="margin-bottom:10px" cellpadding="5">
-                        <p:outputLabel for="role2" value="Permissão: " class="output-form required" />
-                        <p:selectOneRadio id="role2" value="#{usuarioController.role}" layout="responsive" converter="roleConverter" required="true" columns="1" style="margin-left: 10px" >
-                            <f:selectItems  value="#{roleController.todos()}" itemDisabled="#{r.nome_role == 'super_administrador' or r.nome_role == null}" var="r" itemLabel="#{r.descricao}" itemValue="#{r}"/>
-                        </p:selectOneRadio>
-                    </h:panelGrid>
+                        <h:panelGrid style="margin-bottom:10px" cellpadding="5">
+                            <h:outputLabel for="role2" value="Permissão: " class="output-form required" />
+                            <p:selectOneRadio id="role2" value="#{usuarioController.role}" layout="responsive" converter="roleConverter" required="true" columns="1" style="margin-left: 10px" >
+                                <f:selectItems  value="#{roleController.todosCadastro()}" itemDisabled="#{r.nome_role == 'super_administrador' or r.nome_role == null}" var="r" itemLabel="#{r.descricao}" itemValue="#{r}"/>
+                            </p:selectOneRadio>
+                        </h:panelGrid>
 
                         <div class="col-md-12 " style="margin-top: 10px">  
                             <h:panelGrid columns="2" >
@@ -224,28 +220,31 @@
                     </h:panelGrid>
                 </h:form>
             </p:dialog>
-            
+
             <p:dialog  widgetVar="dlg_editar_senha" dynamic="true" closeOnEscape="true" maximizable="false" header="Alterar senha" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true"   >
                 <h:form id="form_editar_senha">
                     <h:panelGrid id="panel_editar_senha">
-                        <p:messages id="messages" />
-                        
+                        <p:messages id="messages" closable="true" >
+                            <p:autoUpdate />
+                        </p:messages>
                         <h:panelGrid  columns="1" id="matchGrid" >
                             <h:panelGrid  columns="1">
                                 <h:outputLabel for="pwd1" value="Senha: " class="output-form required" />
-                                <p:password id="pwd1" value="#{usuarioController.usuario.senha}" required="true" placeholder="********" styleClass="form-control input" match="pwd2" label="Password 1" />
+                                <p:password id="pwd1" value="#{usuarioController.usuario.senha}" required="true"  placeholder="********" feedback="true" inline="true" promptLabel="Entre com a senha" weakLabel="Fraca"  goodLabel="Média" strongLabel="Forte" validatorMessage="Erro de validação."   styleClass="form-control input" match="pwd2" label="Password 1" >
+                                    <f:validateLength minimum="8" maximum="50" />
+                                </p:password>
                             </h:panelGrid>
                             <h:panelGrid columns="1">
-                                <h:outputLabel for="pwd2" value="Confirmar: " class="output-form required" />
-                                <p:password id="pwd2" value="#{usuarioController.usuario.senha}" required="true" promptLabel="Entre com a senha" weakLabel="Fraca" goodLabel="Boa" strongLabel="Forte" placeholder="********" styleClass="form-control input" label="Password 2"  />
+                                <h:outputLabel for="pwd2" value="Confirme a senha: " class="output-form required" />
+                                <p:password id="pwd2" value="#{usuarioController.usuario.senha}" required="true" size="8"  placeholder="********" feedback="true" inline="true" promptLabel="Confirme a senha" weakLabel="Fraca"  goodLabel="Média" strongLabel="Forte" styleClass="form-control input" label="Password 2"  />
                             </h:panelGrid>
                         </h:panelGrid>
 
+
                         <div class="col-md-12 " style="margin-top: 10px">
                             <h:panelGrid columns="2" >
-                                <h:commandButton value="Salvar" action="#{usuarioController.alterarSenha()}"  styleClass="btn btn-primary btn-space" >
-                                    <!--<f:ajax execute="@all" render="@all" />-->
-                                </h:commandButton>
+                                <p:commandButton update="@form" value="Salvar" style="background: #9C331E; color: #FFF" actionListener="#{usuarioController.alterarSenha()}" class="btn "/>
+                                <!--<h:commandButton value="Salvar" action="{usuarioController.alterarSenha()}" styleClass="btn btn-primary btn-space" />-->
                             </h:panelGrid>
                         </div>
                     </h:panelGrid>

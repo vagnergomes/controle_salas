@@ -20,26 +20,26 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @XmlRootElement
 public class Descritivo implements Serializable {
-    
+
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idDescritivo;
-    
+
     @Column
     private int qtd_pessoas;
-    
+
     @Column
     private boolean agua;
-    
-    @Column 
+
+    @Column
     private boolean cafe;
-    
-    @Column 
+
+    @Column
     private boolean frutas;
-    
+
     @Column
     private boolean lanche;
-    
+
     @Column
     private String adicional;
 
@@ -98,6 +98,5 @@ public class Descritivo implements Serializable {
     public void setAdicional(String adicional) {
         this.adicional = adicional;
     }
-    
-    
+
 }

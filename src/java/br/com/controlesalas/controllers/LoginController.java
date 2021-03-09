@@ -38,23 +38,27 @@ public class LoginController implements Serializable {
 
     @PostConstruct
     public void init() {
-        usuario = new Usuario();
-        Org org = new Org();
-        //Long idOrg = null;
-        //SecurityContext context = SecurityContextHolder.getContext();
-        if (context instanceof SecurityContext) {
-            // Authentication authentication = context.getAuthentication();
+        try {
+            usuario = new Usuario();
+            Org org = new Org();
+            //Long idOrg = null;
+            //SecurityContext context = SecurityContextHolder.getContext();
+            if (context instanceof SecurityContext) {
+                // Authentication authentication = context.getAuthentication();
 
-            if (authentication instanceof Authentication) {
-                usuario = service.consultaPorUsuario(((User) authentication.getPrincipal()).getUsername());
-                org = service.getOrg(usuario.getIdUsuario());
+                if (authentication instanceof Authentication) {
+                    usuario = service.consultaPorUsuario(((User) authentication.getPrincipal()).getUsername());
+                    org = service.getOrg(usuario.getIdUsuario());
 
-                getSession().setAttribute("org", org);
-                getSession().setAttribute("idUsuario", usuario.getIdUsuario());
-                getSession().setAttribute("roles", usuario.getRoles());
-                getSession().setAttribute("usuario_logado", usuario.getUsuario());
+                    getSession().setAttribute("org", org);
+                    getSession().setAttribute("idUsuario", usuario.getIdUsuario());
+                    getSession().setAttribute("roles", usuario.getRoles());
+                    getSession().setAttribute("usuario_logado", usuario.getUsuario());
+                }
+
             }
-
+        } catch (Exception ex) {
+            ex.getMessage();
         }
 
     }
@@ -78,55 +82,70 @@ public class LoginController implements Serializable {
 //        return new BigInteger(1, messageDigest.digest()).toString(16);
 //    }
     public boolean verificaSAdmin() {
-        if (authentication instanceof AnonymousAuthenticationToken) {
-            return false;
-        } else {
-            boolean admin = true;
-            Role r = new Role();
-            for (Role role : usuario.getRoles()) {
-                r = role;
-            }
-            if (r.getNome_role().equals("super_administrador")) {
-                return admin;
-            } else {
+        try {
+            if (authentication instanceof AnonymousAuthenticationToken) {
                 return false;
+            } else {
+                boolean admin = true;
+                Role r = new Role();
+                for (Role role : usuario.getRoles()) {
+                    r = role;
+                }
+                if (r.getNome_role().equals("super_administrador")) {
+                    return admin;
+                } else {
+                    return false;
+                }
             }
+        } catch (Exception ex) {
+            ex.getStackTrace();
+            return false;
         }
     }
 
     public boolean verificaAdmin() {
-        if (authentication instanceof AnonymousAuthenticationToken) {
-            return false;
-        } else {
-            boolean admin = true;
-            Role r = new Role();
-            for (Role role : usuario.getRoles()) {
-                r = role;
-            }
-            String papel = r.getNome_role();
-            if (papel.equals("administrador")) {
-                return admin;
-            } else {
+        try {
+            if (authentication instanceof AnonymousAuthenticationToken) {
                 return false;
+            } else {
+                boolean admin = true;
+                Role r = new Role();
+                for (Role role : usuario.getRoles()) {
+                    r = role;
+                }
+                String papel = r.getNome_role();
+                if (papel.equals("administrador")) {
+                    return admin;
+                } else {
+                    return false;
+                }
             }
+        } catch (Exception ex) {
+            ex.getStackTrace();
+            return false;
         }
     }
 
     public boolean verificaUsuario() {
-        if (authentication instanceof AnonymousAuthenticationToken) {
-            return false;
-        } else {
-            boolean admin = true;
-            Role r = new Role();
-            for (Role role : usuario.getRoles()) {
-                r = role;
-            }
-            String papel = r.getNome_role();
-            if (papel.equals("usuario")) {
-                return admin;
-            } else {
+        try {
+            if (authentication instanceof AnonymousAuthenticationToken) {
                 return false;
+            } else {
+                boolean admin = true;
+                Role r = new Role();
+                for (Role role : usuario.getRoles()) {
+                    r = role;
+                }
+                String papel = r.getNome_role();
+                if (papel.equals("usuario")) {
+                    return admin;
+                } else {
+                    return false;
+                }
             }
+        } catch (Exception ex) {
+            ex.getStackTrace();
+            return false;
         }
     }
 

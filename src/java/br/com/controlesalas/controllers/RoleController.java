@@ -52,6 +52,10 @@ public class RoleController implements Serializable {
     public List<Role> todos(){
         return service.todos();
     }
+    
+    public List<Role> todosCadastro(){
+        return service.todosCadastro();
+    }
 
     public Role getRole() {
         return role;
