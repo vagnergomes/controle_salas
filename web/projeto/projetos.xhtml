@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="../template.xhtml">
+        <ui:define name="titulo"  >
+            <span style="font-size: 22px; font-family: sans-serif; color: #999999 ; "> Agendas</span>
+        </ui:define>    
+        <ui:define name="conteudo">
+            <h:form id="cadastro">
+                <div class="col-md-12" style="margin-top: 5px">          
+                    <div class="form-group"> 
+
+                        <h:commandButton rendered="#{loginController.verificaSAdmin() or loginController.verificaAdmin()}" styleClass="btn btn-primary" value="Novo" >
+                            <p:ajax oncomplete="PF('dlg_novo_projeto').show()" rendered=":cadastro:panel_novo_projeto" /> 
+                        </h:commandButton>
+                    </div>
+                </div>
+
+                <p:inputText style="visibility: hidden;" disabled="true" value="" />
+                <h:panelGrid rendered="#{loginController.verificaSAdmin() or loginController.verificaAdmin() }" columns="5" style="margin-top: 10px; margin-bottom: 20px; border-color: transparent" >
+                    <p:dataGrid var="c" 
+                                value="#{projetoController.todosAtivos()}" 
+                                layout="grid"
+                                columns="7"  
+                                id="grid_salas"
+                                emptyMessage="Nenhum registro encontrado.">
+
+                        <p:panel  style="text-align:center; width: 100%; border-color: transparent">
+                            <h:panelGrid class="panel-projeto" columns="1" style="margin-left: 10px; width:100%; border-color: transparent">
+                                <p:poll id="poll" interval="5"  process="div_notificacao" update="div_notificacao"  />
+                                <h:panelGrid id="div_notificacao" style="background: transparent;  height: 20px; margin-top: 0px; float: right" >
+                                    <h:outputText  class='size-x2 circle' rendered="#{projetoController.countAnalises(c.idProjeto).equals('0')? false:true}"  value="#{projetoController.countAnalises(c.idProjeto)}"> </h:outputText>
+                                </h:panelGrid>
+                                <h:commandButton style="margin-top: -30px;" actionListener="#{projetoController.selecionarProjeto(c)}" image="#{request.contextPath}/../Imagem/icons/calendar.png" alt="Voltar pro Meunu" >
+                                    <center><h:outputLabel value="#{c.nome}" /></center>
+                                </h:commandButton> 
+
+                                <h:panelGrid rendered="#{loginController.verificaSAdmin() or loginController.verificaAdmin()}" class="panel-projeto-oculto" columns="1" style="width: 100%; margin-left: 16%; margin-top: -80px; border-color: transparent" >
+                                    <h:panelGrid columns="2" style="border-color: transparent"  >
+
+                                        <h:commandLink class="btn btn-default"   value="" >
+                                            <h:graphicImage value="/Imagem/icons/visao.png" />
+                                            <p:ajax event="click" listener="#{projetoController.selecionarProjeto(c)}"  process="@this"/>
+                                        </h:commandLink>
+                                        <h:commandLink id="Desativar" disabled="false" class="btn btn-primary" onclick="PF('dlg1_confirm').show();" value="" style="margin-left: 5px;" >
+                                            <h:graphicImage value="/Imagem/icons/block.png" />
+                                            <p:ajax event="click" listener="#{projetoController.selecionar(c)}" update=":formConfirm"  process="@this" />
+                                        </h:commandLink> 
+                                    </h:panelGrid>
+                                </h:panelGrid>
+
+                            </h:panelGrid>
+
+                        </p:panel>
+
+                    </p:dataGrid>
+                </h:panelGrid>
+
+                <h:panelGrid class="panel-projeto" rendered="#{loginController.verificaSAdmin()? false:loginController.verificaAdmin()? false:true}" columns="5" style="margin-top: 10px; margin-bottom: 20px; " >
+                    <p:dataGrid var="c" value="#{projetoController.todosAtivosUsuario()}"
+                                layout="grid"
+                                columns="7"  
+                                id="grid_salas_usuarios"
+                                style="border: none !important;"
+                                emptyMessage="Nenhum registro encontrado.">
+
+                        <p:panel  style="text-align:center; width: 100%; border-color: transparent">
+                            <h:panelGrid class="panel-projeto" columns="1" style="margin-left: 10px; width:100%">
+                                 <p:poll id="poll" interval="5"  process="div_notificacao" update="div_notificacao"  />
+                                <h:panelGrid id="div_notificacao" style="background: transparent;  height: 20px; margin-top: 0px; float: right" >
+                                    <h:outputText  class='size-x2 circle' rendered="#{projetoController.countAnalisesUsuario(c.idProjeto).equals('0')? false:true}"  value="#{projetoController.countAnalisesUsuario(c.idProjeto)}"> </h:outputText>
+                                </h:panelGrid>
+                                <h:commandButton style="margin-top: -30px;" actionListener="#{projetoController.selecionarProjeto(c)}" image="#{request.contextPath}/../Imagem/icons/calendar.png" alt="Voltar pro Meunu" >
+                                    <center><h:outputLabel value="#{c.nome}" /></center>
+                                </h:commandButton> 
+                            </h:panelGrid>
+                        </p:panel>
+                    </p:dataGrid>
+                </h:panelGrid>
+
+                <p:dialog widgetVar="dlg_novo_projeto"  maximizable="false" header="Nova Agenda" closeOnEscape="true" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true" >
+                    <h:panelGrid id="panel_novo_projeto" columns="1" style="width: 280px;" >
+                        <ui:include src="projeto.xhtml" />
+                    </h:panelGrid>
+                </p:dialog>
+            </h:form>
+
+            <p:dialog id="confirm" header="Confirmar" widgetVar="dlg1_confirm" closeOnEscape="true" modal="true" showEffect="clip" hideEffect="clip" minHeight="40" resizable="false" >
+                <h:form id="formConfirm" >
+                    <p:outputLabel > Você não está excluindo este projeto. Ele será desativado e poderá ser ativado novamente a qualquer momento. </p:outputLabel>
+                    <div style="margin-top: 10px" class="form-group"> 
+                        <h:commandButton value="Desativar" actionListener="#{projetoController.desativar()}" styleClass="btn btn-primary btn-space" />
+                        <h:commandButton onclick="dlg1_confirm.hide()" value="Cancelar" class="btn btn-default btn-space" />                
+                    </div>
+                </h:form>
+            </p:dialog>  
+        </ui:define>
+    </ui:composition>
+
+
+</html>
