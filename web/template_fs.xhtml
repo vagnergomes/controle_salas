@@ -1,0 +1,142 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Agendas</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link type="text/css" href="#{request.contextPath}/Css/bootstrap.min.css" rel="stylesheet"/>
+        <link type="text/css" href="#{request.contextPath}/Css/style.css" rel="stylesheet"/>
+        <script src="#{request.contextPath}/Js/bootstrap.min.js" ></script>
+        <script src="#{request.contextPath}/Js/lumino.glyphs.js"></script>
+
+        <script>
+            PrimeFaces.locales['pt'] = {
+                closeText: 'Fechar',
+                prevText: 'Anterior',
+                nextText: 'Próximo',
+                currentText: 'Hoje',
+                monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+                dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+                dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
+                weekHeader: 'Semana',
+                firstDay: 0,
+                isRTL: false,
+                showMonthAfterYear: true,
+                yearSuffix: '',
+                timeOnlyTitle: 'Marque o horário',
+                timeText: 'Horário',
+                hourText: 'Hora',
+                minuteText: 'Minuto',
+                secondText: 'Segundo',
+                ampm: false,
+                month: 'M',
+                week: 'S',
+                day: 'D',
+                allDayText: 'All Day'
+            };
+        </script>
+    </h:head>
+
+    <h:body>
+
+        <nav style="background-color: #9C331E;" class="navbar navbar-inverse navbar-fixed-top" role="navigation" > 
+            <div class="container-fluid">
+                <div class="navbar-header row">
+                    <a href="#{request.contextPath}/index.xhtml" >
+                        <p:graphicImage value="#{configController.foto}"  cache="false" width="177px" height="52px"   />
+                    </a>
+                    <span style="font-size: 20px; color: #FFF ">#{agendamentoController.projeto.nome}</span> 
+                    <!--<span style="font-size: 20px; color: #FFF; background-color: #999; ">DESATIVADO</span>--> 
+                    <ul class="user-menu">
+                        <h:form >
+                            <a style="margin-right: 20px; visibility: hidden" href="#{request.contextPath}/acesso/login/login.xhtml"  >Login</a>
+                        </h:form>
+                        <h:form style="margin-right: 20px; margin-top: -20px " >
+                            <li class="dropdown pull-right">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><svg class="glyph stroked male-user"><use href="#stroked-male-user"/></svg> <span class="caret"></span></a>                       
+                                <ul class="dropdown-menu" role="menu">
+
+                                    <li class="panel-config"  ><svg class="glyph stroked male-user panel-config"><use href="#stroked-male-user"/></svg>#{request.remoteUser} </li>
+                                    <h:form rendered="#{loginController.verificaSAdmin() or loginController.verificaAdmin()}" >
+                                        <li  ><a href="#{request.contextPath}/usuario/usuarios_org.xhtml"><img src="#{request.contextPath}/Imagem/icons/users.png" /> Usuários</a></li>
+                                        <li  ><a href="#{request.contextPath}/projeto/projetos_desat.xhtml"><svg class="glyph stroked cancel"><use href="#stroked-cancel"/></svg> Desativados</a></li>
+                                    </h:form>
+
+                                    <li ><a href="#{request.contextPath}/j_spring_security_logout"><img src="#{request.contextPath}/Imagem/icons/sair.png" /> Sair</a></li>
+                                </ul>
+                            </li>
+                        </h:form>
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+
+        <div class="panel" style="width: 100%; margin-left: 0px; ">
+            <div class="row panel-default" style="width: 100%;">  
+                <ui:insert name="conteudo" />
+            </div>			
+        </div>  
+
+         <script>
+             
+             function toggleFullScreen() {
+  if ((document.fullScreenElement &amp;&amp; document.fullScreenElement !== null) ||    
+   (!document.mozFullScreen &amp;&amp; !document.webkitIsFullScreen)) {
+    if (document.documentElement.requestFullScreen) {  
+      document.documentElement.requestFullScreen();  
+    } else if (document.documentElement.mozRequestFullScreen) {  
+      document.documentElement.mozRequestFullScreen();  
+    } else if (document.documentElement.webkitRequestFullScreen) {  
+      document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);  
+    }  
+  } else {  
+    if (document.cancelFullScreen) {  
+      document.cancelFullScreen();  
+    } else if (document.mozCancelFullScreen) {  
+      document.mozCancelFullScreen();  
+    } else if (document.webkitCancelFullScreen) {  
+      document.webkitCancelFullScreen();  
+    }  
+  }  
+} 
+           
+//nao usados no momento
+            function requestFullScreen(el) {
+        // Supports most browsers and their versions.
+        var requestMethod = el.requestFullScreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullScreen;
+
+        if (requestMethod) { // Native full screen.
+            requestMethod.call(el);
+        } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+            var wscript = new ActiveXObject("WScript.Shell");
+            if (wscript !== null) {
+                wscript.SendKeys("{F11}");
+            }
+        }
+        return false;
+    }
+    
+    $(document).ready(cancelFullScreen);
+    function cancelFullScreen(el) {
+        var requestMethod = el.cancelFullScreen||el.webkitCancelFullScreen||el.mozCancelFullScreen||el.exitFullscreen;
+        if (requestMethod) { // cancel full screen.
+            requestMethod.call(el);
+        } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+            var wscript = new ActiveXObject("WScript.Shell");
+            if (wscript !== null) {
+                wscript.SendKeys("{F11}");
+            }
+        }
+    }
+        </script>	
+    </h:body>
+</html>

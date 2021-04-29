@@ -9,6 +9,7 @@ import br.com.controlesalas.entities.Agendamento;
 import br.com.controlesalas.entities.Projeto;
 import br.com.controlesalas.entities.Role;
 import br.com.controlesalas.services.AgendamentoService;
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -227,6 +228,10 @@ public class ScheduleController implements Serializable {
 
     public void onEventMove(ScheduleEntryMoveEvent event) {
 //        MensagemUtil.addMensagemInfo("Dia:" + event.getDayDelta() + ", Horário:" + event.getMinuteDelta());
+    }
+    
+    public void fullscreen() throws IOException{
+        FacesContext.getCurrentInstance().getExternalContext().redirect("schedule_fs.xhtml");
     }
 
     public List<Agendamento> todos() {

@@ -7,22 +7,23 @@
 	http://www.springframework.org/schema/security
 	http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 	 
-    <http auto-config="true" access-denied-page="/Acesso/error/negado.xhtml">
+    <http auto-config="true" access-denied-page="/acesso/error/negado.xhtml">
          
-        <intercept-url pattern="/Agendamento/Schedule.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_USUARIO" />
-        <intercept-url pattern="/Agendamento/Dashboard.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_USUARIO" />
-        <intercept-url pattern="/Agendamento/Sala.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN" />
-        <intercept-url pattern="/Projeto/projetos.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_USUARIO" />
-        <intercept-url pattern="/Projeto/projetos_desat.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN" />
-        <intercept-url pattern="/Projeto/projeto.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN" />
-        <intercept-url pattern="/Configuracao/config.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN" />
+        <intercept-url pattern="/agendamento/schedule.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_USUARIO" />
+        <intercept-url pattern="/agendamento/schedule_fs.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_USUARIO" />
+        <intercept-url pattern="/agendamento/dashboard.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_USUARIO" />
+        <intercept-url pattern="/agendamento/sala.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN" />
+        <intercept-url pattern="/projeto/projetos.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_USUARIO" />
+        <intercept-url pattern="/projeto/projetos_desat.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN" />
+        <intercept-url pattern="/projeto/projeto.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN" />
+        <intercept-url pattern="/configuracao/config.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN" />
                
-        <form-login login-page="/Acesso/login/login.xhtml" 
+        <form-login login-page="/acesso/login/login.xhtml" 
                     always-use-default-target="true"
-                    default-target-url="/Projeto/projetos.xhtml" 
-                    authentication-failure-url="/Acesso/login/login.xhtml?login_error=1"  />
+                    default-target-url="/projeto/projetos.xhtml" 
+                    authentication-failure-url="/acesso/login/login.xhtml?login_error=1"  />
         
-        <logout logout-success-url="/Acesso/login/login.xhtml"  />
+        <logout logout-success-url="/acesso/login/login.xhtml"  />
     </http>
 	 	
     <beans:bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
