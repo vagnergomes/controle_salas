@@ -7,6 +7,7 @@ package br.com.controlesalas.services;
 
 import br.com.controlesalas.entities.Configuracao;
 import java.io.Serializable;
+import javax.annotation.PreDestroy;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -24,6 +25,11 @@ public class ConfigService implements Serializable {
     
     public ConfigService(){
         
+    }
+    
+    @PreDestroy
+    public void destruct() {
+        em.close();
     }
     
     public String salvar(Configuracao config){

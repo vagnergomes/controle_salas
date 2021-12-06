@@ -19,10 +19,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.ejb.EJBTransactionRolledbackException;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.RollbackException;
 import javax.servlet.http.HttpSession;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
@@ -50,12 +53,16 @@ public class ConfigController implements Serializable {
 
     @PostConstruct
     public void init() {
+        try{
         idProjeto = getSession().getAttribute("idConfigSelecionado");
-
         if (idProjeto == null) {
             configuracao = new Configuracao();
         } else {
-            configuracao = service.obter(convertToLong(idProjeto));
+            Long id = convertToLong(idProjeto);
+            configuracao = service.obter(id);
+        }
+        }catch(EJBTransactionRolledbackException ex){
+            ex.getStackTrace();
         }
 
     }
@@ -238,7 +245,7 @@ public class ConfigController implements Serializable {
         getSession().removeAttribute("idProjetoSelecionado");
     }
 
-    public static Long convertToLong(Object o) {
+    public Long convertToLong(Object o) {
         String stringToConvert = String.valueOf(o);
         Long convertedLong = Long.parseLong(stringToConvert);
         return convertedLong;

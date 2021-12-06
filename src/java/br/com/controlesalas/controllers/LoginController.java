@@ -10,6 +10,7 @@ import br.com.controlesalas.entities.Usuario;
 import br.com.controlesalas.services.UsuarioService;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJBTransactionRolledbackException;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -47,7 +48,11 @@ public class LoginController implements Serializable {
                 // Authentication authentication = context.getAuthentication();
 
                 if (authentication instanceof Authentication) {
-                    usuario = service.consultaPorUsuario(((User) authentication.getPrincipal()).getUsername());
+                    if (authentication.getPrincipal() != null) {
+                        String username = ((User) authentication.getPrincipal()).getUsername();
+                        usuario = service.consultaPorUsuario(username);
+                        
+                    }
                     org = service.getOrg(usuario.getIdUsuario());
 
                     getSession().setAttribute("org", org);
@@ -57,7 +62,7 @@ public class LoginController implements Serializable {
                 }
 
             }
-        } catch (Exception ex) {
+        } catch (EJBTransactionRolledbackException ex) {
             ex.getMessage();
         }
 

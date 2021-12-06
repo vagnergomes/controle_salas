@@ -11,7 +11,7 @@
         <ui:define name="titulo"  >
             <span style="margin-left: 10px; font-size: 22px; font-family: sans-serif; color: #999999 ; "> Solicitações </span>
         </ui:define>
-        <ui:define name="conteudo">
+        <ui:define name="conteudo"> 
             <h:form id="analise" >
                 <div id="teste" class="row" style="margin-top: 20px;">
                     <h:panelGrid columns="1" style="margin-bottom: 10px; margin-left: 15px;" >
@@ -52,7 +52,7 @@
                         <h:commandButton class="btn_rotulos" disabled="true" style="background-color: blue;" > <h:outputLabel class="label_rotulos" value="Outro." /> </h:commandButton>
                     </h:panelGrid>
 
-                    <p:scrollPanel  mode="native" style="width:96%; margin-left: 5px; border-color: transparent; margin-bottom: 800px;">
+                    <!--<p:scrollPanel  mode="native" style="width:96%; margin-left: 5px; border-color: transparent; margin-bottom: 800px;">-->
                         <p:dataTable id="table_analise"
                                      widgetVar="w_table_agenda"
                                      value="#{analiseController.analises}" 
@@ -61,6 +61,11 @@
                                      style="width: 98%; margin: 0 auto; margin-bottom: 20px; " 
                                      sortBy="#{s.data_abertura}"
                                      sortOrder="descending"
+                                     rows="10"
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} página(s)"
+                                     rowsPerPageTemplate="10,25,50,100,{ShowAll|'Tudo'}"
                                      emptyMessage="Nenhum registro foi encontrado.">
 
                             <!--<p:column style="width: 5%;">{s.idAgendamento} </p:column>-->
@@ -132,7 +137,7 @@
                                 </h:commandLink>
                             </p:column>
                         </p:dataTable>
-                    </p:scrollPanel>
+                    <!--</p:scrollPanel>-->
                 </div>
             </h:form>
 

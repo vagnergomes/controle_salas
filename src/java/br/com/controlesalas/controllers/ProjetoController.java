@@ -19,6 +19,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJBTransactionRolledbackException;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -133,7 +134,7 @@ public class ProjetoController implements Serializable {
         return service.todosAtivos(idOrg);
     }
 
-    public List<Projeto> todosAtivosUsuario() {
+    public List<Projeto> todosAtivosUsuario() throws EJBTransactionRolledbackException{
         return service.todosAtivosUsuario(idOrg, idUsuario);
     }
 

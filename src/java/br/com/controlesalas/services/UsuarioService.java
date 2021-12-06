@@ -10,6 +10,7 @@ import br.com.controlesalas.entities.Usuario;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.PreDestroy;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -29,6 +30,12 @@ public class UsuarioService implements Serializable {
     public UsuarioService() {
 
     }
+    
+    @PreDestroy
+    public void destruct() {
+        em.close();
+    }
+    
 
     public String salvar(Usuario usuario) {
         try {

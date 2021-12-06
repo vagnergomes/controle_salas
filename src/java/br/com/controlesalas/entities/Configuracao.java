@@ -6,6 +6,7 @@
 package br.com.controlesalas.entities;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -121,4 +122,29 @@ public class Configuracao implements Serializable {
         this.show_weekends = show_weekends;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 29 * hash + Objects.hashCode(this.idConfig);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Configuracao other = (Configuracao) obj;
+        if (!Objects.equals(this.idConfig, other.idConfig)) {
+            return false;
+        }
+        return true;
+    }
+    
 }

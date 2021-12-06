@@ -15,6 +15,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
@@ -24,7 +25,7 @@ import javax.servlet.http.HttpSession;
  * @author vagner.gomes
  */
 @Named
-@RequestScoped
+@ViewScoped
 public class AnaliseController implements Serializable {
 
     @Inject
@@ -49,7 +50,10 @@ public class AnaliseController implements Serializable {
         projeto = (Projeto) getSession().getAttribute("projetoSelecionado");
         usuario_logado = (String) getSession().getAttribute("usuario_logado");
         idUsuario = (Long) getSession().getAttribute("idUsuario");
-        opcao = "1";
+        
+        if(opcao == null || opcao.equals("")){
+            opcao = "1";
+        }
         analises = service.todos(projeto.getIdProjeto(), opcao);
     }
 

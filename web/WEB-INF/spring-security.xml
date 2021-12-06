@@ -20,7 +20,7 @@
                
         <form-login login-page="/acesso/login/login.xhtml" 
                     always-use-default-target="true"
-                    default-target-url="/projeto/projetos.xhtml" 
+                    default-target-url="/index.xhtml" 
                     authentication-failure-url="/acesso/login/login.xhtml?login_error=1"  />
         
         <logout logout-success-url="/acesso/login/login.xhtml"  />
