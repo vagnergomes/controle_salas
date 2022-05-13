@@ -12,13 +12,14 @@ import br.com.controlesalas.util.DateUtil;
 import br.com.controlesalas.util.MensagemUtil;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Locale;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
+import org.primefaces.util.LangUtils;
 
 /**
  *
@@ -34,6 +35,8 @@ public class AnaliseController implements Serializable {
     private Analise analise;
 
     private List<Analise> analises;
+    
+    private List<Analise> analisesFiltradas;
 
     private String usuario_logado;
 
@@ -151,6 +154,20 @@ public class AnaliseController implements Serializable {
             salvar(an);
         }
     }
+    
+    public boolean globalFilterFunction(Object value, Object filter, Locale locale) {
+        String filterText = (filter == null) ? null : filter.toString().trim().toLowerCase();
+        if (LangUtils.isValueBlank(filterText)) {
+            return true;
+        }
+
+        Analise c = (Analise) value;
+        return c.getAgendamento().getTitulo().toLowerCase().contains(filterText)
+                || c.getAgendamento().getSala().getNome_sala().toLowerCase().contains(filterText)
+                || c.getData_abertura().toString().toLowerCase().contains(filterText)
+                || c.getAgendamento().getInicio().toString().toLowerCase().contains(filterText)
+                || c.getAgendamento().getFim().toString().toLowerCase().contains(filterText);
+    }
 
     public Analise getAnalise() {
         return analise;
@@ -168,6 +185,14 @@ public class AnaliseController implements Serializable {
         this.analises = analises;
     }
 
+    public List<Analise> getAnalisesFiltradas() {
+        return analisesFiltradas;
+    }
+
+    public void setAnalisesFiltradas(List<Analise> analisesFiltradas) {
+        this.analisesFiltradas = analisesFiltradas;
+    }
+  
     public Projeto getProjeto() {
         return projeto;
     }

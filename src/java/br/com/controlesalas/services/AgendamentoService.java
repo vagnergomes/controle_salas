@@ -131,7 +131,7 @@ public class AgendamentoService implements Serializable {
             role = r.getNome_role();
         }
 
-        if ("usuario".equals(role)) {
+        if ("usuario".equals(role) || "telefonista".equals(role)) {
             try {
 
                 //A lógica da tela Dashboard para usuário comum é diferente. Ele consegue ver apenas as solicitações feitas por ele, independente do Status dela
@@ -144,7 +144,8 @@ public class AgendamentoService implements Serializable {
                 ex.getMessage();
             }
 
-        } else {
+        } 
+        else {
             try {
                 //O usuário com mais níveis vê apenas as que estão com análise OK e aprovados. Existe a tela de Analise para ver os agendamentos pendentes.
                 query = em.createQuery("Select c from Agendamento as c Where c.analise.analise = False and c.analise.aprovado = True and c.sala.projeto.idProjeto = ?1 and c.inicio >= ?2 and c.fim <= ?3", Agendamento.class);

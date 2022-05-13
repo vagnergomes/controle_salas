@@ -86,6 +86,13 @@ h3, h4 {
     box-shadow: inset 0px 0px 0px 1px #9C331E;
 }
 
+
+.ui-inputfield.ui-state-focus, .ui-widget-content .ui-inputfield.ui-state-focus, .ui-widget-header .ui-inputfield.ui-state-focus, .form-control {
+    border: 1px solid #9C331E;
+    outline: 0;
+    box-shadow: inset 0px 0px 0px 1px #9C331E;
+}
+
 .navbar-header .navbar-brand {
     color: #fff;
     font-size: 16px;

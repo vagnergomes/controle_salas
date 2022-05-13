@@ -9,14 +9,15 @@
 	 
     <http auto-config="true" access-denied-page="/acesso/error/negado.xhtml">
          
-        <intercept-url pattern="/agendamento/schedule.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_USUARIO" />
-        <intercept-url pattern="/agendamento/schedule_fs.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_USUARIO" />
-        <intercept-url pattern="/agendamento/dashboard.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_USUARIO" />
+        <intercept-url pattern="/agendamento/schedule.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_USUARIO, ROLE_TELEFONISTA" />
+        <intercept-url pattern="/agendamento/schedule_fs.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_USUARIO, ROLE_TELEFONISTA" />
+        <intercept-url pattern="/agendamento/dashboard.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_USUARIO, ROLE_TELEFONISTA" />
         <intercept-url pattern="/agendamento/sala.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN" />
-        <intercept-url pattern="/projeto/projetos.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_USUARIO" />
+        <intercept-url pattern="/projeto/projetos.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_USUARIO, ROLE_TELEFONISTA" />
         <intercept-url pattern="/projeto/projetos_desat.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN" />
         <intercept-url pattern="/projeto/projeto.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN" />
         <intercept-url pattern="/configuracao/config.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN" />
+        <intercept-url pattern="/contato/cadastro.xhtml" access="ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_TELEFONISTA" />
                
         <form-login login-page="/acesso/login/login.xhtml" 
                     always-use-default-target="true"
@@ -48,7 +49,8 @@
                                                 WHEN r.NOME_ROLE = 'super_administrador' THEN 'ROLE_SUPER_ADMIN'
                                                 ELSE (CASE WHEN r.NOME_ROLE = 'administrador' THEN 'ROLE_ADMIN'
                                                 ELSE (CASE WHEN r.NOME_ROLE = 'usuario' THEN 'ROLE_USUARIO'
-                                                ELSE '' END) END) END AS permissao
+                                                ELSE (CASE WHEN r.NOME_ROLE = 'telefonista' THEN 'ROLE_TELEFONISTA'
+                                                ELSE '' END) END) END) END AS permissao
                                         FROM usuario  u
                                         inner join usuarios_roles as ur
                                         on u.idUsuario = ur.usuario_id

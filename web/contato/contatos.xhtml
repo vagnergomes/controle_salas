@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="../template.xhtml">
+        <ui:define name="titulo"  >
+            <span style="font-size: 22px; font-family: sans-serif; color: #999999 ; "> Contatos </span>
+        </ui:define>    
+        <ui:define name="conteudo">
+            <h:form id="form_turno">
+                <div class="row" style="margin-top: 5px;" >
+                    <div style="margin-left: 15px;  float: left;">
+                        <h:commandLink id="novoEvento" class="btn btn-primary" actionListener="#{contatoController.init()}" rendered="#{loginController.verificaSAdmin() or loginController.verificaAdmin() or loginController.verificaTelefonista()}" >
+                            <h:graphicImage value="/Imagem/icons/plus.png" style="filter: invert(1);" />
+                            <p:ajax  oncomplete="PF('dlg_novo').show();" update="painel_novo" />
+                        </h:commandLink>
+                    </div>
+                </div>
+                
+                <p:dataTable id="id_table_servico"
+                             widgetVar="w_table_contatos"
+                             value="#{contatoController.todos()}"
+                             var="s"
+                             rows="10"
+                             paginator="true"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} itens(s)"
+                             rowsPerPageTemplate="10,50,100,{ShowAll|'Tudo'}"
+                             filteredValue="#{contatoController.contatosFiltrados}"
+                             globalFilterFunction="#{contatoController.globalFilterFunction}"
+                             emptyMessage="Nenhum registro encontrado."
+                             style="margin-top: 10px;"
+                             >
+
+                    <f:facet name="header">
+                        <div class="p-d-flex p-jc-end" >
+                            <p:inputText id="globalFilter" onkeyup="PF('w_table_contatos').filter()" style="width:300px"
+                                         placeholder="pesquisar" />
+                        </div>
+                    </f:facet>
+
+                    <!--<p:column field="name" filterable="false"/>-->
+
+                    <p:column headerText="Contato" width="25%" priority="0" sortBy="#{s.contato}" class="align_text_column" style="text-transform: uppercase;" >
+                        <h:outputText value="#{s.contato}" />
+                    </p:column>
+                    <p:column headerText="Telefone" width="15%" priority="1" class="align_text_column" style="text-align:center; vertical-align: middle; text-transform: uppercase;"  >
+                       
+                        <h:outputText value="#{s.telefone.isEmpty()? '':s.telefone.substring(0, s.telefone.length()-4)}"  />
+                        <h:outputText value="#{s.telefone.isEmpty()? '':s.telefone.substring(s.telefone.length()-4)}" rendered="#{s.tel_ramal}" style="font-weight: bold; font-size: 20px;" />
+                        <h:outputText value="#{s.telefone.isEmpty()? '':s.telefone.substring(s.telefone.length()-4)}" rendered="#{!s.tel_ramal}" />
+                        <h:graphicImage rendered="#{s.tel_ramal}" value="/Imagem/icons/tel.png" style="margin-left: 5px;" />
+                        <h:graphicImage rendered="#{s.tel_wpp}" value="/Imagem/icons/whatsapp.png" style="margin-left: 5px;" />
+                    </p:column>
+                    <p:column headerText="Celular" width="20%"  priority="2" class="align_text_column" style="text-align:center; vertical-align: middle; text-transform: uppercase;" >
+                        <h:outputText value="#{s.celular}" />
+                        <h:graphicImage rendered="#{s.cel_wpp}" value="/Imagem/icons/whatsapp.png" style="margin-left: 5px;" />
+                    </p:column>
+                    <p:column headerText="Descrição" width="15%" priority="4" class="align_text_column" style="text-align:center; vertical-align: middle; text-transform: uppercase; " >
+                        <h:outputText value="#{s.descricao}" />
+                    </p:column>
+                    <p:column headerText="Cidade" width="20%" priority="3" class="align_text_column" style="text-align:center; vertical-align: middle; text-transform: uppercase;">
+                        <h:outputText value="#{s.cidade}" />
+                    </p:column>
+                    
+                    <p:column headerText="" width="6%" class="align_text_column" rendered="#{loginController.verificaSAdmin() or loginController.verificaAdmin() or loginController.verificaTelefonista()}" >
+                         <h:commandLink class="btn btn-default" onclick="PF('dlg_novo').show();" value="" >
+                            <h:graphicImage value="/Imagem/icons/editar.png"  />
+                            <p:ajax event="click" listener="#{contatoController.selecionar(s)}" update=":painel_novo" process="@this"/>
+                        </h:commandLink>
+                    </p:column>
+
+                    <p:column headerText="" width="6%" class="align_text_column" rendered="#{loginController.verificaSAdmin() or loginController.verificaAdmin() or loginController.verificaTelefonista()}" >
+                        <h:commandLink id="excluir" disabled="false" class="btn btn-primary" onclick="PF('dlg1_confirm').show();" value="" >
+                            <h:graphicImage value="/Imagem/icons/excluir.png"  />
+                            <p:ajax event="click" listener="#{contatoController.selecionar(s)}"  update=":form_confirm" process="@this" />
+                        </h:commandLink>
+                    </p:column>
+
+                </p:dataTable>
+            </h:form>
+            
+            <p:dialog id="confirm" header="Confirmar exclusão" widgetVar="dlg1_confirm" closeOnEscape="true" modal="true" showEffect="clip" hideEffect="clip" minHeight="40" resizable="false" >
+                <h:form id="form_confirm" >
+                    <div style="margin-top: 10px" class="form-group"> 
+                        <h:commandButton value="Excluir" action="#{contatoController.excluir()}" styleClass="btn btn-primary btn-space" />
+                        <h:commandButton onclick="dlg1_confirm.hide()" value="Cancelar" class="btn btn-default btn-space" />                
+                    </div>
+                </h:form>
+            </p:dialog>  
+            
+            <p:dialog widgetVar="dlg_novo" maximizable="false" header="Contato" closeOnEscape="true" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true"  >
+                    <h:panelGrid id="painel_novo" columns="1" style="width: 320px;" >
+                        <ui:include src="cadastro.xhtml" />
+                    </h:panelGrid>
+            </p:dialog>
+         
+        </ui:define>
+    </ui:composition>
+</html>

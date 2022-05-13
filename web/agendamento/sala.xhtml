@@ -33,13 +33,13 @@ and open the template in the editor.
                     </h:panelGrid>
 
                     <h:outputLabel  value="Rótulo: " class="output-form" />
-                    <p:selectBooleanCheckbox value="#{salaController.sala.visivel}" itemLabel="Sim"/>
+                    <p:selectBooleanCheckbox value="#{salaController.sala.visivel}"  itemLabel="Sim"/>
 
                     <h:outputLabel value="Cor/Categoria:" class="output-form required"  />                
-                    <p:selectOneMenu 
+                    <h:selectOneMenu 
                         id="idperfil"
                         value="#{salaController.sala.cor}"
-                        class="input"
+                        class="form-control input"
                         required="true"
                         requiredMessage="Informe o Local"
                         style="width: 25%; min-width: 250px; float: left; font-weight:bold;">
@@ -53,7 +53,7 @@ and open the template in the editor.
                         <f:selectItem itemLabel="Marrom" itemValue="maroon" />
                         <f:selectItem itemLabel="Verde" itemValue="green" />
                         <f:selectItem itemLabel="Vermelho" itemValue="red" />
-                    </p:selectOneMenu>
+                    </h:selectOneMenu>
 
                     <div  style="margin-top: 20px">          
                         <div class="form-group"> 

@@ -64,10 +64,18 @@
                                      rows="10"
                                      paginator="true"
                                      paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                     currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} página(s)"
+                                     currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registro(s)"
                                      rowsPerPageTemplate="10,25,50,100,{ShowAll|'Tudo'}"
+                                     filteredValue="#{analiseController.analisesFiltradas}"
+                                     globalFilterFunction="#{analiseController.globalFilterFunction}"
                                      emptyMessage="Nenhum registro foi encontrado.">
 
+                            <f:facet name="header">
+                                <div class="p-d-flex p-jc-end" >
+                                    <p:inputText id="globalFilter" onkeyup="PF('w_table_agenda').filter()" style="width:300px"
+                                                 placeholder="pesquisar" />
+                                </div>
+                            </f:facet>
                             <!--<p:column style="width: 5%;">{s.idAgendamento} </p:column>-->
                             <p:column styleClass="#{analiseController.cor_analise(s.analise, s.aprovado, s.reprovado)}" width="1%" />
                             <p:column headerText="Data Solic." sortBy="#{s.data_abertura}" style="text-align:center; vertical-align: middle;" width="13%">

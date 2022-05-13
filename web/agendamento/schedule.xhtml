@@ -15,9 +15,13 @@
 
                 <div class="row" style="margin-top: 5px;" >
                     <div style="margin-left: 30px;  float: left;">
-                        <h:commandButton rendered="#{loginController.verificaSAdmin() or loginController.verificaAdmin()}" id="novoEvento" value="Agendar" class="btn btn-primary">
+<!--                        <h:commandButton rendered="#{loginController.verificaSAdmin() or loginController.verificaAdmin()}" id="novoEvento" value="Novo" class="btn btn-primary">
                             <p:ajax listener="#{scheduleController.cleanAttributes()}" oncomplete="PF('dialogNovoEvento').show();" update=":agenda:panelNovoEvento" />
-                        </h:commandButton>
+                        </h:commandButton>-->
+                        <h:commandLink id="novoEvento2" class="btn btn-primary" actionListener="#{contatoController.init()}" >
+                            <h:graphicImage value="/Imagem/icons/plus.png" style="filter: invert(1);" />
+                            <p:ajax  oncomplete="PF('dialogNovoEvento').show();" update=":agenda:panelNovoEvento" />
+                        </h:commandLink>
                     </div>
 
                     <div style="margin-right: 30px; margin-bottom: 0px; font-size: 18px; float: right;"> 
@@ -62,7 +66,7 @@
                                     allDaySlot="false"
                                     view="#{configController.configuracao.view_agenda}" tooltip="false" >
                             <p:ajax  event="dateSelect" listener="#{scheduleController.onDateSelect}"   update=":agenda" />
-                            <p:ajax disabled="#{loginController.verificaUsuario()}" event="eventSelect" listener="#{scheduleController.onEventSelect}"  update=":agenda" />
+                            <p:ajax disabled="#{loginController.verificaUsuario() or loginController.verificaTelefonista()}" event="eventSelect" listener="#{scheduleController.onEventSelect}"  update=":agenda" />
                         </p:schedule>
                     </div>
                 </div>

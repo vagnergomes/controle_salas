@@ -157,7 +157,6 @@ public class UsuarioController implements Serializable {
     }
 
     public void editarUsuario(Usuario u) {
-        System.out.println("EditarUsuario: " + u.getIdUsuario());
         if (u != null) {
             usuario = service.obter(u.getIdUsuario());
             PrimeFaces.current().executeScript("PF('dlg_editar_usuario').show();");
@@ -167,7 +166,6 @@ public class UsuarioController implements Serializable {
     }
 
     public void editarSenha(Usuario u) {
-        System.out.println("EditarSenha: " + u.getIdUsuario());
         if (u != null) {
             usuario = service.obter(u.getIdUsuario());
             PrimeFaces.current().executeScript("PF('dlg_editar_senha').show();");

@@ -35,15 +35,20 @@
                                              style="width: 100%; margin: 0 auto; margin-bottom: 20px" 
                                              sortBy="#{u.usuario}"
                                              sortOrder="descending"
+                                             rows="10"
+                                             paginator="true"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                             currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registro(s)"
+                                             rowsPerPageTemplate="10,25,50,100,{ShowAll|'Tudo'}"
                                              emptyMessage="Nenhum registro foi encontrado.">
 
-                                    <p:column headerText="Usuário" width="10%" priority="8" style="text-align:center; vertical-align: middle;">
+                                    <p:column headerText="Usuário" width="10%" priority="8" sortBy="#{u.usuario}" style="text-align:center; vertical-align: middle;">
                                         <h:outputText value="#{u.usuario}" />
                                     </p:column>
-                                    <p:column headerText="Nome" width="20%" priority="5" style="text-align:center; vertical-align: middle;">
+                                    <p:column headerText="Nome" width="20%" priority="5" sortBy="#{u.nome_completo}" style="text-align:center; vertical-align: middle;">
                                         <h:outputText value="#{u.nome_completo}" />
                                     </p:column>
-                                    <p:column headerText="E-mail" width="20%" priority="6" style="text-align:center; vertical-align: middle;">
+                                    <p:column headerText="E-mail" width="20%" priority="6" sortBy="#{u.email}" style="text-align:center; vertical-align: middle;">
                                         <h:outputText value="#{u.email}" />
                                     </p:column>
                                     <p:column headerText="Permissão" width="13%" priority="7" style="text-align:center; vertical-align: middle;">
@@ -52,25 +57,25 @@
                                         </ui:repeat>
                                     </p:column>
                                     <p:column width="6%" priority="4" >
-                                        <h:commandLink class="btn btn-default" disabled="false"  value="" >
+                                        <h:commandLink class="btn btn-default" disabled="false"  value="" title="Editar" >
                                             <h:graphicImage value="/Imagem/icons/editar.png" />
                                             <p:ajax event="click" listener="#{usuarioController.editarUsuario(u)}" update=":form_editar_usuario"  />
                                         </h:commandLink>
                                     </p:column>
                                     <p:column width="6%" priority="3" >
-                                        <h:commandLink class="btn btn-default" disabled="false"  value="" >
+                                        <h:commandLink class="btn btn-default" disabled="false"  value="" title="Alterar senha" >
                                             <h:graphicImage value="/Imagem/icons/chave.png" />
                                             <p:ajax event="click" listener="#{usuarioController.editarSenha(u)}" update="usuarios_grupos:usuarios" />
                                         </h:commandLink>
                                     </p:column>
                                     <p:column width="6%" priority="1" >
-                                        <h:commandLink class="btn btn-default"  onclick="PF('dlg_acesso_usuario').show();" value="" >
+                                        <h:commandLink class="btn btn-default"  onclick="PF('dlg_acesso_usuario').show();" value="" title="Acessos" >
                                             <h:graphicImage value="/Imagem/icons/external-link.png" />
                                             <p:ajax event="click" listener="#{projetoUsuarioController.selecionarUsuario(u)}" update=":form_acesso_usuario" process="@this"/>
                                         </h:commandLink>
                                     </p:column>
                                     <p:column headerText="" width="6%" priority="2"  >
-                                        <h:commandLink id="excluir" disabled="false" class="btn btn-primary" onclick="PF('dlg1_confirm').show();" value="" >
+                                        <h:commandLink id="excluir" disabled="false" class="btn btn-primary" onclick="PF('dlg1_confirm').show();" value="" title="Excluir">
                                             <h:graphicImage value="/Imagem/icons/excluir.png" />
                                             <p:ajax event="click" listener="#{usuarioController.selecionar(u)}"  update=":formConfirm" process="@this" />
                                         </h:commandLink>
@@ -123,16 +128,16 @@
                                 <h:outputText value="#{p.descricao}" />
                             </p:column>
                             <p:column width="12%" transient="true" >
-                                <h:commandLink rendered="#{!projetoUsuarioController.projetoPorUsuario(p)}" id="check_hab" disabled="false" class="btn btn-default btn-space"  value="" >
+                                <h:commandLink rendered="#{!projetoUsuarioController.projetoPorUsuario(p)}" id="check_hab" disabled="false" class="btn btn-default btn-space"  value="" title="Liberar acesso" >
                                     <h:graphicImage value="/Imagem/icons/check.png" />
                                     <p:ajax event="click" listener="#{projetoUsuarioController.salvar(p)}" update=":form_acesso_usuario" process=":form_acesso_usuario" />
                                 </h:commandLink>
-                                <h:commandLink  rendered="#{projetoUsuarioController.projetoPorUsuario(p)}" id="check_disab" disabled="true" class="btn btn-success btn-space"  value="" >
+                                <h:commandLink  rendered="#{projetoUsuarioController.projetoPorUsuario(p)}" id="check_disab" disabled="true" class="btn btn-success btn-space"  value="" title="Acesso liberado" >
                                     <h:graphicImage value="/Imagem/icons/check.png" />
                                 </h:commandLink>
                             </p:column>
                             <p:column width="12%" transient="true" >
-                                <h:commandLink id="block" disabled="#{!projetoUsuarioController.projetoPorUsuario(p)}" class="btn btn-primary"  value="" >
+                                <h:commandLink id="block" disabled="#{!projetoUsuarioController.projetoPorUsuario(p)}" class="btn btn-primary"  value="" title="Remover acesso" >
                                     <h:graphicImage value="/Imagem/icons/block.png" />
                                     <p:ajax event="click" listener="#{projetoUsuarioController.excluirProjetoUsuario(p)}"  update=":form_acesso_usuario" process=":form_acesso_usuario"  />
                                 </h:commandLink>
@@ -147,13 +152,13 @@
                     <h:panelGrid id="panel_novo_usuario">
                         <p:messages id="messages" />
                         <p:outputLabel for="usuario" value="Usuário: " class="output-form required" />
-                        <p:inputText id="usuario" value="#{usuarioController.usuario.usuario}" styleClass="form-control input" />
+                        <p:inputText id="usuario" value="#{usuarioController.usuario.usuario}" styleClass="form-control input" required="true" requiredMessage="Informe um usuário." />
 
                         <p:outputLabel for="nome" value="Nome: " class="output-form required" />
-                        <p:inputText id="nome" value="#{usuarioController.usuario.nome_completo}" styleClass="form-control input" />
+                        <p:inputText id="nome" value="#{usuarioController.usuario.nome_completo}" styleClass="form-control input" required="true" requiredMessage="Informe um nome." />
 
                         <h:outputLabel value="E-mail: " class="output-form required" />
-                        <h:inputText id="email" value="#{usuarioController.usuario.email}" styleClass="form-control input"  >        
+                        <h:inputText id="email" value="#{usuarioController.usuario.email}" styleClass="form-control input" required="true" requiredMessage="Informe um e-mail válido." >        
                             <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
                         </h:inputText>
                         
@@ -170,16 +175,17 @@
                             </h:panelGrid>
                         </h:panelGrid>
 
-                         <h:panelGrid style="margin-bottom:10px" cellpadding="5">
-                        <p:outputLabel for="role" value="Permissão: " class="output-form required" />
-                        <p:selectOneRadio id="role" value="#{usuarioController.role}" layout="responsive" converter="roleConverter" columns="1" style="margin-left: 10px" >
-                            <f:selectItems  value="#{roleController.todosCadastro()}" itemDisabled="#{r.nome_role == 'super_administrador' or r.nome_role == null}" var="r" itemLabel="#{r.descricao}" itemValue="#{r}"/>
-                        </p:selectOneRadio>
-                    </h:panelGrid>
+                        <h:panelGrid style="margin-bottom:10px" cellpadding="5">
+                            <p:outputLabel for="role" value="Permissão: " class="output-form required" />
+                            <p:selectOneRadio id="role" value="#{usuarioController.role}" layout="responsive" converter="roleConverter" columns="1" style="margin-left: 10px" required="true" requiredMessage="Selecione uma permissão." >
+                                <f:selectItems  value="#{roleController.todosCadastro()}" itemDisabled="#{r.nome_role == 'super_administrador' or r.nome_role == null}" var="r" itemLabel="#{r.descricao}" itemValue="#{r}"/>
+                            </p:selectOneRadio>
+                        </h:panelGrid>
 
                         <div class="col-md-12 " style="margin-top: 10px">
                             <h:panelGrid columns="2" >
-                                <h:commandButton value="Salvar" action="#{usuarioController.salvar()}"  styleClass="btn btn-primary btn-space" >
+
+                                <h:commandButton value="Salvar" action="#{usuarioController.salvar()}"  styleClass="btn btn-primary btn-space" title="Salvar" >-->
                                     <!--<f:ajax execute="@all" render="@all" />-->
                                 </h:commandButton>
                             </h:panelGrid>
@@ -188,31 +194,32 @@
                 </h:form>
             </p:dialog>
             
-            <p:dialog  widgetVar="dlg_editar_usuario" dynamic="true" closeOnEscape="true" maximizable="false" header="Alterar" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true"   >
+            <p:dialog  widgetVar="dlg_editar_usuario" dynamic="true"  closeOnEscape="true" maximizable="false" header="Editar usuário" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true"   >
                 <h:form id="form_editar_usuario">
                     <h:panelGrid id="panel_editar_usuario">
                         <p:messages id="messages2" />
                         <p:outputLabel for="usuario2" value="Usuário: " class="output-form required" />
-                        <p:inputText id="usuario2" disabled="true" value="#{usuarioController.usuario.usuario}" styleClass="form-control input" />
+                        <p:inputText id="usuario2" disabled="true" value="#{usuarioController.usuario.usuario}" styleClass="form-control input" required="true" requiredMessage="Informe um usuário." />
 
                         <p:outputLabel for="nome2" value="Nome: " class="output-form required" />
-                        <p:inputText id="nome2" value="#{usuarioController.usuario.nome_completo}" styleClass="form-control input" />
+                        <p:inputText id="nome2" value="#{usuarioController.usuario.nome_completo}" styleClass="form-control input" required="true" requiredMessage="Informe um nome." />
 
                         <h:outputLabel value="E-mail: " class="output-form required" />
-                        <h:inputText id="email2" value="#{usuarioController.usuario.email}" styleClass="form-control input"  >        
-                            <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+                        <h:inputText id="email2" value="#{usuarioController.usuario.email}" styleClass="form-control input" required="true" requiredMessage="Informe um e-mail válido." >        
+                            <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]"  />
                         </h:inputText>
 
                         <h:panelGrid style="margin-bottom:10px" cellpadding="5">
                             <h:outputLabel for="role2" value="Permissão: " class="output-form required" />
-                            <p:selectOneRadio id="role2" value="#{usuarioController.role}" layout="responsive" converter="roleConverter" required="true" columns="1" style="margin-left: 10px" >
+                            <p:selectOneRadio id="role2" value="#{usuarioController.role}" layout="responsive" converter="roleConverter" required="true" requiredMessage="Selecione uma permissão." columns="1" style="margin-left: 10px" >
                                 <f:selectItems  value="#{roleController.todosCadastro()}" itemDisabled="#{r.nome_role == 'super_administrador' or r.nome_role == null}" var="r" itemLabel="#{r.descricao}" itemValue="#{r}"/>
                             </p:selectOneRadio>
                         </h:panelGrid>
 
                         <div class="col-md-12 " style="margin-top: 10px">  
                             <h:panelGrid columns="2" >
-                                <h:commandButton value="Salvar" action="#{usuarioController.salvar()}"  styleClass="btn btn-primary btn-space" >
+                                <!--<p:commandButton update="@form" value="Salvar" style="background: #9C331E; color: #FFF" actionListener="{usuarioController.salvar()}" class="btn " title="Salvar"/>-->
+                                <h:commandButton value="Salvar" action="#{usuarioController.salvar()}"  styleClass="btn btn-primary btn-space" title="Salvar" >
                                     <!--<f:ajax execute="@all" render="@all" />-->
                                 </h:commandButton>
                             </h:panelGrid>
@@ -224,7 +231,7 @@
             <p:dialog  widgetVar="dlg_editar_senha" dynamic="true" closeOnEscape="true" maximizable="false" header="Alterar senha" showEffect="clip" hideEffect="clip" closable="true" draggable="true" modal="true" resizable="true"   >
                 <h:form id="form_editar_senha">
                     <h:panelGrid id="panel_editar_senha">
-                        <p:messages id="messages" closable="true" >
+                        <p:messages id="messages"  >
                             <p:autoUpdate />
                         </p:messages>
                         <h:panelGrid  columns="1" id="matchGrid" >
@@ -243,7 +250,7 @@
 
                         <div class="col-md-12 " style="margin-top: 10px">
                             <h:panelGrid columns="2" >
-                                <p:commandButton update="@form" value="Salvar" style="background: #9C331E; color: #FFF" actionListener="#{usuarioController.alterarSenha()}" class="btn "/>
+                                <p:commandButton update="@form" value="Salvar" style="background: #9C331E; color: #FFF" actionListener="#{usuarioController.alterarSenha()}" class="btn " title="Salvar"/>
                                 <!--<h:commandButton value="Salvar" action="{usuarioController.alterarSenha()}" styleClass="btn btn-primary btn-space" />-->
                             </h:panelGrid>
                         </div>

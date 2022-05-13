@@ -153,6 +153,29 @@ public class LoginController implements Serializable {
             return false;
         }
     }
+    
+    public boolean verificaTelefonista() {
+        try {
+            if (authentication instanceof AnonymousAuthenticationToken) {
+                return false;
+            } else {
+                boolean admin = true;
+                Role r = new Role();
+                for (Role role : usuario.getRoles()) {
+                    r = role;
+                }
+                String papel = r.getNome_role();
+                if (papel.equals("telefonista")) {
+                    return admin;
+                } else {
+                    return false;
+                }
+            }
+        } catch (Exception ex) {
+            ex.getStackTrace();
+            return false;
+        }
+    }
 
     public Usuario getUsuario() {
         return usuario;

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:form>
+        <h:panelGrid columns="1" >
+            <h:inputHidden value="#{contatoController.contato.idContato}" />
+
+            <h:outputLabel value="Nome" class="output-form required" />
+            <h:inputText label="nome" value="#{contatoController.contato.contato}" styleClass="form-control input"  /> 
+
+            <h:outputLabel value="Telefone *" class="output-form " />
+            <h:inputText label="ramal" value="#{contatoController.contato.telefone}" styleClass="form-control input"  />
+            <!--<p:inputMask id="Ramal" mask="(99) 9999-9999" value="#{contatoController.contato.telefone}" styleClass="input" />-->
+            <h:panelGrid columns="2" style="margin-top: 3px;">
+            <p:selectBooleanCheckbox value="#{contatoController.contato.tel_wpp}" itemLabel="Whatsapp"/>
+            <p:selectBooleanCheckbox value="#{contatoController.contato.tel_ramal}" itemLabel="Ramal" style="margin-left: 3px;"/>
+            </h:panelGrid>
+
+            <h:outputLabel value="Celular *" class="output-form" />
+            <p:inputMask id="telefone" mask="(99) 99999-9999" value="#{contatoController.contato.celular}" styleClass="input" />
+            <p:selectBooleanCheckbox value="#{contatoController.contato.cel_wpp}"  itemLabel="Whatsapp" style="margin-top: 3px;"/>
+            <!--<h:inputText label="telefone" value="#{contatoController.contato.celular}" styleClass="form-control input"  />-->
+
+            <h:outputLabel value="Descrição" class="output-form required" />
+            <h:inputText label="descricao" value="#{contatoController.contato.descricao}" styleClass="form-control input"  />
+
+            <div class="p-field p-col-12 p-md-4">
+                <h:panelGrid id="uf">
+                    <h:outputLabel for="@next" value="Uf" class="output-form required"/>
+                    <h:selectOneMenu id="selectUf"
+                                     value="#{contatoController.uf}" 
+                                     required="true"
+                                     styleClass="form-control input">
+                        <!--<f:converter converterId="entityConverter"/>-->
+                        <f:selectItem
+                            itemLabel="Selecione o UF"
+                            itemValue="" />
+                        <f:selectItems
+                            value="#{contatoController.listaUf}"
+                            var="s"
+                            itemLabel="#{s} "
+                            itemValue="#{s}"
+                            />                       
+                        <p:ajax event="blur" listener="#{contatoController.consultaCidades()}" update="cidade" global="false" ></p:ajax>
+                    </h:selectOneMenu>
+                </h:panelGrid>
+
+               <h:panelGrid id="cidade">
+                    <h:outputLabel for="@next" value="Cidade" class="output-form required"/>
+                    <h:selectOneMenu id="selectCidade"
+                                     value="#{contatoController.cidade}" 
+                                     required="true"
+                                     styleClass="form-control input"
+                                     disabled="#{contatoController.listaCidades == null? true:false}">
+                        <!--<f:converter converterId="entityConverter"/>-->
+                        <f:selectItem
+                            itemLabel="Selecione a cidade"
+                            itemValue="" />
+                        <f:selectItems
+                            value="#{contatoController.listaCidades}"
+                            var="s"
+                            itemLabel="#{s} "
+                            itemValue="#{s}"
+                            />
+                    </h:selectOneMenu>
+                </h:panelGrid>
+            </div>
+        </h:panelGrid>
+
+        <div class="col-md-12 " style="margin-left: -15px; margin-top: 10px;">          
+            <h:panelGrid columns="2" >
+                <h:commandButton value="Salvar" action="#{contatoController.salvar()}"  styleClass="btn btn-primary btn-space" >
+                    <!--<f:ajax execute="@this" render="@this" />-->
+                </h:commandButton>
+                <!--<h:commandButton onclick="dlg1_confirm.hide()" value="Cancelar" class="btn btn-default btn-space" />-->
+            </h:panelGrid>
+        </div>
+    </h:form>
+</html>
