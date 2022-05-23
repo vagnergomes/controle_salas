@@ -34,10 +34,10 @@ and open the template in the editor.
 
                                     <h:panelGrid rendered="#{loginController.verificaSAdmin() or loginController.verificaAdmin()}" class="panel-projeto-oculto" columns="1" style="width: 100%; margin-left: 12%; margin-top: -82px; " >
                                         <h:panelGrid columns="2"  >
-                                            <h:commandLink class="btn btn-success"  onclick="PF('dlg1_confirm_ativar').show();" value="Ativar" >
+                                            <h:commandLink class="btn btn-success"  onclick="PF('dlg1_confirm_ativar').show();" title="Ativar agenda" value="Ativar" >
                                                 <p:ajax event="click" listener="#{projetoController.selecionar(c)}"  process="@this"/>
                                             </h:commandLink>
-                                            <h:commandLink id="excluir" disabled="false" class="btn btn-primary" onclick="PF('dlg1_confirm').show();" value="" style="margin-left: 5px;" >
+                                            <h:commandLink id="excluir" disabled="false" class="btn btn-primary" onclick="PF('dlg1_confirm').show();" title="Excluír permanentemente" value="" style="margin-left: 5px;" >
                                                 <h:graphicImage value="/Imagem/icons/excluir.png" />
                                                 <p:ajax event="click" listener="#{projetoController.selecionar(c)}" update=":formConfirm"  process="@this" />
                                             </h:commandLink> 

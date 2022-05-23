@@ -47,11 +47,11 @@ and open the template in the editor.
                                 <h:panelGrid rendered="#{loginController.verificaSAdmin() or loginController.verificaAdmin()}" class="panel-projeto-oculto" columns="1" style="width: 100%; margin-left: 16%; margin-top: -80px; border-color: transparent" >
                                     <h:panelGrid columns="2" style="border-color: transparent"  >
 
-                                        <h:commandLink class="btn btn-default"   value="" >
+                                        <h:commandLink class="btn btn-default" title="Visualizar agenda" >
                                             <h:graphicImage value="/Imagem/icons/visao.png" />
                                             <p:ajax event="click" listener="#{projetoController.selecionarProjeto(c)}"  process="@this"/>
                                         </h:commandLink>
-                                        <h:commandLink id="Desativar" disabled="false" class="btn btn-primary" onclick="PF('dlg1_confirm').show();" value="" style="margin-left: 5px;" >
+                                        <h:commandLink id="Desativar" disabled="false" class="btn btn-primary" onclick="PF('dlg1_confirm').show();" title="Desativar agenda" style="margin-left: 5px;" >
                                             <h:graphicImage value="/Imagem/icons/block.png" />
                                             <p:ajax event="click" listener="#{projetoController.selecionar(c)}" update=":formConfirm"  process="@this" />
                                         </h:commandLink> 
@@ -96,7 +96,7 @@ and open the template in the editor.
 
             <p:dialog id="confirm" header="Confirmar" widgetVar="dlg1_confirm" closeOnEscape="true" modal="true" showEffect="clip" hideEffect="clip" minHeight="40" resizable="false" >
                 <h:form id="formConfirm" >
-                    <p:outputLabel > Você não está excluindo este projeto. Ele será desativado e poderá ser ativado novamente a qualquer momento. </p:outputLabel>
+                    <p:outputLabel > Você não está excluindo esta agenda. Ela será desativada e poderá ser ativada novamente a qualquer momento. </p:outputLabel>
                     <div style="margin-top: 10px" class="form-group"> 
                         <h:commandButton value="Desativar" actionListener="#{projetoController.desativar()}" styleClass="btn btn-primary btn-space" />
                         <h:commandButton onclick="dlg1_confirm.hide()" value="Cancelar" class="btn btn-default btn-space" />                

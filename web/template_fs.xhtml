@@ -70,11 +70,11 @@
 
                                     <li class="panel-config"  ><svg class="glyph stroked male-user panel-config"><use href="#stroked-male-user"/></svg>#{request.remoteUser} </li>
                                     <h:form rendered="#{loginController.verificaSAdmin() or loginController.verificaAdmin()}" >
-                                        <li  ><a href="#{request.contextPath}/usuario/usuarios_org.xhtml"><img src="#{request.contextPath}/Imagem/icons/users.png" /> Usuários</a></li>
-                                        <li  ><a href="#{request.contextPath}/projeto/projetos_desat.xhtml"><svg class="glyph stroked cancel"><use href="#stroked-cancel"/></svg> Desativados</a></li>
+                                        <li  ><a href="#{request.contextPath}/usuario/usuarios_org.xhtml" title="Todos os usuários"><img src="#{request.contextPath}/Imagem/icons/users.png" /> Usuários</a></li>
+                                        <li  ><a href="#{request.contextPath}/projeto/projetos_desat.xhtml" title="Agendas desativadas"><svg class="glyph stroked cancel"><use href="#stroked-cancel"/></svg> Desativados</a></li>
                                     </h:form>
 
-                                    <li ><a href="#{request.contextPath}/j_spring_security_logout"><img src="#{request.contextPath}/Imagem/icons/sair.png" /> Sair</a></li>
+                                    <li ><a href="#{request.contextPath}/j_spring_security_logout" title="Sair"><img src="#{request.contextPath}/Imagem/icons/sair.png" /> Sair</a></li>
                                 </ul>
                             </li>
                         </h:form>

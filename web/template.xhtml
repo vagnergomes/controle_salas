@@ -54,14 +54,14 @@
                     <a href="#{request.contextPath}/index.xhtml" >
                         <p:graphicImage value="/Imagem/logo/logo_sistema.png" cache="false"  />
                     </a>
-                    <a href="#{request.contextPath}/index.xhtml" style="margin-left: 1px;" >
+                    <a href="#{request.contextPath}/index.xhtml" style="margin-left: 1px;"  >
                         <p:graphicImage value="#{configController.foto}"  cache="false" width="177px" height="52px"  />
                     </a>
                     <span style="font-size: 20px; color: #FFF ">#{configController.configuracao.titulo_cabecalho}</span> 
                     <!--<span style="font-size: 20px; color: #FFF; background-color: #999; ">DESATIVADO</span>--> 
                     <ul class="user-menu">
                         <h:form >
-                            <a style="margin-right: 20px; visibility: hidden" href="#{request.contextPath}/acesso/login/login.xhtml"  >Login</a>
+                            <a style="margin-right: 20px; visibility: hidden" href="#{request.contextPath}/acesso/login/login.xhtml"  title="Login" >Login</a>
                         </h:form>
                         <h:form style="margin-right: 20px; margin-top: -20px " >
                             <li class="dropdown pull-right">
@@ -70,28 +70,28 @@
 
                                     <li class="panel-config"  ><svg class="glyph stroked male-user panel-config"><use href="#stroked-male-user"/></svg>#{request.remoteUser} </li>
                                     <h:form rendered="#{loginController.verificaSAdmin() or loginController.verificaAdmin()}" >
-                                        <li  ><a href="#{request.contextPath}/usuario/usuarios_org.xhtml"><img src="#{request.contextPath}/Imagem/icons/users.png" /> Usuários</a></li>
-                                        <li  ><a href="#{request.contextPath}/projeto/projetos_desat.xhtml"><svg class="glyph stroked cancel"><use href="#stroked-cancel"/></svg> Desativados</a></li>
+                                        <li  ><a href="#{request.contextPath}/usuario/usuarios_org.xhtml" title="Todos os usuários"><img src="#{request.contextPath}/Imagem/icons/users.png" /> Usuários</a></li>
+                                        <li  ><a href="#{request.contextPath}/projeto/projetos_desat.xhtml" title="Agendas desativadas"><svg class="glyph stroked cancel"><use href="#stroked-cancel"/></svg> Desativados</a></li>
                                     </h:form>
 
-                                    <li ><a href="#{request.contextPath}/j_spring_security_logout"><img src="#{request.contextPath}/Imagem/icons/sair.png" /> Sair</a></li>
+                                    <li ><a href="#{request.contextPath}/j_spring_security_logout" title="Sair"><img src="#{request.contextPath}/Imagem/icons/sair.png" /> Sair</a></li>
                                 </ul>
                             </li>
                         </h:form>
 
                         <h:form rendered="#{configController.projetoSelec() and (loginController.verificaSAdmin() or loginController.verificaAdmin())}" style="margin-right: 80px; margin-top: -20px " >
                             <li class="dropdown pull-right">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><svg class="glyph stroked gear"><use href="#stroked-gear"/></svg> <span class="caret"></span></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="Configurações desta agenda"><svg class="glyph stroked gear"><use href="#stroked-gear"/></svg> <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li  ><a style="#{configController.projetoSelec()? '':'pointer-events: none; color: #c3c3c3;'}"  href="#{request.contextPath}/configuracao/config.xhtml"><svg class="glyph stroked gear"><use href="#stroked-gear"/></svg> Opções</a></li>
-                                    <li  ><a style="#{configController.projetoSelec()? '':'pointer-events: none; color: #c3c3c3;'}"  href="#{request.contextPath}/projeto/usuarios_proj.xhtml"><img src="#{request.contextPath}/Imagem/icons/users.png" /> Usuários com acesso</a></li>
+                                    <li  ><a style="#{configController.projetoSelec()? '':'pointer-events: none; color: #c3c3c3;'}"  href="#{request.contextPath}/configuracao/config.xhtml" title="Opções"><svg class="glyph stroked gear"><use href="#stroked-gear"/></svg> Opções</a></li>
+                                    <li  ><a style="#{configController.projetoSelec()? '':'pointer-events: none; color: #c3c3c3;'}"  href="#{request.contextPath}/projeto/usuarios_proj.xhtml" title="Usuários com acesso"><img src="#{request.contextPath}/Imagem/icons/users.png" /> Usuários com acesso</a></li>
                                 </ul>
                             </li>
                         </h:form>
                         <h:form rendered="#{configController.projetoSelec() and (loginController.verificaSAdmin() or loginController.verificaAdmin())}" style="margin-right: 140px;" >
                             <p:poll id="poll" interval="5"  process="div_notificacao" update="div_notificacao"  />
                             <h:panelGrid id="div_notificacao" style="background: transparent;  height: 20px; margin-top: -20px;" >
-                                <a href="#{request.contextPath}/agendamento/analise.xhtml" ><svg class="glyph stroked flag"><use href="#stroked-flag"/></svg> </a>
+                                <a href="#{request.contextPath}/agendamento/analise.xhtml" title="Análise de agendamentos" ><svg class="glyph stroked flag"><use href="#stroked-flag"/></svg> </a>
                                 <h:outputText  class='size-x circle' rendered="#{analiseController.countAnalises().equals('0')? false:true}" value="#{analiseController.countAnalises()}"> </h:outputText>
                             </h:panelGrid>
                         </h:form>
@@ -120,11 +120,11 @@
                 <h:form title="Gerenciar" rendered="#{configController.projetoSelec()}"  >
                     <li class="active" ><svg  class="glyph stroked gear" style="margin-left: 12px;" ><use href="#stroked-gear" ></use></svg> #{agendamentoController.projeto.nome}</li>
                     <!--<a href="#{request.contextPath}/Agendamento/agendamento.xhtml"><li>Cadastro</li></a>-->
-                    <a href="#{request.contextPath}/agendamento/schedule.xhtml"><li><svg class="glyph stroked calendar"><use href="#stroked-calendar"/></svg>Calendário</li></a>
-                    <a href="#{request.contextPath}/agendamento/dashboard.xhtml"><li><svg class="glyph stroked clipboard with paper"><use href="#stroked-clipboard-with-paper"/></svg>Agendamentos</li></a>
-                    <a href="#{request.contextPath}/agendamento/timeline.xhtml"><li><svg class="glyph stroked clock"><use href="#stroked-clock"/></svg>Tempo Real</li></a>
-                    <a style="visibility: #{loginController.verificaAdmin() or loginController.verificaSAdmin() ? 'visible':'hidden'}" href="#{request.contextPath}/agendamento/sala.xhtml"><li><svg class="glyph stroked tag"><use href="#stroked-tag"/></svg>Salas</li></a>
-                    <a href="#{request.contextPath}/contato/contatos.xhtml"><li><svg class="glyph stroked mobile device"><use href="#stroked-mobile-device"/></svg>Contatos</li></a>
+                    <a href="#{request.contextPath}/agendamento/schedule.xhtml" title="Calendário"><li><svg class="glyph stroked calendar"><use href="#stroked-calendar"/></svg>Calendário</li></a>
+                    <a href="#{request.contextPath}/agendamento/dashboard.xhtml" title="Agendamentos"><li><svg class="glyph stroked clipboard with paper"><use href="#stroked-clipboard-with-paper"/></svg>Agendamentos</li></a>
+                    <a href="#{request.contextPath}/agendamento/timeline.xhtml" title="Tempo Real" ><li><svg class="glyph stroked clock"><use href="#stroked-clock"/></svg>Tempo Real</li></a>
+                    <a style="visibility: #{loginController.verificaAdmin() or loginController.verificaSAdmin() ? 'visible':'hidden'}" href="#{request.contextPath}/agendamento/sala.xhtml" title="Sala"><li><svg class="glyph stroked tag"><use href="#stroked-tag"/></svg>Salas</li></a>
+                    <a style="visibility: #{loginController.verificaTelefonista() or loginController.verificaSAdmin() ? 'visible':'hidden'}" href="#{request.contextPath}/contato/contatos.xhtml" title="Contatos"><li><svg class="glyph stroked mobile device"><use href="#stroked-mobile-device"/></svg>Contatos</li></a>
 
                 </h:form>
                 <h:form>
@@ -141,11 +141,11 @@
                 <ul class="nav ">
                     <li class="active" ><a  href="#"><svg  class="glyph stroked gear"><use href="#stroked-gear"></use></svg> #{agendamentoController.projeto.nome}</a></li>
                     <!--<li><a href="#{request.contextPath}/Agendamento/agendamento.xhtml">Cadastro</a></li>-->
-                    <li><a href="#{request.contextPath}/agendamento/schedule.xhtml"><svg class="glyph stroked calendar"><use href="#stroked-calendar"/></svg>Calendário</a></li>
-                    <li><a href="#{request.contextPath}/agendamento/dashboard.xhtml"><svg class="glyph stroked clipboard with paper"><use href="#stroked-clipboard-with-paper"/></svg>Agendamentos</a></li>
-                    <li  ><a href="#{request.contextPath}/agendamento/timeline.xhtml"><svg class="glyph stroked clock"><use href="#stroked-clock"/></svg>Tempo Real</a></li>
-                    <li style="visibility: #{loginController.verificaAdmin() or loginController.verificaSAdmin() ? 'visible':'hidden'}" ><a href="#{request.contextPath}/agendamento/sala.xhtml"><svg class="glyph stroked tag"><use href="#stroked-tag"/></svg>Sala</a></li>
-                    <li><a href="#{request.contextPath}/contato/contatos.xhtml"><svg class="glyph stroked mobile device"><use href="#stroked-mobile-device"/></svg>Contatos</a></li>
+                    <li><a href="#{request.contextPath}/agendamento/schedule.xhtml" title="Calendário"><svg class="glyph stroked calendar"><use href="#stroked-calendar"/></svg>Calendário</a></li>
+                    <li><a href="#{request.contextPath}/agendamento/dashboard.xhtml" title="Agendamentos"><svg class="glyph stroked clipboard with paper"><use href="#stroked-clipboard-with-paper"/></svg>Agendamentos</a></li>
+                    <li  ><a href="#{request.contextPath}/agendamento/timeline.xhtml" title="Tempo Real"><svg class="glyph stroked clock"><use href="#stroked-clock"/></svg>Tempo Real</a></li>
+                    <li style="visibility: #{loginController.verificaAdmin() or loginController.verificaSAdmin() ? 'visible':'hidden'}" ><a href="#{request.contextPath}/agendamento/sala.xhtml" title="Sala"><svg class="glyph stroked tag"><use href="#stroked-tag"/></svg>Sala</a></li>
+                    <li style="visibility: #{loginController.verificaTelefonista() or loginController.verificaSAdmin() ? 'visible':'hidden'}"><a href="#{request.contextPath}/contato/contatos.xhtml" title="Contatos"><svg class="glyph stroked mobile device"><use href="#stroked-mobile-device"/></svg>Contatos</a></li>
 
                 </ul>
             </h:form>
@@ -153,7 +153,7 @@
             <h:form title="agenda"   >
                 <ul class="nav ">
                     <!--<li><a href="{request.contextPath}/Projeto/projeto.xhtml"><svg class="glyph stroked "></svg>Novo Projeto</a></li>-->
-                    <h:outputLink class="btn" value="#{request.contextPath}/projeto/projetos.xhtml"  style="width: 100%; text-align: left"  >
+                    <h:outputLink class="btn" value="#{request.contextPath}/projeto/projetos.xhtml" title="Todas as Agendas"  style="width: 100%; text-align: left"  >
                         Agendas
                         <f:ajax event="click" listener="#{configController.limpaIdProjeto()}" />
                     </h:outputLink>

@@ -13,7 +13,7 @@
 
                     <div class="row" style="margin-top: 10px;" >
                         <div style="margin-left: 30px; float: left;">
-                            <h:commandButton id="update" value="Atualizar" class="btn btn-default btn-space" >
+                            <h:commandButton id="update" value="Atualizar" class="btn btn-default btn-space" title="Atualizar calendário" >
                                 <p:ajax update=":agenda:schedule2" />
                             </h:commandButton> 
                         </div>
@@ -23,10 +23,15 @@
                         </div>  
                         
                          <div style="margin-right: 30px; margin-bottom: 0px; float: right;"> 
-                            <h:commandButton id="btn_fullscreen" image="/Imagem/icons/fullscreen.png"  >
+                             <h:commandButton id="btn_fullscreen" image="/Imagem/icons/fullscreen.png" title="Tela cheia" >
                                 <p:ajax oncomplete="toggleFullScreen();" />
                             </h:commandButton>
                         </div>  
+                        <div style="margin-right: 20px; margin-bottom: 0px; float: right;">
+                            <h:commandLink id="btn_return"  action="schedule.xhtml" title="Retornar" >
+                               <h:graphicImage value="/Imagem/icons/retorna.png" />
+                            </h:commandLink>
+                        </div>
 
                     </div>
                     <p:panel id="painelSchedule" style="border: 0; border-color: #fff; margin-top: 0px;" >

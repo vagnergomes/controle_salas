@@ -7,6 +7,7 @@ package br.com.controlesalas.controllers;
 
 import br.com.controlesalas.entities.Agendamento;
 import br.com.controlesalas.entities.Analise;
+import br.com.controlesalas.entities.Contato;
 import br.com.controlesalas.entities.Descritivo;
 import br.com.controlesalas.entities.Projeto;
 import br.com.controlesalas.entities.Role;
@@ -14,7 +15,6 @@ import br.com.controlesalas.services.AgendamentoService;
 import br.com.controlesalas.util.MensagemUtil;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -45,6 +45,8 @@ public class AgendamentoController implements Serializable {
     private Agendamento agendamento;
 
     private Projeto projeto;
+    
+    private Contato contato;
 
     private Analise analise;
 
@@ -75,9 +77,10 @@ public class AgendamentoController implements Serializable {
         projeto = (Projeto) getSession().getAttribute("projetoSelecionado");
         usuario_logado = (String) getSession().getAttribute("usuario_logado");
         roles = (List<Role>) getSession().getAttribute("roles");
-        for (Role r : roles) {
+     
+        roles.forEach((r) -> {
             role = r;
-        }
+        });
         iniciaObjeto();
     }
 
@@ -261,6 +264,16 @@ public class AgendamentoController implements Serializable {
     public void setRole(Role role) {
         this.role = role;
     }
+
+    public Contato getContato() {
+        return contato;
+    }
+
+    public void setContato(Contato contato) {
+        this.contato = contato;
+    }
+    
+    
 
     public HttpSession getSession() {
         return (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);

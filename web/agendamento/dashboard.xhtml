@@ -92,7 +92,7 @@
                                 <h:outputText value="#{s.descritivo.agua? 'Água':''} #{s.descritivo.cafe? 'Café':''} #{s.descritivo.frutas? 'Frutas':''} #{s.descritivo.lanche? 'Lanche':''}" />
                             </p:column>
                             <p:column width="6%" priority="6"  >
-                                <h:commandLink class="btn btn-default" disabled="#{agendamentoController.role.nome_role =='usuario' and !s.analise.analise? 'true':'false' }" onclick="PF('dlg_novo_evento').show();" value="" >
+                                <h:commandLink class="btn btn-default" disabled="#{(agendamentoController.role.nome_role =='usuario' or agendamentoController.role.nome_role =='telefonista') and !s.analise.analise? 'true':'false' }" onclick="PF('dlg_novo_evento').show();" value="" >
                                     <h:graphicImage value="/Imagem/icons/editar.png" />
                                     <p:ajax event="click" listener="#{agendamentoViewController.selecionar(s)}" update=":formNovoEvento" process="@this"/>
                                 </h:commandLink>
