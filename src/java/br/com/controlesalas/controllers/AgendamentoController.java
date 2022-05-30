@@ -188,6 +188,11 @@ public class AgendamentoController implements Serializable {
             agendamento = new Agendamento();
             agendamento.setDescritivo(new Descritivo());
             agendamento.setAnalise(new Analise());
+            Timestamp dateTimeFim = new Timestamp(dateTime.getTime());
+            dateTimeFim.setHours(dateTimeFim.getHours() + 1);
+            agendamento.setInicio(dateTime);
+            agendamento.setFim(dateTimeFim);
+            
         }
     }
 

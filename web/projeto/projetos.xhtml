@@ -19,9 +19,14 @@ and open the template in the editor.
                 <div class="col-md-12" style="margin-top: 5px">          
                     <div class="form-group"> 
 
-                        <h:commandButton rendered="#{loginController.verificaSAdmin() or loginController.verificaAdmin()}" styleClass="btn btn-primary" value="Novo" >
+<!--                        <h:commandButton rendered="{loginController.verificaSAdmin() or loginController.verificaAdmin()}" styleClass="btn btn-primary"  >
+                            <h:graphicImage value="#{request.contextPath}/Imagem/icons/plus.png" style="filter: invert(1);" />
                             <p:ajax oncomplete="PF('dlg_novo_projeto').show()" rendered=":cadastro:panel_novo_projeto" /> 
-                        </h:commandButton>
+                        </h:commandButton>-->
+                        <h:commandLink id="novoProjeto" rendered="#{loginController.verificaSAdmin() or loginController.verificaAdmin()}" class="btn btn-primary"  >
+                            <h:graphicImage value="/Imagem/icons/plus.png" style="filter: invert(1);" />
+                            <p:ajax  oncomplete="PF('dlg_novo_projeto').show();" rendered=":cadastro:panel_novo_projeto" />
+                        </h:commandLink>
                     </div>
                 </div>
 

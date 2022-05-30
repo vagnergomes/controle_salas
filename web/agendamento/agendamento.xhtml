@@ -14,7 +14,7 @@ and open the template in the editor.
         <p:messages id="messages" showDetail="true" closable="true" /> 
         <h:outputLabel value="Local/Sala" class="output-form required"  />                
         <p:selectOneMenu 
-            id="idperfil"
+            id="idsala"
             value="#{agendamentoController.agendamento.sala}"
             converter="salaConverter"
             class="input"
@@ -36,7 +36,7 @@ and open the template in the editor.
 
 
         <h:outputLabel value="Título" class="output-form required" />
-        <h:inputText label="titulo" maxlength="15" value="#{agendamentoController.agendamento.titulo}" styleClass="form-control input"  />                  
+        <h:inputText id="titulo" label="titulo" maxlength="15" value="#{agendamentoController.agendamento.titulo}" styleClass="form-control input"  />                  
 
         <h:panelGrid columns="1">
             <h:outputLabel  value="Quantidade pessoas: " class="output-form" />
@@ -61,16 +61,16 @@ and open the template in the editor.
         </h:panelGrid>
 
         <h:outputLabel  value="Descrição: " class="output-form" />
-        <p:inputTextarea rows="2" cols="40" value="#{agendamentoController.agendamento.descritivo.adicional}" counter="display" maxlength="100" counterTemplate="{0} caracteres restantes." autoResize="false" />
+        <p:inputTextarea id="descricao" rows="2" cols="40" value="#{agendamentoController.agendamento.descritivo.adicional}" counter="display" maxlength="100" counterTemplate="{0} caracteres restantes." autoResize="false" />
         <h:outputText id="display" />
 
         </h:panelGrid>
         <div class="col-md-12 " style="margin-top: 10px">          
             <h:panelGrid columns="2" >
-                <h:commandButton value="Agendar" action="#{agendamentoController.salvar()}"  styleClass="btn btn-primary btn-space" >
+                <h:commandButton id="id_btn_salvar" value="Agendar" action="#{agendamentoController.salvar()}"  styleClass="btn btn-primary btn-space" >
                     <f:ajax execute="@all" render="@all" />
                 </h:commandButton>
-                <h:commandButton value="#{agendamentoController.agendamento.idAgendamento == null? 'Cancelar':'Excluir'}" action="#{agendamentoController.excluir()}" class="btn btn-default btn-space"  >
+                <h:commandButton id="btn_excluir" value="#{agendamentoController.agendamento.idAgendamento == null? 'Cancelar':'Excluir'}" action="#{agendamentoController.excluir()}" class="btn btn-default btn-space"  >
                     <f:ajax execute="@all" render="@all" />
                 </h:commandButton>
             </h:panelGrid>
